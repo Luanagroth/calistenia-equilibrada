@@ -31,9 +31,17 @@ const navItems = [
 
 type AlunoShellProps = {
   children: React.ReactNode;
+  studentName?: string;
+  studentEmail?: string;
+  daysRemaining?: number;
 };
 
-export function AlunoShell({ children }: AlunoShellProps) {
+export function AlunoShell({
+  children,
+  studentName = "Aluno",
+  studentEmail = "",
+  daysRemaining = 0,
+}: AlunoShellProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -43,6 +51,13 @@ export function AlunoShell({ children }: AlunoShellProps) {
     router.push("/login");
     router.refresh();
   };
+
+  const initials = studentName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
     <div className="min-h-screen bg-[#070A0D] text-white">
@@ -91,10 +106,13 @@ export function AlunoShell({ children }: AlunoShellProps) {
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs text-slate-400">
                 <span>Progresso</span>
-                <span className="text-yellow-400 font-medium">Dia 04</span>
+                <span className="text-yellow-400 font-medium">{daysRemaining} dias restantes</span>
               </div>
               <div className="h-1.5 rounded-full bg-white/10">
-                <div className="h-1.5 rounded-full bg-yellow-400" style={{ width: "13%" }} />
+                <div
+                  className="h-1.5 rounded-full bg-yellow-400 transition-all"
+                  style={{ width: `${Math.max(0, Math.min(100, (daysRemaining / 30) * 100))}%` }}
+                />
               </div>
               <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400">
                 <span className="flex items-center gap-1">
@@ -111,11 +129,11 @@ export function AlunoShell({ children }: AlunoShellProps) {
 
           <div className="mt-4 flex items-center gap-3">
             <div className="flex size-9 items-center justify-center rounded-full bg-white/10 text-sm font-medium text-white">
-              L
+              {initials}
             </div>
             <div className="space-y-0.5 flex-1">
-              <p className="text-sm font-medium text-white">Lucas</p>
-              <p className="text-[11px] text-slate-400">lucas@email.com</p>
+              <p className="text-sm font-medium text-white">{studentName}</p>
+              <p className="text-[11px] text-slate-400">{studentEmail}</p>
             </div>
             <button
               onClick={handleLogout}
