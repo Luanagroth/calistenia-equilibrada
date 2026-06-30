@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowRight, Award, Clock, Dumbbell, Flame, TrendingUp, Bell, Trophy } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
+import Link from "next/link";
 
 const workoutExercises = [
   "Mobilidade cervical",
@@ -25,6 +27,16 @@ const habits = [
 ];
 
 export default function DashboardPage() {
+  const [localHabits, setLocalHabits] = useState(habits);
+
+  const toggleHabit = (id: string) => {
+    setLocalHabits((prev) =>
+      prev.map((habit) =>
+        habit.id === id ? { ...habit, checked: !habit.checked } : habit
+      )
+    );
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -43,10 +55,12 @@ export default function DashboardPage() {
           <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Dia 04 de 30
           </Badge>
-          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-            Iniciar treino de hoje
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link href="/aluno/treinos/dia-04">
+            <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+              Iniciar treino de hoje
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -125,13 +139,17 @@ export default function DashboardPage() {
               ))}
             </ul>
             <div className="flex items-center gap-3 pt-2">
-              <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                Iniciar treino de hoje
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-              <Button variant="ghost" className="text-slate-300 hover:text-white hover:bg-white/10">
-                Ver detalhes
-              </Button>
+              <Link href="/aluno/treinos/dia-04">
+                <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                  Iniciar treino de hoje
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              </Link>
+              <Link href="/aluno/treinos/dia-04">
+                <Button variant="ghost" className="text-slate-300 hover:text-white hover:bg-white/10">
+                  Ver detalhes
+                </Button>
+              </Link>
             </div>
           </CardContent>
         </Card>
@@ -150,13 +168,14 @@ export default function DashboardPage() {
             </div>
 
             <div className="space-y-4">
-              {habits.map((habit) => (
+              {localHabits.map((habit) => (
                 <label
                   key={habit.id}
-                  className="flex items-center gap-3 text-sm text-slate-200"
+                  className="flex items-center gap-3 text-sm text-slate-200 cursor-pointer"
                 >
                   <Checkbox
                     checked={habit.checked}
+                    onCheckedChange={() => toggleHabit(habit.id)}
                     className="data-checked:bg-emerald-400 data-checked:border-emerald-400"
                   />
                   {habit.label}
@@ -164,9 +183,11 @@ export default function DashboardPage() {
               ))}
             </div>
 
-            <Button variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
-              Ver checklist completo
-            </Button>
+            <Link href="/aluno/checklist">
+              <Button variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                Ver checklist completo
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
@@ -180,9 +201,11 @@ export default function DashboardPage() {
             <p className="text-sm font-medium text-yellow-300">Você está criando ritmo!</p>
             <p className="text-xs text-slate-300">Continue sem pressa. A consistência é mais importante que a intensidade.</p>
           </div>
-          <Button variant="ghost" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10">
-            Ver minhas conquistas
-          </Button>
+          <Link href="/aluno/evolucao">
+            <Button variant="ghost" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10">
+              Ver minhas conquistas
+            </Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

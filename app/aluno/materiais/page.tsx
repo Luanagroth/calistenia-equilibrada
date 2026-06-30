@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowRight, BookOpen, Download, FileText, Info, Lock, Play, Shield, TrendingUp, Trophy } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -87,6 +88,12 @@ const statusBadgeVariant = (status: MaterialStatus) => {
 };
 
 export default function MateriaisPage() {
+  const [activeMaterial, setActiveMaterial] = useState<number | null>(null);
+
+  const handleMaterialClick = (id: number) => {
+    setActiveMaterial(id);
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -106,6 +113,20 @@ export default function MateriaisPage() {
           </Button>
         </div>
       </div>
+
+      {activeMaterial && (
+        <Card className="border-yellow-400/20 bg-yellow-400/5">
+          <CardContent className="flex items-center gap-4 p-6">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-yellow-400 text-slate-950">
+              <BookOpen className="h-6 w-6" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-yellow-300">Material disponível na versão final.</p>
+              <p className="text-xs text-slate-300">Este eBook será liberado na atualização completa.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
@@ -157,11 +178,11 @@ export default function MateriaisPage() {
             <CardContent className="space-y-3">
               <p className="text-sm text-slate-300">{ebook.description}</p>
               <div className="flex flex-col gap-2">
-                <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                <Button onClick={() => handleMaterialClick(ebook.id)} className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
                   <Play className="mr-2 h-4 w-4 fill-current" />
                   Abrir material
                 </Button>
-                <Button variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                <Button onClick={() => handleMaterialClick(ebook.id)} variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
                   <Download className="mr-2 h-4 w-4" />
                   Baixar PDF
                 </Button>

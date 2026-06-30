@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 type DayStatus = "concluido" | "atual" | "disponivel" | "bloqueado" | "descanso";
 type WorkoutType = "Mobilidade" | "Estabilidade" | "Força funcional" | "Recuperação" | "Avaliação";
@@ -116,10 +117,12 @@ export default function TreinosPage() {
           <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Dia atual: 04
           </Badge>
-          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-            Continuar treino de hoje
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <Link href="/aluno/treinos/dia-04">
+            <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+              Continuar treino de hoje
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </Link>
         </div>
       </div>
 
@@ -164,9 +167,8 @@ export default function TreinosPage() {
                 const status = statusConfig(day.status);
                 const isActionable = day.status === "atual" || day.status === "disponivel";
 
-                return (
+                const CardContent = (
                   <div
-                    key={day.day}
                     className={cn(
                       "group relative flex flex-col gap-2 rounded-xl border p-3 transition-colors",
                       status.className
@@ -192,14 +194,23 @@ export default function TreinosPage() {
                         {day.duration}
                       </span>
                       {isActionable && (
-                        <Button
-                          size="icon"
-                          className="h-7 w-7 rounded-full bg-yellow-400 p-0 text-slate-950 hover:bg-yellow-300"
-                        >
+                        <span className="flex size-7 items-center justify-center rounded-full bg-yellow-400 text-slate-950">
                           <Play className="h-3.5 w-3.5 fill-current" />
-                        </Button>
+                        </span>
                       )}
                     </div>
+                  </div>
+                );
+
+                return (
+                  <div key={day.day}>
+                    {isActionable ? (
+                      <Link href={`/aluno/treinos/dia-${String(day.day).padStart(2, "0")}`}>
+                        {CardContent}
+                      </Link>
+                    ) : (
+                      CardContent
+                    )}
                   </div>
                 );
               })}
@@ -251,10 +262,12 @@ export default function TreinosPage() {
                 ))}
               </ul>
 
-              <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                Iniciar treino
-                <Play className="ml-2 h-4 w-4 fill-current" />
-              </Button>
+              <Link href="/aluno/treinos/dia-04">
+                <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                  Iniciar treino
+                  <Play className="ml-2 h-4 w-4 fill-current" />
+                </Button>
+              </Link>
             </CardContent>
           </Card>
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowRight, HelpCircle, Mail, MessageSquare, Send, Shield, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -55,6 +56,12 @@ const tickets = [
 ];
 
 export default function SuportePage() {
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const handleSubmit = () => {
+    setShowSuccess(true);
+  };
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -74,6 +81,20 @@ export default function SuportePage() {
           </Button>
         </div>
       </div>
+
+      {showSuccess && (
+        <Card className="border-emerald-400/20 bg-emerald-400/5">
+          <CardContent className="flex items-center gap-4 p-6">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-slate-950">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-emerald-300">Solicitação registrada.</p>
+              <p className="text-xs text-slate-300">Nossa equipe retornará em breve.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
@@ -129,7 +150,7 @@ export default function SuportePage() {
               />
             </div>
 
-            <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+            <Button onClick={handleSubmit} className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
               <Send className="mr-2 h-4 w-4" />
               Enviar solicitação
             </Button>

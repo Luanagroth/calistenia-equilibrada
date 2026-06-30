@@ -6,12 +6,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import Link from "next/link";
 
 type Category = "Todos" | "Mobilidade" | "Estabilidade" | "Força funcional" | "Recuperação";
 type Level = "Base" | "Inicial" | "Progressivo";
 
 interface Exercise {
   name: string;
+  slug: string;
   category: Category;
   level: Level;
   duration: string;
@@ -23,6 +25,7 @@ interface Exercise {
 const exercises: Exercise[] = [
   {
     name: "Mobilidade cervical",
+    slug: "mobilidade-cervical",
     category: "Mobilidade",
     level: "Base",
     duration: "5 min",
@@ -32,6 +35,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Rotação de ombros",
+    slug: "rotacao-de-ombros",
     category: "Mobilidade",
     level: "Base",
     duration: "3 min",
@@ -41,6 +45,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Alongamento torácico",
+    slug: "alongamento-toracico",
     category: "Mobilidade",
     level: "Inicial",
     duration: "4 min",
@@ -50,6 +55,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Agachamento profundo assistido",
+    slug: "agachamento-profundo-assistido",
     category: "Mobilidade",
     level: "Progressivo",
     duration: "3 séries de 8 repetições",
@@ -59,6 +65,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Mobilidade de tornozelo",
+    slug: "mobilidade-de-tornozelo",
     category: "Mobilidade",
     level: "Base",
     duration: "3 min",
@@ -68,6 +75,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Gato e camelo",
+    slug: "gato-e-camelo",
     category: "Estabilidade",
     level: "Base",
     duration: "4 min",
@@ -77,6 +85,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Prancha com joelhos",
+    slug: "prancha-com-joelhos",
     category: "Estabilidade",
     level: "Inicial",
     duration: "3 séries de 30s",
@@ -86,6 +95,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Ponte de glúteos",
+    slug: "ponte-de-gluteos",
     category: "Força funcional",
     level: "Base",
     duration: "3 séries de 12 repetições",
@@ -95,6 +105,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Bird dog",
+    slug: "bird-dog",
     category: "Estabilidade",
     level: "Progressivo",
     duration: "3 séries de 8 repetições por lado",
@@ -104,6 +115,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Flexão na parede",
+    slug: "flexao-na-parede",
     category: "Força funcional",
     level: "Inicial",
     duration: "3 séries de 8 repetições",
@@ -113,6 +125,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Flexão inclinada",
+    slug: "flexao-inclinada",
     category: "Força funcional",
     level: "Progressivo",
     duration: "3 séries de 10 repetições",
@@ -122,6 +135,7 @@ const exercises: Exercise[] = [
   },
   {
     name: "Respiração e relaxamento",
+    slug: "respiracao-e-relaxamento",
     category: "Recuperação",
     level: "Base",
     duration: "5 min",
@@ -243,9 +257,11 @@ export default function ExerciciosPage() {
                         ))}
                       </div>
 
-                      <Button variant="outline" className="mt-1 w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
-                        Ver detalhes
-                      </Button>
+                      <Link href={`/aluno/exercicios/${exercise.slug}`}>
+                        <Button variant="outline" className="mt-1 w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                          Ver detalhes
+                        </Button>
+                      </Link>
                     </CardContent>
                   </Card>
                 ))}
@@ -332,12 +348,14 @@ export default function ExerciciosPage() {
 
           <div className="flex flex-wrap gap-2">
             <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+              <Play className="mr-2 h-4 w-4 fill-current" />
               Adicionar ao treino de hoje
-              <Play className="ml-2 h-4 w-4 fill-current" />
             </Button>
-            <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-              Ver execução
-            </Button>
+            <Link href="/aluno/exercicios/agachamento-profundo-assistido">
+              <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                Ver execução
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

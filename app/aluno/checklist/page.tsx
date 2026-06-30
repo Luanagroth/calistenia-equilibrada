@@ -1,6 +1,7 @@
 "use client";
 
-import { CheckCircle2, Dumbbell, Droplets, Footprints, HeartPulse, Lightbulb, Moon, Shield, TrendingUp } from "lucide-react";
+import { useState } from "react";
+import { CheckCircle2, Dumbbell, Droplets, Footprints, HeartPulse, Lightbulb, Moon, Shield, TrendingUp, Trophy } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,7 +28,7 @@ interface MoodMetric {
   color: string;
 }
 
-const habits: Habit[] = [
+const initialHabits: Habit[] = [
   {
     id: "treino",
     title: "Fiz o treino de hoje",
@@ -125,6 +126,24 @@ const moodMetrics: MoodMetric[] = [
 ];
 
 export default function ChecklistPage() {
+  const [habits, setHabits] = useState<Habit[]>(initialHabits);
+  const [showSuccess, setShowSuccess] = useState(false);
+
+  const toggleHabit = (id: string) => {
+    setHabits((prev) =>
+      prev.map((habit) =>
+        habit.id === id
+          ? { ...habit, status: habit.status === "completed" ? "pending" : "completed" }
+          : habit
+      )
+    );
+    setShowSuccess(false);
+  };
+
+  const handleSave = () => {
+    setShowSuccess(true);
+  };
+
   const completedCount = habits.filter((h) => h.status === "completed").length;
   const totalHabits = habits.length;
   const progressPercentage = Math.round((completedCount / totalHabits) * 100);
@@ -142,11 +161,25 @@ export default function ChecklistPage() {
           <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Dia 04 de 30
           </Badge>
-          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+          <Button onClick={handleSave} className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
             Salvar checklist
           </Button>
         </div>
       </div>
+
+      {showSuccess && (
+        <Card className="border-emerald-400/20 bg-emerald-400/5">
+          <CardContent className="flex items-center gap-4 p-6">
+            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-slate-950">
+              <CheckCircle2 className="h-6 w-6" />
+            </div>
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-emerald-300">Checklist salvo com sucesso.</p>
+              <p className="text-xs text-slate-300">Seus hábitos foram registrados.</p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -177,10 +210,11 @@ export default function ChecklistPage() {
               {habits.map((habit) => (
                 <label
                   key={habit.id}
-                  className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-colors hover:border-white/10"
+                  className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-colors hover:border-white/10 cursor-pointer"
                 >
                   <Checkbox
                     checked={habit.status === "completed"}
+                    onCheckedChange={() => toggleHabit(habit.id)}
                     className="mt-0.5 data-checked:bg-emerald-400 data-checked:border-emerald-400"
                   />
                   <div className="flex-1 space-y-1">
