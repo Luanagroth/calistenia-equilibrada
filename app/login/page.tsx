@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { ArrowRight, CheckCircle2, Dumbbell, HeartPulse, Home, Lock, LineChart, Mail, BookOpen } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -8,17 +9,47 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { createClient } from "@/lib/supabase/client";
 
 export default function LoginPage() {
+  const router = useRouter();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+
+    const supabase = createClient();
+
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setError("E-mail ou senha inválidos. Tente novamente.");
+      setLoading(false);
+      return;
+    }
+
+    router.push("/aluno/dashboard");
+    router.refresh();
+  };
+
   return (
-    <div className="min-h-screen bg-slate-950">
+    <div className="min-h-screen bg-[#070A0D]">
       <div className="grid min-h-screen lg:grid-cols-2">
         <div className="flex flex-col justify-center px-8 py-12 lg:px-16">
           <div className="mx-auto w-full max-w-md">
-            <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+            <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
               Espaço do Aluno
             </Badge>
-            <h1 className="mt-6 text-3xl font-bold tracking-tight text-slate-100">
+            <h1 className="mt-6 text-3xl font-bold tracking-tight text-white">
               Acesse sua Jornada 30 Dias
             </h1>
             <p className="mt-4 text-slate-300">
@@ -66,53 +97,68 @@ export default function LoginPage() {
         </div>
 
         <div className="flex items-center justify-center px-8 py-12 lg:px-16">
-          <Card className="w-full max-w-md bg-white/5 border-white/10">
+          <Card className="w-full max-w-md bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-semibold text-slate-100">Entrar na plataforma</CardTitle>
+              <CardTitle className="text-2xl font-semibold text-white">Entrar na plataforma</CardTitle>
               <p className="text-sm text-slate-400">Use seu e-mail e senha para acessar sua área.</p>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-xs text-slate-300">E-mail</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="seu@email.com"
-                    className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/20"
-                  />
+              {error && (
+                <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 p-3 text-xs text-rose-300">
+                  {error}
                 </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-xs text-slate-300">Senha</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                  <Input
-                    id="password"
-                    type="password"
-                    placeholder="Sua senha"
-                    className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/20"
-                  />
+              )}
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-xs text-slate-300">E-mail</Label>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="seu@email.com"
+                      required
+                      className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    />
+                  </div>
                 </div>
-              </div>
 
-              <div className="flex items-center justify-end">
-                <button
-                  type="button"
-                  className="text-xs text-emerald-400 hover:text-emerald-300 transition-colors"
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-xs text-slate-300">Senha</Label>
+                  <div className="relative">
+                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                    <Input
+                      id="password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Sua senha"
+                      required
+                      className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-end">
+                  <button
+                    type="button"
+                    className="text-xs text-yellow-400 hover:text-yellow-300 transition-colors"
+                  >
+                    Esqueci minha senha
+                  </button>
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Esqueci minha senha
-                </button>
-              </div>
-
-              <Link href="/aluno/dashboard">
-                <Button className="w-full bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
-                  Entrar no Espaço do Aluno
-                  <ArrowRight className="ml-2 h-4 w-4" />
+                  {loading ? "Entrando..." : "Entrar no Espaço do Aluno"}
+                  {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
                 </Button>
-              </Link>
+              </form>
 
               <Link
                 href="/"

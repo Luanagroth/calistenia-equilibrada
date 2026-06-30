@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   BookOpen,
@@ -13,9 +13,11 @@ import {
   Flame,
   Clock,
   Trophy,
+  LogOut,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { label: "Início", href: "/aluno/dashboard", icon: Home },
@@ -33,10 +35,18 @@ type AlunoShellProps = {
 
 export function AlunoShell({ children }: AlunoShellProps) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/login");
+    router.refresh();
+  };
 
   return (
     <div className="min-h-screen bg-[#070A0D] text-white">
-      <aside className="fixed left-0 top-0 hidden h-screen w-72 border-r border-white/10 bg-[#0B1115] p-6 lg:block">
+      <aside className="fixed left-0 top-0 hidden h-screen w-72 border-r border-white/10 bg-[#0B1115] p-6 lg:flex lg:flex-col">
         <div className="mb-10">
           <div className="flex items-center gap-2">
             <div className="flex size-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950">
@@ -72,41 +82,48 @@ export function AlunoShell({ children }: AlunoShellProps) {
           })}
         </nav>
 
-        <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/30">
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-sm font-medium text-white">Jornada 30 Dias</p>
-            <Flame className="h-4 w-4 text-yellow-400" />
+        <div className="mt-auto">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/30">
+            <div className="flex items-center justify-between mb-3">
+              <p className="text-sm font-medium text-white">Jornada 30 Dias</p>
+              <Flame className="h-4 w-4 text-yellow-400" />
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-xs text-slate-400">
+                <span>Progresso</span>
+                <span className="text-yellow-400 font-medium">Dia 04</span>
+              </div>
+              <div className="h-1.5 rounded-full bg-white/10">
+                <div className="h-1.5 rounded-full bg-yellow-400" style={{ width: "13%" }} />
+              </div>
+              <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400">
+                <span className="flex items-center gap-1">
+                  <Flame className="h-3 w-3 text-emerald-400" />
+                  3 dias
+                </span>
+                <span className="flex items-center gap-1">
+                  <Clock className="h-3 w-3 text-emerald-400" />
+                  20 min
+                </span>
+              </div>
+            </div>
           </div>
-          <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Progresso</span>
-              <span className="text-yellow-400 font-medium">Dia 04</span>
-            </div>
-            <div className="h-1.5 rounded-full bg-white/10">
-              <div className="h-1.5 rounded-full bg-yellow-400" style={{ width: "13%" }} />
-            </div>
-            <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400">
-              <span className="flex items-center gap-1">
-                <Flame className="h-3 w-3 text-emerald-400" />
-                3 dias
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-3 w-3 text-emerald-400" />
-                20 min
-              </span>
-            </div>
-          </div>
-        </div>
 
-        <div className="absolute bottom-6 left-6 right-6 border-t border-white/10 pt-4" style={{ bottom: "220px" }}>
-          <div className="flex items-center gap-3">
+          <div className="mt-4 flex items-center gap-3">
             <div className="flex size-9 items-center justify-center rounded-full bg-white/10 text-sm font-medium text-white">
               L
             </div>
-            <div className="space-y-0.5">
+            <div className="space-y-0.5 flex-1">
               <p className="text-sm font-medium text-white">Lucas</p>
               <p className="text-[11px] text-slate-400">lucas@email.com</p>
             </div>
+            <button
+              onClick={handleLogout}
+              className="flex items-center justify-center rounded-xl p-2 text-slate-400 transition hover:bg-white/10 hover:text-white"
+              title="Sair"
+            >
+              <LogOut className="h-4 w-4" />
+            </button>
           </div>
         </div>
       </aside>
