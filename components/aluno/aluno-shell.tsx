@@ -2,7 +2,18 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BookOpen, CalendarCheck, Dumbbell, Headphones, Home, ListChecks } from "lucide-react";
+import {
+  BarChart3,
+  BookOpen,
+  CalendarCheck,
+  Dumbbell,
+  Headphones,
+  Home,
+  ListChecks,
+  Flame,
+  Clock,
+  Trophy,
+} from "lucide-react";
 
 import { cn } from "@/lib/utils";
 
@@ -24,14 +35,21 @@ export function AlunoShell({ children }: AlunoShellProps) {
   const pathname = usePathname();
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white">
-      <aside className="fixed left-0 top-0 hidden h-screen w-72 border-r border-white/10 bg-slate-950/95 p-6 lg:block">
+    <div className="min-h-screen bg-[#070A0D] text-white">
+      <aside className="fixed left-0 top-0 hidden h-screen w-72 border-r border-white/10 bg-[#0B1115] p-6 lg:block">
         <div className="mb-10">
-          <p className="text-sm font-medium text-emerald-300">Calistenia Equilibrada</p>
-          <h1 className="mt-1 text-2xl font-bold">Espaço do Aluno</h1>
+          <div className="flex items-center gap-2">
+            <div className="flex size-8 items-center justify-center rounded-lg bg-yellow-400 text-slate-950">
+              <Dumbbell className="h-4 w-4" />
+            </div>
+            <div>
+              <p className="text-xs font-medium text-yellow-400">Calistenia Equilibrada</p>
+              <h1 className="text-lg font-bold text-white">Espaço do Aluno</h1>
+            </div>
+          </div>
         </div>
 
-        <nav className="space-y-2">
+        <nav className="space-y-1.5">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
@@ -41,8 +59,10 @@ export function AlunoShell({ children }: AlunoShellProps) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition hover:bg-white/10 hover:text-white",
-                  isActive && "bg-emerald-400 text-slate-950 hover:bg-emerald-400 hover:text-slate-950"
+                  "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition",
+                  isActive
+                    ? "bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20"
+                    : "hover:bg-white/10 hover:text-white"
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -52,9 +72,42 @@ export function AlunoShell({ children }: AlunoShellProps) {
           })}
         </nav>
 
-        <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-          <p className="text-sm font-medium text-emerald-300">Acesso ativo</p>
-          <p className="mt-1 text-xs text-slate-300">Jornada liberada por 45 dias.</p>
+        <div className="absolute bottom-6 left-6 right-6 rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/30">
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-sm font-medium text-white">Jornada 30 Dias</p>
+            <Flame className="h-4 w-4 text-yellow-400" />
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
+              <span>Progresso</span>
+              <span className="text-yellow-400 font-medium">Dia 04</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-white/10">
+              <div className="h-1.5 rounded-full bg-yellow-400" style={{ width: "13%" }} />
+            </div>
+            <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400">
+              <span className="flex items-center gap-1">
+                <Flame className="h-3 w-3 text-emerald-400" />
+                3 dias
+              </span>
+              <span className="flex items-center gap-1">
+                <Clock className="h-3 w-3 text-emerald-400" />
+                20 min
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="absolute bottom-6 left-6 right-6 border-t border-white/10 pt-4" style={{ bottom: "220px" }}>
+          <div className="flex items-center gap-3">
+            <div className="flex size-9 items-center justify-center rounded-full bg-white/10 text-sm font-medium text-white">
+              L
+            </div>
+            <div className="space-y-0.5">
+              <p className="text-sm font-medium text-white">Lucas</p>
+              <p className="text-[11px] text-slate-400">lucas@email.com</p>
+            </div>
+          </div>
         </div>
       </aside>
 
@@ -62,7 +115,7 @@ export function AlunoShell({ children }: AlunoShellProps) {
         <div className="mx-auto max-w-6xl px-5 py-6 lg:px-8 lg:py-8">{children}</div>
       </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-slate-950/95 px-2 py-2 backdrop-blur lg:hidden">
+      <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#070A0D]/95 px-2 py-2 backdrop-blur lg:hidden">
         <div className="grid grid-cols-5 gap-1">
           {navItems.slice(0, 5).map((item) => {
             const Icon = item.icon;
@@ -73,8 +126,10 @@ export function AlunoShell({ children }: AlunoShellProps) {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex flex-col items-center justify-center rounded-2xl px-2 py-2 text-[11px] text-slate-400",
-                  isActive && "bg-emerald-400 text-slate-950"
+                  "flex flex-col items-center justify-center rounded-2xl px-2 py-2 text-[11px] transition",
+                  isActive
+                    ? "bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20"
+                    : "text-slate-400 hover:text-white"
                 )}
               >
                 <Icon className="mb-1 h-5 w-5" />

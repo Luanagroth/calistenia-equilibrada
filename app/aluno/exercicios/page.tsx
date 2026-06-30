@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRight, BookOpen, Dumbbell, Info, Play, Shield } from "lucide-react";
+import { ArrowRight, BookOpen, Dumbbell, Info, Play, Shield, ImageIcon, Clock } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -162,13 +162,13 @@ export default function ExerciciosPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Biblioteca de exercícios</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Biblioteca de exercícios</h1>
           <p className="mt-2 max-w-xl text-slate-300">
             Consulte os movimentos da jornada por categoria, nível e objetivo.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Base do método
           </Badge>
           <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
@@ -193,22 +193,29 @@ export default function ExerciciosPage() {
               {exercises
                 .filter((exercise) => category === "Todos" || exercise.category === category)
                 .map((exercise) => (
-                  <Card key={exercise.name} className="bg-white/5 border-white/10 transition-colors hover:border-white/20">
+                  <Card key={exercise.name} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30 transition-colors hover:border-white/20">
                     <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between gap-3">
-                        <CardTitle className="text-base font-semibold text-slate-100">{exercise.name}</CardTitle>
+                      <div className="flex items-center justify-between gap-3">
+                        <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white/5 border border-white/10">
+                          <Dumbbell className="h-5 w-5 text-yellow-400" />
+                        </div>
                         <Badge variant="outline" className={`${categoryBadgeVariant(exercise.category)} border text-[10px] px-1.5 py-0`}>
                           {exercise.category}
                         </Badge>
                       </div>
-                      <div className="flex flex-wrap items-center gap-2 pt-1">
-                        <Badge variant="outline" className={`${levelBadgeVariant(exercise.level)} border text-[10px] px-1.5 py-0`}>
-                          {exercise.level}
-                        </Badge>
-                        <span className="flex items-center gap-1 text-[11px] text-slate-400">
-                          <Dumbbell className="h-3 w-3 text-emerald-400" />
-                          {exercise.duration}
-                        </span>
+                      <div className="space-y-1 pt-2">
+                        <CardTitle className="text-base font-semibold text-white leading-tight">
+                          {exercise.name}
+                        </CardTitle>
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge variant="outline" className={`${levelBadgeVariant(exercise.level)} border text-[10px] px-1.5 py-0`}>
+                            {exercise.level}
+                          </Badge>
+                          <span className="flex items-center gap-1 text-[11px] text-slate-400">
+                            <Clock className="h-3 w-3 text-yellow-400" />
+                            {exercise.duration}
+                          </span>
+                        </div>
                       </div>
                     </CardHeader>
                     <CardContent className="space-y-3">
@@ -248,10 +255,10 @@ export default function ExerciciosPage() {
       </Tabs>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <BookOpen className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <BookOpen className="h-5 w-5 text-yellow-400" />
               Como usar a biblioteca
             </CardTitle>
           </CardHeader>
@@ -277,10 +284,10 @@ export default function ExerciciosPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Shield className="h-5 w-5 text-yellow-400" />
               Regra de segurança
             </CardTitle>
           </CardHeader>
@@ -292,34 +299,39 @@ export default function ExerciciosPage() {
         </Card>
       </div>
 
-      <Card className="border-emerald-400/20 bg-emerald-400/5">
+      <Card className="border-yellow-400/20 bg-yellow-400/5 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Play className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <Play className="h-5 w-5 text-yellow-400" />
             Exercício recomendado hoje
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <h3 className="text-lg font-semibold text-slate-100">Agachamento profundo assistido</h3>
-            <p className="mt-1 text-sm text-slate-300">
-              Melhorar mobilidade de quadril, tornozelos e controle corporal.
-            </p>
+          <div className="flex items-center gap-4">
+            <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-white/5 border border-white/10">
+              <ImageIcon className="h-8 w-8 text-yellow-400" />
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold text-white">Agachamento profundo assistido</h3>
+              <p className="mt-1 text-sm text-slate-300">
+                Melhorar mobilidade de quadril, tornozelos e controle corporal.
+              </p>
+            </div>
           </div>
 
           <div className="flex flex-wrap gap-3 text-xs text-slate-400">
             <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
-              <Dumbbell className="h-3 w-3 text-emerald-400" />
+              <Dumbbell className="h-3 w-3 text-yellow-400" />
               3 séries de 8 repetições
             </span>
             <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
-              <BookOpen className="h-3 w-3 text-emerald-400" />
+              <BookOpen className="h-3 w-3 text-yellow-400" />
               Mobilidade
             </span>
           </div>
 
           <div className="flex flex-wrap gap-2">
-            <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+            <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
               Adicionar ao treino de hoje
               <Play className="ml-2 h-4 w-4 fill-current" />
             </Button>

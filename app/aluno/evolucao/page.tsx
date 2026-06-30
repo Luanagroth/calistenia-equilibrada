@@ -16,10 +16,10 @@ const initialAssessment = [
 ];
 
 const currentMetrics = [
-  { label: "Energia", value: 7, max: 10, icon: <TrendingUp className="h-4 w-4 text-emerald-400" /> },
-  { label: "Sono", value: 6, max: 10, icon: <HeartPulse className="h-4 w-4 text-indigo-400" /> },
-  { label: "Dor / Desconforto", value: 2, max: 10, icon: <Shield className="h-4 w-4 text-rose-400" /> },
-  { label: "Disposição para treinar", value: 8, max: 10, icon: <Target className="h-4 w-4 text-amber-400" /> },
+  { label: "Energia", value: 7, max: 10, icon: <TrendingUp className="h-4 w-4 text-yellow-400" />, color: "text-yellow-300" },
+  { label: "Sono", value: 6, max: 10, icon: <HeartPulse className="h-4 w-4 text-indigo-400" />, color: "text-indigo-300" },
+  { label: "Dor / Desconforto", value: 2, max: 10, icon: <Shield className="h-4 w-4 text-rose-400" />, color: "text-rose-300" },
+  { label: "Disposição para treinar", value: 8, max: 10, icon: <Target className="h-4 w-4 text-amber-400" />, color: "text-amber-300" },
 ];
 
 const journeyComparison = [
@@ -44,72 +44,72 @@ export default function EvolucaoPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Sua evolução</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Sua evolução</h1>
           <p className="mt-2 max-w-xl text-slate-300">
             Acompanhe sua constância, compare seu ponto de partida e veja como pequenas melhorias se acumulam ao longo da jornada.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Dia 04 de 30
           </Badge>
-          <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
             Registrar evolução de hoje
           </Button>
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Progresso da jornada</CardTitle>
-            <TrendingUp className="h-4 w-4 text-emerald-400" />
+            <TrendingUp className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">13%</div>
-            <Progress value={13} className="mt-3 h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400" />
+            <div className="text-2xl font-bold text-white">13%</div>
+            <Progress value={13} className="mt-3 h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400" />
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Treinos concluídos</CardTitle>
-            <Flag className="h-4 w-4 text-emerald-400" />
+            <Flag className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3</div>
+            <div className="text-2xl font-bold text-white">3</div>
             <p className="text-xs text-slate-400">Sessões finalizadas</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Checklists preenchidos</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            <CheckCircle2 className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">4</div>
+            <div className="text-2xl font-bold text-white">4</div>
             <p className="text-xs text-slate-400">Registros de hábitos</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Sequência atual</CardTitle>
-            <Trophy className="h-4 w-4 text-emerald-400" />
+            <Trophy className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">3 dias</div>
+            <div className="text-2xl font-bold text-white">3 dias</div>
             <p className="text-xs text-slate-400">Continue assim</p>
           </CardContent>
         </Card>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <BarChart3 className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <BarChart3 className="h-5 w-5 text-yellow-400" />
               Ponto de partida
             </CardTitle>
             <p className="text-xs text-slate-400">Avaliação inicial — Dia 1</p>
@@ -125,28 +125,28 @@ export default function EvolucaoPage() {
                 </div>
                 <Progress
                   value={(item.value / item.max) * 100}
-                  className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+                  className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400"
                 />
               </div>
             ))}
             <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
               <div>
                 <p className="text-xs text-slate-400">Pontuação inicial</p>
-                <p className="text-lg font-semibold text-slate-100">
+                <p className="text-lg font-semibold text-white">
                   {initialScore}/{initialTotal}
                 </p>
               </div>
-              <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+              <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
                 Base
               </Badge>
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <HeartPulse className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <HeartPulse className="h-5 w-5 text-yellow-400" />
               Como você está hoje
             </CardTitle>
             <p className="text-xs text-slate-400">Dia 04 — dados atuais</p>
@@ -163,13 +163,13 @@ export default function EvolucaoPage() {
                       {metric.icon}
                       {metric.label}
                     </span>
-                    <span className="text-sm font-semibold text-emerald-300">
+                    <span className={`text-sm font-semibold ${metric.color}`}>
                       {metric.value}/{metric.max}
                     </span>
                   </div>
                   <Progress
                     value={(metric.value / metric.max) * 100}
-                    className="h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+                    className="h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400"
                   />
                 </div>
               ))}
@@ -178,10 +178,10 @@ export default function EvolucaoPage() {
         </Card>
       </div>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <TrendingUp className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <TrendingUp className="h-5 w-5 text-yellow-400" />
             Comparativo da jornada
           </CardTitle>
           <p className="text-xs text-slate-400">Veja o quanto você já evoluiu desde o início</p>
@@ -210,17 +210,17 @@ export default function EvolucaoPage() {
                   </div>
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-xs">
-                      <span className="text-emerald-300">Atual</span>
-                      <span className="text-emerald-300">
+                      <span className="text-yellow-300">Atual</span>
+                      <span className="text-yellow-300">
                         {item.current}{unit}
                       </span>
                     </div>
                     <Progress
                       value={currentPercent}
-                      className="h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+                      className="h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400"
                     />
                   </div>
-                  <div className="flex items-center gap-1 text-xs text-emerald-300">
+                  <div className="flex items-center gap-1 text-xs text-yellow-300">
                     <TrendingUp className="h-3 w-3" />
                     +{item.current - item.initial}{unit}
                   </div>
@@ -231,10 +231,10 @@ export default function EvolucaoPage() {
         </CardContent>
       </Card>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Calendar className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <Calendar className="h-5 w-5 text-yellow-400" />
             Linha do tempo
           </CardTitle>
           <p className="text-xs text-slate-400">Marcos da sua jornada até aqui</p>
@@ -245,7 +245,7 @@ export default function EvolucaoPage() {
             <div className="space-y-6">
               {timelineEvents.map((event) => (
                 <div key={event.day} className="relative flex items-start gap-4">
-                  <div className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-slate-950">
+                  <div className="relative z-10 flex size-8 shrink-0 items-center justify-center rounded-full border border-white/10 bg-[#070A0D]">
                     {event.icon}
                   </div>
                   <div className="flex-1 space-y-1">
@@ -263,10 +263,10 @@ export default function EvolucaoPage() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Lightbulb className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Lightbulb className="h-5 w-5 text-yellow-400" />
               Próxima reavaliação
             </CardTitle>
           </CardHeader>
@@ -281,10 +281,10 @@ export default function EvolucaoPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Trophy className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Trophy className="h-5 w-5 text-yellow-400" />
               Depois dos 30 dias
             </CardTitle>
           </CardHeader>

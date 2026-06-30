@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { cn } from "@/lib/utils";
 
 type DayStatus = "concluido" | "atual" | "disponivel" | "bloqueado" | "descanso";
 type WorkoutType = "Mobilidade" | "Estabilidade" | "Força funcional" | "Recuperação" | "Avaliação";
@@ -77,8 +78,8 @@ const statusConfig = (status: DayStatus) => {
     case "atual":
       return {
         label: "Atual",
-        className: "border-emerald-400 bg-emerald-400/10",
-        icon: <Play className="h-4 w-4 text-emerald-400" />,
+        className: "border-yellow-400 bg-yellow-400/10",
+        icon: <Play className="h-4 w-4 text-yellow-400" />,
       };
     case "disponivel":
       return {
@@ -106,33 +107,33 @@ export default function TreinosPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Plano de 30 dias</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Plano de 30 dias</h1>
           <p className="mt-2 max-w-xl text-slate-300">
             Siga sua jornada no seu ritmo, respeitando seus limites e registando cada treino concluído.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Dia atual: 04
           </Badge>
-          <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
             Continuar treino de hoje
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium text-slate-300">Progresso geral</CardTitle>
-          <TrendingUp className="h-4 w-4 text-emerald-400" />
+          <TrendingUp className="h-4 w-4 text-yellow-400" />
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-baseline justify-between">
-            <div className="text-2xl font-bold">4 de 30 dias</div>
+            <div className="text-2xl font-bold text-white">4 de 30 dias</div>
             <div className="text-sm text-slate-400">13%</div>
           </div>
-          <Progress value={13} className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400" />
+          <Progress value={13} className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400" />
           <div className="flex flex-wrap gap-4 pt-1 text-xs text-slate-400">
             <span className="flex items-center gap-1.5">
               <Flame className="h-3.5 w-3.5 text-emerald-400" />
@@ -150,10 +151,10 @@ export default function TreinosPage() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-[1fr_340px]">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Dumbbell className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Dumbbell className="h-5 w-5 text-yellow-400" />
               Jornada Calistenia Equilibrada
             </CardTitle>
           </CardHeader>
@@ -193,7 +194,7 @@ export default function TreinosPage() {
                       {isActionable && (
                         <Button
                           size="icon"
-                          className="h-7 w-7 rounded-full bg-emerald-400 p-0 text-slate-950 hover:bg-emerald-400/90"
+                          className="h-7 w-7 rounded-full bg-yellow-400 p-0 text-slate-950 hover:bg-yellow-300"
                         >
                           <Play className="h-3.5 w-3.5 fill-current" />
                         </Button>
@@ -207,17 +208,17 @@ export default function TreinosPage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Dumbbell className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                <Dumbbell className="h-5 w-5 text-yellow-400" />
                 Treino de hoje
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">Dia 04 — Mobilidade + estabilidade</h3>
+                  <h3 className="font-semibold text-white">Dia 04 — Mobilidade + estabilidade</h3>
                 </div>
                 <p className="mt-2 text-sm text-slate-300">
                   Melhore a mobilidade, ative o core e crie consciência corporal.
@@ -226,11 +227,11 @@ export default function TreinosPage() {
 
               <div className="flex flex-wrap gap-3 text-xs text-slate-400">
                 <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
-                  <Clock className="h-3 w-3 text-emerald-400" />
+                  <Clock className="h-3 w-3 text-yellow-400" />
                   20 min
                 </span>
                 <span className="flex items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1">
-                  <Dumbbell className="h-3 w-3 text-emerald-400" />
+                  <Dumbbell className="h-3 w-3 text-yellow-400" />
                   Base
                 </span>
               </div>
@@ -250,14 +251,14 @@ export default function TreinosPage() {
                 ))}
               </ul>
 
-              <Button className="w-full bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+              <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
                 Iniciar treino
                 <Play className="ml-2 h-4 w-4 fill-current" />
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardContent className="flex items-start gap-3 p-5">
               <Shield className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
               <div className="space-y-1">
@@ -273,5 +274,3 @@ export default function TreinosPage() {
     </div>
   );
 }
-
-import { cn } from "@/lib/utils";

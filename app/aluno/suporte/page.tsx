@@ -59,13 +59,13 @@ export default function SuportePage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Suporte</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Suporte</h1>
           <p className="mt-2 max-w-xl text-slate-300">
             Precisa de ajuda com acesso, materiais, plataforma ou dúvidas sobre a jornada? Envie sua solicitação.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Atendimento ao aluno
           </Badge>
           <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
@@ -76,10 +76,10 @@ export default function SuportePage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <MessageSquare className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <MessageSquare className="h-5 w-5 text-yellow-400" />
               Abrir solicitação
             </CardTitle>
             <p className="text-xs text-slate-400">Preencha os dados abaixo e entraremos em contato.</p>
@@ -91,7 +91,7 @@ export default function SuportePage() {
                 <Input
                   id="name"
                   placeholder="Seu nome"
-                  className="border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/20"
+                  className="border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 />
               </div>
               <div className="space-y-2">
@@ -100,7 +100,7 @@ export default function SuportePage() {
                   id="email"
                   type="email"
                   placeholder="seu@email.com"
-                  className="border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/20"
+                  className="border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 />
               </div>
             </div>
@@ -111,7 +111,7 @@ export default function SuportePage() {
                 {supportTypes.map((type) => (
                   <div
                     key={type.value}
-                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300 transition-colors hover:border-emerald-400/30 hover:bg-emerald-400/5"
+                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5"
                   >
                     <span className="flex size-3 shrink-0 rounded-full border border-white/20" />
                     {type.label}
@@ -125,11 +125,11 @@ export default function SuportePage() {
               <Textarea
                 id="message"
                 placeholder="Descreva sua dúvida ou problema com o máximo de detalhes possível..."
-                className="min-h-[120px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/20"
+                className="min-h-[120px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
               />
             </div>
 
-            <Button className="w-full bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+            <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
               <Send className="mr-2 h-4 w-4" />
               Enviar solicitação
             </Button>
@@ -137,10 +137,10 @@ export default function SuportePage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <HelpCircle className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                <HelpCircle className="h-5 w-5 text-yellow-400" />
                 Antes de enviar
               </CardTitle>
             </CardHeader>
@@ -166,10 +166,10 @@ export default function SuportePage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg">
-                <Mail className="h-5 w-5 text-emerald-400" />
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                <Mail className="h-5 w-5 text-yellow-400" />
                 Canais de atendimento
               </CardTitle>
             </CardHeader>
@@ -177,23 +177,23 @@ export default function SuportePage() {
               <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
                 <div className="space-y-1">
                   <p className="text-xs text-slate-400">E-mail</p>
-                  <p className="text-sm font-medium text-slate-200">suporte@calisteniaequilibrada.com</p>
+                  <p className="text-sm font-medium text-white">suporte@calisteniaequilibrada.com</p>
                 </div>
-                <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300 text-[10px] px-1.5 py-0">
+                <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300 text-[10px] px-1.5 py-0">
                   Responderemos em breve
                 </Badge>
               </div>
               <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
                 <div className="space-y-1">
                   <p className="text-xs text-slate-400">Prazo de resposta</p>
-                  <p className="text-sm font-medium text-slate-200">Até 2 dias úteis</p>
+                  <p className="text-sm font-medium text-white">Até 2 dias úteis</p>
                 </div>
-                <Clock className="h-4 w-4 text-emerald-400" />
+                <Clock className="h-4 w-4 text-yellow-400" />
               </div>
               <div className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3">
                 <div className="space-y-1">
                   <p className="text-xs text-slate-400">Status</p>
-                  <p className="text-sm font-medium text-slate-200">Atendimento em horário comercial</p>
+                  <p className="text-sm font-medium text-white">Atendimento em horário comercial</p>
                 </div>
                 <CheckCircle2 className="h-4 w-4 text-emerald-400" />
               </div>
@@ -202,10 +202,10 @@ export default function SuportePage() {
         </div>
       </div>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <HelpCircle className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <HelpCircle className="h-5 w-5 text-yellow-400" />
             Perguntas frequentes
           </CardTitle>
         </CardHeader>
@@ -221,10 +221,10 @@ export default function SuportePage() {
         </CardContent>
       </Card>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Clock className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <Clock className="h-5 w-5 text-yellow-400" />
             Histórico de solicitações
           </CardTitle>
         </CardHeader>
@@ -236,7 +236,7 @@ export default function SuportePage() {
                 className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4"
               >
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-slate-200">{ticket.title}</p>
+                  <p className="text-sm font-medium text-white">{ticket.title}</p>
                   <p className="text-[10px] text-slate-500">{ticket.id} • {ticket.date}</p>
                 </div>
                 <Badge
@@ -266,16 +266,14 @@ export default function SuportePage() {
       </Card>
 
       <Card className="border-rose-400/10 bg-rose-400/5">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Shield className="h-5 w-5 text-rose-400" />
-            Sobre dores e limitações
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-relaxed text-slate-300">
-            Este suporte não substitui avaliação médica, fisioterapêutica ou acompanhamento de profissional de educação física. Dor aguda, tontura, formigamento, falta de ar intensa ou desconforto forte são sinais para interromper o exercício e procurar orientação profissional.
-          </p>
+        <CardContent className="flex items-start gap-3 p-5">
+          <Shield className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-slate-200">Sobre dores e limitações</p>
+            <p className="text-xs leading-relaxed text-slate-400">
+              Este suporte não substitui avaliação médica, fisioterapêutica ou acompanhamento de profissional de educação física. Dor aguda, tontura, formigamento, falta de ar intensa ou desconforto forte são sinais para interromper o exercício e procurar orientação profissional.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

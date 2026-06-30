@@ -32,7 +32,7 @@ const habits: Habit[] = [
     id: "treino",
     title: "Fiz o treino de hoje",
     description: "Completei a sessão planejada para o dia.",
-    icon: <Dumbbell className="h-4 w-4 text-emerald-400" />,
+    icon: <Dumbbell className="h-4 w-4 text-yellow-400" />,
     status: "completed",
   },
   {
@@ -98,8 +98,8 @@ const moodMetrics: MoodMetric[] = [
     label: "Energia",
     value: 7,
     max: 10,
-    icon: <TrendingUp className="h-4 w-4 text-emerald-400" />,
-    color: "text-emerald-300",
+    icon: <TrendingUp className="h-4 w-4 text-yellow-400" />,
+    color: "text-yellow-300",
   },
   {
     label: "Sono",
@@ -133,29 +133,29 @@ export default function ChecklistPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Checklist diário</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Checklist diário</h1>
           <p className="mt-2 max-w-xl text-slate-300">
             Registre sua constância, acompanhe seus hábitos e observe como seu corpo responde ao longo da jornada.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             Dia 04 de 30
           </Badge>
-          <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
             Salvar checklist
           </Button>
         </div>
       </div>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <CardTitle className="text-sm font-medium text-slate-300">Sua consistência hoje</CardTitle>
           <CheckCircle2 className="h-4 w-4 text-emerald-400" />
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-baseline justify-between">
-            <div className="text-2xl font-bold">
+            <div className="text-2xl font-bold text-white">
               {completedCount} de {totalHabits} hábitos concluídos
             </div>
             <div className="text-sm text-slate-400">{progressPercentage}%</div>
@@ -168,9 +168,9 @@ export default function ChecklistPage() {
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="text-lg">Hábitos do dia</CardTitle>
+            <CardTitle className="text-lg text-white">Hábitos do dia</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -204,9 +204,9 @@ export default function ChecklistPage() {
         </Card>
 
         <div className="space-y-6">
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardHeader>
-              <CardTitle className="text-lg">Como você se sentiu hoje?</CardTitle>
+              <CardTitle className="text-lg text-white">Como você se sentiu hoje?</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-3">
@@ -226,7 +226,7 @@ export default function ChecklistPage() {
                     </div>
                     <Progress
                       value={(metric.value / metric.max) * 100}
-                      className="h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+                      className="h-1.5 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400"
                     />
                   </div>
                 ))}
@@ -234,14 +234,14 @@ export default function ChecklistPage() {
             </CardContent>
           </Card>
 
-          <Card className="bg-white/5 border-white/10">
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
             <CardHeader>
-              <CardTitle className="text-lg">Observações do dia</CardTitle>
+              <CardTitle className="text-lg text-white">Observações do dia</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <Textarea
                 placeholder="Ex: senti mais mobilidade no quadril, tive dificuldade na prancha, dormi pouco..."
-                className="min-h-[100px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-emerald-400/50 focus-visible:ring-emerald-400/20"
+                className="min-h-[100px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
               />
               <p className="text-[11px] text-slate-500">
                 Este registro é privado e ajuda você a identificar padrões ao longo da semana.
@@ -252,10 +252,10 @@ export default function ChecklistPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Shield className="h-5 w-5 text-yellow-400" />
               Regra de segurança
             </CardTitle>
           </CardHeader>
@@ -266,25 +266,25 @@ export default function ChecklistPage() {
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <TrendingUp className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <TrendingUp className="h-5 w-5 text-yellow-400" />
               Resumo da semana
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-slate-100">3</div>
+                <div className="text-2xl font-bold text-white">3</div>
                 <p className="text-xs text-slate-400">Treinos concluídos</p>
               </div>
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-slate-100">4</div>
+                <div className="text-2xl font-bold text-white">4</div>
                 <p className="text-xs text-slate-400">Checklists preenchidos</p>
               </div>
               <div className="space-y-1">
-                <div className="text-2xl font-bold text-slate-100">3 dias</div>
+                <div className="text-2xl font-bold text-white">3 dias</div>
                 <p className="text-xs text-slate-400">Sequência atual</p>
               </div>
               <div className="space-y-1">

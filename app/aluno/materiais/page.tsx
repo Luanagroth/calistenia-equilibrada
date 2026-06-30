@@ -72,7 +72,7 @@ const ebooks: Ebook[] = [
 const statusBadgeVariant = (status: MaterialStatus) => {
   switch (status) {
     case "Recomendado para começar":
-      return "border-emerald-400/30 bg-emerald-400/10 text-emerald-300";
+      return "border-yellow-400/30 bg-yellow-400/10 text-yellow-300";
     case "Essencial":
       return "border-sky-400/30 bg-sky-400/10 text-sky-300";
     case "Em uso na jornada":
@@ -91,26 +91,26 @@ export default function MateriaisPage() {
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Materiais da jornada</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Materiais da jornada</h1>
           <p className="mt-2 max-w-xl text-slate-300">
             Acesse os 7 eBooks premium do Método Calistenia Equilibrada na ordem recomendada para acompanhar sua evolução.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
             7 eBooks premium
           </Badge>
-          <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
             Continuar de onde parei
             <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
         </div>
       </div>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <BookOpen className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <BookOpen className="h-5 w-5 text-yellow-400" />
             Como usar os materiais
           </CardTitle>
         </CardHeader>
@@ -137,10 +137,10 @@ export default function MateriaisPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ebooks.map((ebook) => (
-          <Card key={ebook.id} className="bg-white/5 border-white/10 transition-colors hover:border-white/20">
+          <Card key={ebook.id} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30 transition-colors hover:border-white/20">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between gap-3">
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-semibold text-slate-400">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-semibold text-yellow-400">
                   {String(ebook.id).padStart(2, "0")}
                 </div>
                 <Badge variant="outline" className={`${statusBadgeVariant(ebook.status)} border text-[10px] px-1.5 py-0`}>
@@ -148,7 +148,7 @@ export default function MateriaisPage() {
                 </Badge>
               </div>
               <div className="space-y-1 pt-2">
-                <CardTitle className="text-base font-semibold text-slate-100 leading-tight">
+                <CardTitle className="text-base font-semibold text-white leading-tight">
                   {ebook.title}
                 </CardTitle>
                 <p className="text-[11px] text-slate-400">{ebook.category}</p>
@@ -157,7 +157,7 @@ export default function MateriaisPage() {
             <CardContent className="space-y-3">
               <p className="text-sm text-slate-300">{ebook.description}</p>
               <div className="flex flex-col gap-2">
-                <Button className="w-full bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+                <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
                   <Play className="mr-2 h-4 w-4 fill-current" />
                   Abrir material
                 </Button>
@@ -172,10 +172,10 @@ export default function MateriaisPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <TrendingUp className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <TrendingUp className="h-5 w-5 text-yellow-400" />
               Ordem recomendada
             </CardTitle>
           </CardHeader>
@@ -184,41 +184,41 @@ export default function MateriaisPage() {
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-slate-200">Dia 1:</span> eBook 1 + avaliação inicial
+                  <span className="font-medium text-white">Dia 1:</span> eBook 1 + avaliação inicial
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-slate-200">Dias 1 a 7:</span> eBooks 2, 3 e 4
+                  <span className="font-medium text-white">Dias 1 a 7:</span> eBooks 2, 3 e 4
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-slate-200">Dias 8 a 20:</span> eBooks 4 e 5
+                  <span className="font-medium text-white">Dias 8 a 20:</span> eBooks 4 e 5
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-slate-200">Dias 1 a 30:</span> eBook 7 como acompanhamento
+                  <span className="font-medium text-white">Dias 1 a 30:</span> eBook 7 como acompanhamento
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-slate-200">Durante toda a jornada:</span> eBook 6 como apoio de recuperação
+                  <span className="font-medium text-white">Durante toda a jornada:</span> eBook 6 como apoio de recuperação
                 </div>
               </li>
             </ul>
           </CardContent>
         </Card>
 
-        <Card className="bg-white/5 border-white/10">
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg">
-              <Shield className="h-5 w-5 text-emerald-400" />
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Shield className="h-5 w-5 text-yellow-400" />
               Importante
             </CardTitle>
           </CardHeader>
@@ -234,10 +234,10 @@ export default function MateriaisPage() {
         </Card>
       </div>
 
-      <Card className="bg-white/5 border-white/10">
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg">
-            <Trophy className="h-5 w-5 text-emerald-400" />
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <Trophy className="h-5 w-5 text-yellow-400" />
             Depois dos 30 dias
           </CardTitle>
         </CardHeader>
