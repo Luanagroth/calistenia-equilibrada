@@ -12,7 +12,6 @@ import {
   ListChecks,
   Flame,
   Clock,
-  Trophy,
   LogOut,
 } from "lucide-react";
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useActionState } from "react";
 import { ArrowLeft, User, Mail, Lock, Calendar, CheckCircle2 } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
@@ -9,29 +10,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
+import { createStudentAccessAction } from "./actions";
 
 type DurationOption = "30" | "45" | "60";
 
 export default function AdminNovoAlunoPage() {
-  const [form, setForm] = useState({
-    name: "",
-    email: "",
-    password: "",
-    duration: "45" as DurationOption,
-    notes: "",
-  });
-  const [toast, setToast] = useState<string | null>(null);
-
-  const showToast = (message: string) => {
-    setToast(message);
-    setTimeout(() => setToast(null), 3000);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    showToast("Aluno criado na versão final.");
-    setForm({ name: "", email: "", password: "", duration: "45", notes: "" });
-  };
+  const [state, formAction] = useActionState(createStudentAccessAction, null);
+  const [selectedDuration, setSelectedDuration] = useState<DurationOption>("45");
 
   return (
     <div className="space-y-8">
@@ -52,15 +37,14 @@ export default function AdminNovoAlunoPage() {
           <CardTitle className="text-lg text-white">Dados do aluno</CardTitle>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form action={formAction} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="name" className="text-xs text-slate-300">Nome completo</Label>
+              <Label htmlFor="fullName" className="text-xs text-slate-300">Nome completo</Label>
               <div className="relative">
                 <User className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 <Input
-                  id="name"
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
+                  id="fullName"
+                  name="fullName"
                   placeholder="Nome do aluno"
                   required
                   className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
@@ -74,9 +58,8 @@ export default function AdminNovoAlunoPage() {
                 <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 <Input
                   id="email"
+                  name="email"
                   type="email"
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   placeholder="aluno@email.com"
                   required
                   className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
@@ -85,14 +68,13 @@ export default function AdminNovoAlunoPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-xs text-slate-300">Senha temporária</Label>
+              <Label htmlFor="temporaryPassword" className="text-xs text-slate-300">Senha temporária</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                 <Input
-                  id="password"
+                  id="temporaryPassword"
+                  name="temporaryPassword"
                   type="password"
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
                   placeholder="Senha inicial"
                   required
                   className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
@@ -102,14 +84,15 @@ export default function AdminNovoAlunoPage() {
 
             <div className="space-y-2">
               <Label className="text-xs text-slate-300">Duração do acesso</Label>
+              <input type="hidden" name="durationDays" value={selectedDuration} />
               <div className="grid grid-cols-3 gap-2">
                 {(["30", "45", "60"] as DurationOption[]).map((duration) => (
                   <button
                     key={duration}
                     type="button"
-                    onClick={() => setForm({ ...form, duration })}
+                    onClick={() => setSelectedDuration(duration)}
                     className={`flex items-center justify-center gap-2 rounded-xl border px-4 py-2 text-sm transition ${
-                      form.duration === duration
+                      selectedDuration === duration
                         ? "border-yellow-400 bg-yellow-400/10 text-yellow-300"
                         : "border-white/10 bg-white/5 text-slate-300 hover:bg-white/10"
                     }`}
@@ -125,12 +108,31 @@ export default function AdminNovoAlunoPage() {
               <Label htmlFor="notes" className="text-xs text-slate-300">Observações</Label>
               <textarea
                 id="notes"
-                value={form.notes}
-                onChange={(e) => setForm({ ...form, notes: e.target.value })}
+                name="notes"
                 placeholder="Ex: aluno indicação amigo, oferta promocional..."
                 className="min-h-[100px] w-full rounded-xl border border-white/10 bg-white/5 p-3 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
               />
             </div>
+
+            {state?.error && (
+              <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 p-3 text-xs text-rose-300">
+                {state.error}
+              </div>
+            )}
+
+            {state?.success && (
+              <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-4">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                  <div>
+                    <p className="text-sm font-medium text-emerald-300">{state.message}</p>
+                    <p className="text-xs text-slate-300 mt-1">
+                      Envie o e-mail e senha temporária ao aluno.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            )}
 
             <Button
               type="submit"
@@ -141,15 +143,6 @@ export default function AdminNovoAlunoPage() {
           </form>
         </CardContent>
       </Card>
-
-      {toast && (
-        <div className="fixed bottom-6 right-6 z-50 rounded-2xl border border-emerald-400/20 bg-emerald-400/5 px-6 py-4 shadow-2xl shadow-black/30">
-          <div className="flex items-center gap-3">
-            <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-            <p className="text-sm text-emerald-300">{toast}</p>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
