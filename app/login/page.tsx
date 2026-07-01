@@ -37,7 +37,31 @@ export default function LoginPage() {
       return;
     }
 
-    router.push("/aluno/dashboard");
+    const { data: { user } } = await supabase.auth.getUser();
+
+    if (!user) {
+      setError("Não foi possível identificar o usuário.");
+      setLoading(false);
+      return;
+    }
+
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("role, status")
+      .eq("id", user.id)
+      .maybeSingle();
+
+    if (!profile || profile.status === "blocked" || profile.status === "expired") {
+      router.push("/acesso-expirado");
+      router.refresh();
+      return;
+    }
+
+    if (profile.role === "admin") {
+      router.push("/admin");
+    } else {
+      router.push("/aluno/dashboard");
+    }
     router.refresh();
   };
 
