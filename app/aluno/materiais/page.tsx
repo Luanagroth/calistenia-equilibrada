@@ -1,99 +1,72 @@
 "use client";
 
-import { useState } from "react";
-import { ArrowRight, BookOpen, Download, FileText, Info, Lock, Play, Shield, TrendingUp, Trophy } from "lucide-react";
+import { ArrowRight, BookOpen, Download, Info, Shield, TrendingUp, Trophy } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
 
-type MaterialStatus = "Recomendado para começar" | "Essencial" | "Em uso na jornada" | "Complementar" | "Apoio" | "Acompanhamento";
-
-interface Ebook {
+type Ebook = {
   id: number;
   title: string;
-  category: string;
   description: string;
-  status: MaterialStatus;
-}
+  etapa: string;
+  fileName: string;
+};
 
 const ebooks: Ebook[] = [
   {
     id: 1,
     title: "Descubra Seu Ponto de Partida",
-    category: "Avaliação inicial",
-    description: "Faça os testes iniciais e registre sua condição atual antes de começar.",
-    status: "Recomendado para começar",
+    description: "Um guia inicial para entender seu corpo, suas limitações atuais e começar a jornada com consciência.",
+    etapa: "Antes de começar",
+    fileName: "/materiais/ebooks/01-descubra-seu-ponto-de-partida.pdf",
   },
   {
     id: 2,
-    title: "O Método para Desenvolver Mobilidade, Força Funcional e Saúde",
-    category: "Fundamentos",
-    description: "Entenda a proposta da Calistenia Equilibrada e os pilares do método.",
-    status: "Essencial",
+    title: "Método Mobilidade, Força Funcional e Saúde",
+    description: "A base do método para evoluir usando o peso do corpo, com foco em mobilidade, controle e constância.",
+    etapa: "Fundamento da jornada",
+    fileName: "/materiais/ebooks/02-metodo-mobilidade-forca-saude.pdf",
   },
   {
     id: 3,
     title: "Como Evoluir Sem Lesões e Sem Pressa",
-    category: "Progressão segura",
-    description: "Aprenda como avançar com consistência, respeitando seus limites.",
-    status: "Essencial",
+    description: "Orientações para respeitar o próprio ritmo, evitar exageros e construir evolução sustentável.",
+    etapa: "Segurança e progressão",
+    fileName: "/materiais/ebooks/03-como-evoluir-sem-lesoes-e-sem-pressa.pdf",
   },
   {
     id: 4,
     title: "Os Melhores Exercícios para Mobilidade e Saúde",
-    category: "Exercícios principais",
-    description: "Consulte os movimentos base da jornada e o plano prático.",
-    status: "Em uso na jornada",
+    description: "Seleção de exercícios essenciais para melhorar mobilidade, consciência corporal e bem-estar.",
+    etapa: "Prática guiada",
+    fileName: "/materiais/ebooks/04-melhores-exercicios-mobilidade-saude.pdf",
   },
   {
     id: 5,
     title: "Novos Exercícios de Mobilidade, Força e Longevidade",
-    category: "Exercícios complementares",
-    description: "Aprofunde sua prática com novos movimentos por categoria.",
-    status: "Complementar",
+    description: "Exercícios complementares para ampliar repertório, força funcional e longevidade.",
+    etapa: "Evolução prática",
+    fileName: "/materiais/ebooks/05-novos-exercicios-mobilidade-forca-longevidade.pdf",
   },
   {
     id: 6,
     title: "Alimentação para Recuperação Muscular e Longevidade",
-    category: "Recuperação",
-    description: "Veja orientações simples sobre proteína, carboidratos, hidratação e sono.",
-    status: "Apoio",
+    description: "Conteúdo educativo sobre alimentação, recuperação e hábitos que apoiam a jornada.",
+    etapa: "Recuperação e hábitos",
+    fileName: "/materiais/ebooks/06-alimentacao-recuperacao-muscular-longevidade.pdf",
   },
   {
     id: 7,
-    title: "Seção Premium — Espaço do Leitor e Checklist Diário de Evolução",
-    category: "Acompanhamento",
-    description: "Use os registros, metas e checklists para acompanhar sua transformação.",
-    status: "Acompanhamento",
+    title: "Espaço do Leitor e Checklist Diário de Evolução",
+    description: "Material de apoio para reflexão, acompanhamento e organização da evolução diária.",
+    etapa: "Acompanhamento",
+    fileName: "/materiais/ebooks/07-espaco-do-leitor-checklist-diario-evolucao.pdf",
   },
 ];
 
-const statusBadgeVariant = (status: MaterialStatus) => {
-  switch (status) {
-    case "Recomendado para começar":
-      return "border-yellow-400/30 bg-yellow-400/10 text-yellow-300";
-    case "Essencial":
-      return "border-sky-400/30 bg-sky-400/10 text-sky-300";
-    case "Em uso na jornada":
-      return "border-amber-400/30 bg-amber-400/10 text-amber-300";
-    case "Complementar":
-      return "border-violet-400/30 bg-violet-400/10 text-violet-300";
-    case "Apoio":
-      return "border-indigo-400/30 bg-indigo-400/10 text-indigo-300";
-    case "Acompanhamento":
-      return "border-rose-400/30 bg-rose-400/10 text-rose-300";
-  }
-};
-
 export default function MateriaisPage() {
-  const [activeMaterial, setActiveMaterial] = useState<number | null>(null);
-
-  const handleMaterialClick = (id: number) => {
-    setActiveMaterial(id);
-  };
-
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
@@ -103,30 +76,10 @@ export default function MateriaisPage() {
             Acesse os 7 eBooks premium do Método Calistenia Equilibrada na ordem recomendada para acompanhar sua evolução.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            7 eBooks premium
-          </Badge>
-          <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-            Continuar de onde parei
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+        <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300 w-fit">
+          7 eBooks premium
+        </Badge>
       </div>
-
-      {activeMaterial && (
-        <Card className="border-yellow-400/20 bg-yellow-400/5">
-          <CardContent className="flex items-center gap-4 p-6">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-yellow-400 text-slate-950">
-              <BookOpen className="h-6 w-6" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-yellow-300">Material disponível na versão final.</p>
-              <p className="text-xs text-slate-300">Este eBook será liberado na atualização completa.</p>
-            </div>
-          </CardContent>
-        </Card>
-      )}
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
@@ -158,33 +111,37 @@ export default function MateriaisPage() {
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ebooks.map((ebook) => (
-          <Card key={ebook.id} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30 transition-colors hover:border-white/20">
-            <CardHeader className="pb-3">
+          <Card key={ebook.id} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30 transition-colors hover:border-white/20 flex flex-col">
+            <CardHeader className="pb-3 flex-1">
               <div className="flex items-start justify-between gap-3">
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-white/10 bg-white/5 text-xs font-semibold text-yellow-400">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg border border-yellow-400/30 bg-yellow-400/10 text-xs font-semibold text-yellow-400">
                   {String(ebook.id).padStart(2, "0")}
                 </div>
-                <Badge variant="outline" className={`${statusBadgeVariant(ebook.status)} border text-[10px] px-1.5 py-0`}>
-                  {ebook.status}
+                <Badge variant="outline" className="border-yellow-400/30 bg-yellow-400/5 text-yellow-300 text-[10px] px-1.5 py-0">
+                  {ebook.etapa}
                 </Badge>
               </div>
               <div className="space-y-1 pt-2">
                 <CardTitle className="text-base font-semibold text-white leading-tight">
                   {ebook.title}
                 </CardTitle>
-                <p className="text-[11px] text-slate-400">{ebook.category}</p>
+                <p className="text-[11px] text-slate-400">eBook {String(ebook.id).padStart(2, "0")} de 07</p>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <p className="text-sm text-slate-300">{ebook.description}</p>
               <div className="flex flex-col gap-2">
-                <Button onClick={() => handleMaterialClick(ebook.id)} className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                  <Play className="mr-2 h-4 w-4 fill-current" />
-                  Abrir material
+                <Button asChild className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                  <a href={ebook.fileName} target="_blank" rel="noopener noreferrer">
+                    <BookOpen className="mr-2 h-4 w-4" />
+                    Abrir eBook
+                  </a>
                 </Button>
-                <Button onClick={() => handleMaterialClick(ebook.id)} variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
-                  <Download className="mr-2 h-4 w-4" />
-                  Baixar PDF
+                <Button asChild variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                  <a href={ebook.fileName} download>
+                    <Download className="mr-2 h-4 w-4" />
+                    Baixar PDF
+                  </a>
                 </Button>
               </div>
             </CardContent>
@@ -223,13 +180,13 @@ export default function MateriaisPage() {
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-white">Dias 1 a 30:</span> eBook 7 como acompanhamento
+                  <span className="font-medium text-white">Durante toda a jornada:</span> eBook 6 como apoio de recuperação
                 </div>
               </li>
               <li className="flex items-start gap-3">
                 <span className="mt-1 flex size-2 shrink-0 rounded-full bg-emerald-400" />
                 <div>
-                  <span className="font-medium text-white">Durante toda a jornada:</span> eBook 6 como apoio de recuperação
+                  <span className="font-medium text-white">Dias 1 a 30:</span> eBook 7 como acompanhamento
                 </div>
               </li>
             </ul>
@@ -245,7 +202,7 @@ export default function MateriaisPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm leading-relaxed text-slate-300">
-              Os materiais são educativos e não substituem avaliação médica, fisioterapêutica, nutricional ou acompanhamento de profissional de educação física. Respeite seus limites durante toda a jornada.
+              Os materiais são complementares à jornada dentro da plataforma. Em caso de dor forte, tontura, formigamento ou desconforto intenso, interrompa a prática e procure orientação profissional.
             </p>
             <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
               <Info className="mr-2 h-4 w-4" />
