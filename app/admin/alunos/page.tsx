@@ -179,10 +179,12 @@ export default async function AdminAlunosPage({
                   </div>
 
                    <div className="flex flex-wrap gap-2">
-                     <Button type="button" variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/10">
-                       <Eye className="mr-1 h-4 w-4" />
-                       Ver detalhes
-                     </Button>
+                     <Link href={`/admin/alunos/${student.id}`}>
+                       <Button type="button" variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/10">
+                         <Eye className="mr-1 h-4 w-4" />
+                         Ver detalhes
+                       </Button>
+                     </Link>
                      {student.profileStatus !== "blocked" && (
                        <form action={extendStudentAccessAction}>
                          <input type="hidden" name="studentId" value={student.id} />
