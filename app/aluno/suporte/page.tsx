@@ -1,7 +1,8 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import { getUserAccess } from "@/lib/auth/get-user-access";
+import { createSupportTicketAction } from "./actions";
 
-import { useState } from "react";
-import { ArrowRight, HelpCircle, Mail, MessageSquare, Send, Shield, Clock, CheckCircle2, AlertCircle } from "lucide-react";
+import { ArrowLeft, HelpCircle, Mail, MessageSquare, Send, Shield, Clock, CheckCircle2, AlertCircle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import Link from "next/link";
 
 type SupportType = "acesso" | "material" | "exercicio" | "plataforma" | "sugestao" | "outro";
 
@@ -40,27 +42,67 @@ const faqs = [
   },
 ];
 
-const tickets = [
-  {
-    id: "TK-001",
-    title: "Dúvida sobre acesso aos materiais",
-    status: "respondido",
-    date: "Há 2 dias",
-  },
-  {
-    id: "TK-002",
-    title: "Dificuldade na prancha com joelhos",
-    status: "em_analise",
-    date: "Há 5 horas",
-  },
-];
+const statusBadgeVariant = (status: string) => {
+  switch (status) {
+    case "answered":
+      return "border-emerald-400/30 bg-emerald-400/5 text-emerald-300";
+    case "reviewing":
+      return "border-amber-400/30 bg-amber-400/5 text-amber-300";
+    case "closed":
+      return "border-white/10 bg-white/5 text-slate-300";
+    default:
+      return "border-rose-400/30 bg-rose-400/5 text-rose-300";
+  }
+};
 
-export default function SuportePage() {
-  const [showSuccess, setShowSuccess] = useState(false);
+const statusLabel = (status: string) => {
+  switch (status) {
+    case "open":
+      return "aberto";
+    case "reviewing":
+      return "em análise";
+    case "answered":
+      return "respondido";
+    case "closed":
+      return "fechado";
+    default:
+      return status;
+  }
+};
 
-  const handleSubmit = () => {
-    setShowSuccess(true);
-  };
+function formatDate(value: string | null) {
+  if (!value) return "—";
+  const date = new Date(value);
+  return date.toLocaleDateString("pt-BR");
+}
+
+export default async function AlunoSuportePage({
+  searchParams,
+}: {
+  searchParams: Promise<{ success?: string; error?: string }>;
+}) {
+  const params = await searchParams;
+  const access = await getUserAccess();
+  const supabase = await createClient();
+
+  let tickets: {
+    id: string;
+    type: string;
+    subject: string;
+    message: string;
+    status: string;
+    created_at: string;
+  }[] = [];
+
+  if (access.user) {
+    const { data } = await supabase
+      .from("support_tickets")
+      .select("id, type, subject, message, status, created_at")
+      .eq("user_id", access.user.id)
+      .order("created_at", { ascending: false });
+
+    tickets = data ?? [];
+  }
 
   return (
     <div className="space-y-8">
@@ -71,18 +113,12 @@ export default function SuportePage() {
             Precisa de ajuda com acesso, materiais, plataforma ou dúvidas sobre a jornada? Envie sua solicitação.
           </p>
         </div>
-        <div className="flex items-center gap-3">
-          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            Atendimento ao aluno
-          </Badge>
-          <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-            Ver perguntas frequentes
-            <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
-        </div>
+        <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
+          Atendimento ao aluno
+        </Badge>
       </div>
 
-      {showSuccess && (
+      {params.success === "ticket-created" && (
         <Card className="border-emerald-400/20 bg-emerald-400/5">
           <CardContent className="flex items-center gap-4 p-6">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-slate-950">
@@ -96,6 +132,17 @@ export default function SuportePage() {
         </Card>
       )}
 
+      {params.error && (
+        <Card className="border-rose-400/20 bg-rose-400/5">
+          <CardContent className="p-3 text-xs text-rose-300">
+            {params.error === "missing-type" && "Selecione o tipo de dúvida."}
+            {params.error === "missing-subject" && "Informe um assunto válido."}
+            {params.error === "missing-message" && "Descreva sua dúvida com mais detalhes."}
+            {params.error === "ticket-error" && "Erro ao enviar solicitação. Tente novamente mais tarde."}
+          </CardContent>
+        </Card>
+      )}
+
       <div className="grid gap-6 lg:grid-cols-2">
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader>
@@ -105,55 +152,55 @@ export default function SuportePage() {
             </CardTitle>
             <p className="text-xs text-slate-400">Preencha os dados abaixo e entraremos em contato.</p>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4 sm:grid-cols-2">
+          <CardContent>
+            <form action={createSupportTicketAction} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-xs text-slate-300">Nome</Label>
+                <Label htmlFor="type" className="text-xs text-slate-300">Tipo de dúvida</Label>
+                <select
+                  id="type"
+                  name="type"
+                  required
+                  className="h-10 rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20 outline-none"
+                >
+                  <option value="" disabled>Selecione...</option>
+                  {supportTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="subject" className="text-xs text-slate-300">Assunto</Label>
                 <Input
-                  id="name"
-                  placeholder="Seu nome"
+                  id="subject"
+                  name="subject"
+                  placeholder="Resumo da sua dúvida"
+                  required
                   className="border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 />
               </div>
+
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-xs text-slate-300">E-mail</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="seu@email.com"
-                  className="border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                <Label htmlFor="message" className="text-xs text-slate-300">Mensagem</Label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  placeholder="Descreva sua dúvida ou problema com o máximo de detalhes possível..."
+                  required
+                  className="min-h-[140px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 />
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label className="text-xs text-slate-300">Tipo de dúvida</Label>
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-                {supportTypes.map((type) => (
-                  <div
-                    key={type.value}
-                    className="flex cursor-pointer items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs text-slate-300 transition-colors hover:border-yellow-400/30 hover:bg-yellow-400/5"
-                  >
-                    <span className="flex size-3 shrink-0 rounded-full border border-white/20" />
-                    {type.label}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="message" className="text-xs text-slate-300">Mensagem</Label>
-              <Textarea
-                id="message"
-                placeholder="Descreva sua dúvida ou problema com o máximo de detalhes possível..."
-                className="min-h-[120px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-              />
-            </div>
-
-            <Button onClick={handleSubmit} className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-              <Send className="mr-2 h-4 w-4" />
-              Enviar solicitação
-            </Button>
+              <Button
+                type="submit"
+                className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20"
+              >
+                <Send className="mr-2 h-4 w-4" />
+                Enviar solicitação
+              </Button>
+            </form>
           </CardContent>
         </Card>
 
@@ -226,63 +273,36 @@ export default function SuportePage() {
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg text-white">
-            <HelpCircle className="h-5 w-5 text-yellow-400" />
-            Perguntas frequentes
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {faqs.map((faq) => (
-              <div key={faq.question} className="space-y-2 rounded-xl border border-white/10 bg-white/5 p-4">
-                <p className="text-sm font-medium text-slate-200">{faq.question}</p>
-                <p className="text-xs leading-relaxed text-slate-400">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg text-white">
             <Clock className="h-5 w-5 text-yellow-400" />
             Histórico de solicitações
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="space-y-3">
-            {tickets.map((ticket) => (
-              <div
-                key={ticket.id}
-                className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-4"
-              >
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-white">{ticket.title}</p>
-                  <p className="text-[10px] text-slate-500">{ticket.id} • {ticket.date}</p>
-                </div>
-                <Badge
-                  variant="outline"
-                  className={
-                    ticket.status === "respondido"
-                      ? "border-emerald-400/30 bg-emerald-400/5 text-emerald-300"
-                      : "border-amber-400/30 bg-amber-400/5 text-amber-300"
-                  }
+          {tickets.length === 0 ? (
+            <p className="text-xs text-slate-400">Você ainda não abriu nenhuma solicitação.</p>
+          ) : (
+            <div className="space-y-3">
+              {tickets.map((ticket) => (
+                <div
+                  key={ticket.id}
+                  className="flex flex-col gap-2 rounded-xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  {ticket.status === "respondido" ? (
-                    <span className="flex items-center gap-1">
-                      <CheckCircle2 className="h-3 w-3" />
-                      Respondido
-                    </span>
-                  ) : (
-                    <span className="flex items-center gap-1">
-                      <AlertCircle className="h-3 w-3" />
-                      Em análise
-                    </span>
-                  )}
-                </Badge>
-              </div>
-            ))}
-          </div>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-sm font-medium text-white">{ticket.subject}</p>
+                      <Badge variant="outline" className={`${statusBadgeVariant(ticket.status)} border text-[10px] px-1.5 py-0`}>
+                        {statusLabel(ticket.status)}
+                      </Badge>
+                    </div>
+                    <p className="text-xs text-slate-300 line-clamp-1">{ticket.message}</p>
+                    <p className="text-[10px] text-slate-500">
+                      {supportTypes.find((st) => st.value === ticket.type)?.label ?? ticket.type} • {formatDate(ticket.created_at)}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </CardContent>
       </Card>
 
