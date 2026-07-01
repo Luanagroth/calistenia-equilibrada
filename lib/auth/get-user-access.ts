@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import { getAccessDaysRemaining } from "@/lib/jornada/calendar";
 
 export type UserAccess = {
   user: { id: string; email: string } | null;
@@ -42,11 +43,7 @@ export async function getUserAccess(): Promise<UserAccess> {
     isActive = true;
     daysRemaining = 999;
   } else if (access) {
-    const now = new Date();
-    const endsAt = new Date(access.ends_at);
-    const diffTime = endsAt.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    daysRemaining = diffDays > 0 ? diffDays : 0;
+    daysRemaining = getAccessDaysRemaining(access.ends_at);
     isActive = daysRemaining > 0;
   }
 

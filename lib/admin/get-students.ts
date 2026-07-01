@@ -1,7 +1,10 @@
 import "server-only";
 
+import "server-only";
+
 import { supabaseAdmin } from "@/lib/supabase/admin";
 import { getAdminAccess } from "@/lib/auth/get-admin-access";
+import { getAccessDaysRemaining } from "@/lib/jornada/calendar";
 
 export type StudentAccess = {
   id: string;
@@ -71,10 +74,10 @@ export async function getStudents(): Promise<StudentAccess[]> {
       let isAccessActive = false;
 
       if (accessToUse) {
-        const endsAt = new Date(accessToUse.ends_at);
         const startsAt = new Date(accessToUse.starts_at);
-        const diffTime = endsAt.getTime() - now.getTime();
-        daysRemaining = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        const endsAt = new Date(accessToUse.ends_at);
+        const now = new Date();
+        daysRemaining = getAccessDaysRemaining(endsAt);
         isAccessActive = daysRemaining > 0 && accessToUse.status === "active" && startsAt <= now && endsAt >= now;
       }
 

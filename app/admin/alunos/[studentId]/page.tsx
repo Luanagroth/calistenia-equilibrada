@@ -7,6 +7,7 @@ import { Progress } from "@/components/ui/progress";
 import Link from "next/link";
 import { getStudents } from "@/lib/admin/get-students";
 import { getAdminStudentProgress } from "@/lib/admin/get-student-progress";
+import { getStudentJourneyAlerts } from "@/lib/jornada/student-alerts";
 
 function formatDate(value: string | null) {
   if (!value) return "—";
@@ -44,6 +45,19 @@ export default async function AdminAlunoDetailPage({
 
   const progress = await getAdminStudentProgress(studentId);
   const { totalCompletedDays, totalInProgressDays, progressPercentage, lastCompletedDay, progressList } = progress;
+
+  const alerts = await getStudentJourneyAlerts({
+    daysRemaining: student.daysRemaining,
+    accessEndsAt: student.endsAt ?? new Date(),
+    accessStartsAt: student.startsAt ?? new Date(),
+    progressList: progressList as Array<{
+      journey_day: number;
+      status: string;
+      updated_at: string | null;
+      completed_at: string | null;
+      created_at: string;
+    }>,
+  });
 
   return (
     <div className="space-y-8">
@@ -140,6 +154,41 @@ export default async function AdminAlunoDetailPage({
           </CardContent>
         </Card>
       </div>
+
+      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-lg text-white">
+            <Shield className="h-5 w-5 text-yellow-400" />
+            Avisos do aluno
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-3">
+            {alerts.map((alert, index) => (
+              <div
+                key={index}
+                className={`flex items-start gap-3 rounded-xl border p-4 ${
+                  alert.type === "danger"
+                    ? "border-rose-400/20 bg-rose-400/5"
+                    : alert.type === "warning"
+                      ? "border-amber-400/20 bg-amber-400/5"
+                      : alert.type === "success"
+                        ? "border-emerald-400/20 bg-emerald-400/5"
+                        : "border-white/10 bg-white/5"
+                }`}
+              >
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/5 border border-white/10">
+                  <Shield className="h-4 w-4 text-yellow-400" />
+                </div>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-white">{alert.title}</p>
+                  <p className="text-xs text-slate-300">{alert.message}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </CardContent>
+      </Card>
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>

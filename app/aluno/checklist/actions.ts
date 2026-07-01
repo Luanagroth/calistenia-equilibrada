@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/lib/supabase/server";
 import { getUserAccess } from "@/lib/auth/get-user-access";
+import { getJourneyAvailability } from "@/lib/jornada/progress-rules";
+import { getStudentProgressSummary } from "@/lib/aluno/get-student-progress";
 
 export async function saveDailyProgressAction(formData: FormData): Promise<void> {
   const access = await getUserAccess();
@@ -22,6 +24,23 @@ export async function saveDailyProgressAction(formData: FormData): Promise<void>
 
   const intent = formData.get("intent");
   const status = intent === "complete" ? "completed" : "in_progress";
+
+  const journey = await getJourneyAvailability();
+  const summary = await getStudentProgressSummary();
+
+  const dayProgress = summary.progressList.find((p) => p.journey_day === journeyDay);
+
+  if (status === "completed" && journeyDay !== journey.availableDay) {
+    redirect(`/aluno/checklist?dia=${journeyDay}&error=day-locked`);
+  }
+
+  if (status === "in_progress" && dayProgress?.status === "completed") {
+    redirect(`/aluno/checklist?dia=${journeyDay}&error=day-locked`);
+  }
+
+  if (status === "in_progress" && !dayProgress && journeyDay > journey.availableDay) {
+    redirect(`/aluno/checklist?dia=${journeyDay}&error=day-locked`);
+  }
 
   const checklistKeys = ["warmup", "mobility", "strength", "stretching", "breathing", "reading"] as const;
   const checklist: Record<string, boolean> = {};
