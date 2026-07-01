@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, Eye, Plus, Ban, RotateCcw, CheckCircle2 } from "lucide-react";
+import { ArrowLeft, Search, Eye, Plus, Ban, RotateCcw } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 import { getStudents } from "@/lib/admin/get-students";
+import { extendStudentAccessAction, blockStudentAction, reactivateStudentAction } from "./actions";
 
 const formatDate = (value: string | null) => {
   if (!value) return "—";
@@ -33,7 +34,7 @@ const statusLabel = (isAccessActive: boolean, profileStatus: string) => {
 export default async function AdminAlunosPage({
   searchParams,
 }: {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<{ search?: string; success?: string }>;
 }) {
   const params = await searchParams;
   const search = params.search || "";
@@ -103,6 +104,18 @@ export default async function AdminAlunosPage({
         </Card>
       </div>
 
+      {params.success && (
+        <Card className="bg-[#10161A] border-emerald-400/30 shadow-lg shadow-emerald-400/10">
+          <CardContent className="py-3">
+            <p className="text-sm text-emerald-300">
+              {params.success === "access-extended" && "Acesso estendido por 45 dias."}
+              {params.success === "student-blocked" && "Aluno bloqueado com sucesso."}
+              {params.success === "student-reactivated" && "Aluno reativado com sucesso."}
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg text-white">
@@ -165,24 +178,39 @@ export default async function AdminAlunosPage({
                     </p>
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="ghost" size="sm" disabled className="text-slate-300 hover:text-white hover:bg-white/10">
-                      <Eye className="mr-1 h-4 w-4" />
-                      Ver detalhes
-                    </Button>
-                    <Button variant="ghost" size="sm" disabled className="text-slate-300 hover:text-white hover:bg-white/10">
-                      <Plus className="mr-1 h-4 w-4" />
-                      45 dias
-                    </Button>
-                    <Button variant="ghost" size="sm" disabled className="text-slate-300 hover:text-white hover:bg-white/10">
-                      <Ban className="mr-1 h-4 w-4" />
-                      Bloquear
-                    </Button>
-                    <Button variant="ghost" size="sm" disabled className="text-slate-300 hover:text-white hover:bg-white/10">
-                      <RotateCcw className="mr-1 h-4 w-4" />
-                      Reativar
-                    </Button>
-                  </div>
+                   <div className="flex flex-wrap gap-2">
+                     <Button type="button" variant="ghost" size="sm" className="text-slate-300 hover:text-white hover:bg-white/10">
+                       <Eye className="mr-1 h-4 w-4" />
+                       Ver detalhes
+                     </Button>
+                     {student.profileStatus !== "blocked" && (
+                       <form action={extendStudentAccessAction}>
+                         <input type="hidden" name="studentId" value={student.id} />
+                         <Button type="submit" variant="ghost" size="sm" className="text-yellow-400 hover:text-yellow-300 hover:bg-yellow-400/10">
+                           <Plus className="mr-1 h-4 w-4" />
+                           45 dias
+                         </Button>
+                       </form>
+                     )}
+                     {student.profileStatus !== "blocked" && student.isAccessActive && (
+                       <form action={blockStudentAction}>
+                         <input type="hidden" name="studentId" value={student.id} />
+                         <Button type="submit" variant="outline" size="sm" className="border-red-500/40 text-red-300 hover:bg-red-500/10">
+                           <Ban className="mr-1 h-4 w-4" />
+                           Bloquear
+                         </Button>
+                       </form>
+                     )}
+                     {!student.isAccessActive && (
+                       <form action={reactivateStudentAction}>
+                         <input type="hidden" name="studentId" value={student.id} />
+                         <Button type="submit" variant="outline" size="sm" className="border-emerald-400/40 text-emerald-300 hover:bg-emerald-400/10">
+                           <RotateCcw className="mr-1 h-4 w-4" />
+                           Reativar
+                         </Button>
+                       </form>
+                     )}
+                   </div>
                 </div>
               ))}
             </div>
