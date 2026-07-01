@@ -127,9 +127,9 @@ export default async function ChecklistPage({
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight text-white">Checklist diário</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-white">Jornada do dia</h1>
           <p className="mt-2 max-w-xl text-slate-300">
-            Registre sua constância, acompanhe seus hábitos e observe como seu corpo responde ao longo da jornada.
+            Registre sua prática, acompanhe sua evolução e avance no tempo certo.
           </p>
         </div>
         <div className="flex items-center gap-3">

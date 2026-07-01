@@ -160,7 +160,7 @@ export default async function EvolucaoPage() {
             </p>
             <Link href="/aluno/checklist">
               <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-                Ver checklist de hoje
+                Ver jornada de hoje
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </Link>

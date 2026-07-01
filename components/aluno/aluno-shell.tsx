@@ -3,16 +3,13 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  BarChart3,
   BookOpen,
-  CalendarCheck,
   Dumbbell,
   Headphones,
   Home,
-  ListChecks,
+  LogOut,
   Flame,
   Clock,
-  LogOut,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -20,10 +17,8 @@ import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
   { label: "Início", href: "/aluno/dashboard", icon: Home },
-  { label: "Treinos", href: "/aluno/treinos", icon: CalendarCheck },
-  { label: "Exercícios", href: "/aluno/exercicios", icon: Dumbbell },
-  { label: "Checklist", href: "/aluno/checklist", icon: ListChecks },
-  { label: "Evolução", href: "/aluno/evolucao", icon: BarChart3 },
+  { label: "Jornada", href: "/aluno/checklist", icon: Dumbbell },
+  { label: "Evolução", href: "/aluno/evolucao", icon: Flame },
   { label: "Materiais", href: "/aluno/materiais", icon: BookOpen },
   { label: "Suporte", href: "/aluno/suporte", icon: Headphones },
 ];
@@ -151,7 +146,7 @@ export function AlunoShell({
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#070A0D]/95 px-2 py-2 backdrop-blur lg:hidden">
         <div className="grid grid-cols-5 gap-1">
-          {navItems.slice(0, 5).map((item) => {
+          {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 
