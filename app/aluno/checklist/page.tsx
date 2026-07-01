@@ -10,6 +10,7 @@ import { Label } from "@/components/ui/label";
 import Link from "next/link";
 import { getStudentProgressByDay, getStudentProgressSummary } from "@/lib/aluno/get-student-progress";
 import { getJourneyAvailability } from "@/lib/jornada/progress-rules";
+import { getTrainingDayPlan } from "@/lib/jornada/training-plan";
 import { saveDailyProgressAction } from "./actions";
 
 type HabitId = "warmup" | "mobility" | "strength" | "stretching" | "breathing" | "reading";
@@ -208,6 +209,63 @@ export default async function ChecklistPage({
           )}
         </CardContent>
       </Card>
+
+      {(() => {
+        const plan = getTrainingDayPlan(selectedDay);
+
+        if (!plan) return null;
+
+        return (
+          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-lg text-white">
+                  Treino de hoje — Dia {String(plan.day).padStart(2, "0")}
+                </CardTitle>
+                <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
+                  {plan.duration}
+                </Badge>
+              </div>
+              <p className="text-xs text-slate-400">{plan.focus}</p>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-slate-300">{plan.description}</p>
+
+              <div className="space-y-3">
+                {plan.steps.map((step) => (
+                  <div key={step.label} className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3">
+                    <div className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-yellow-400/10 border border-yellow-400/20 text-[10px] font-semibold text-yellow-400">
+                      {step.label.charAt(0)}
+                    </div>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-white">{step.label}</p>
+                      <p className="text-xs text-slate-400">{step.description}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1">
+                <p className="text-[11px] font-medium text-slate-300">Adaptação recomendada</p>
+                <p className="text-[11px] text-slate-400">{plan.adaptation}</p>
+              </div>
+
+              <div className="rounded-xl border border-rose-400/10 bg-rose-400/5 p-3 space-y-1">
+                <p className="text-[11px] font-medium text-rose-300">Cuidado</p>
+                <p className="text-[11px] text-slate-400">{plan.safetyNote}</p>
+              </div>
+
+              {locked && (
+                <div className="rounded-xl border border-amber-400/10 bg-amber-400/5 p-3">
+                  <p className="text-xs text-amber-300">
+                    Você pode visualizar o roteiro, mas o registro só será liberado no próximo dia válido.
+                  </p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
