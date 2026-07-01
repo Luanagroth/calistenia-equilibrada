@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, CheckCircle2, Dumbbell, HeartPulse, Home, Lock, LineChart, Mail, BookOpen } from "lucide-react";
+import { ArrowRight, CheckCircle2, Home, Lock, Mail } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -166,12 +166,12 @@ export default function LoginPage() {
                 </div>
 
                 <div className="flex items-center justify-end">
-                  <button
-                    type="button"
+                  <Link
+                    href="/recuperar-senha"
                     className="text-xs text-yellow-400 hover:text-yellow-300 transition-colors"
                   >
                     Esqueci minha senha
-                  </button>
+                  </Link>
                 </div>
 
                 <Button
