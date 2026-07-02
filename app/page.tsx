@@ -1,109 +1,482 @@
-import { ArrowRight, CheckCircle2, Dumbbell, ShieldCheck, Smartphone } from "lucide-react";
-
+import { ArrowRight, CheckCircle2, HelpCircle, Lightbulb, Shield, XCircle } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import Image from "next/image";
+import Link from "next/link";
 
-const benefits = [
-  "7 eBooks premium em ordem lógica",
-  "Plano guiado de 30 dias",
-  "Área do aluno com login",
-  "Checklist diário de evolução",
-  "Biblioteca de exercícios",
-  "Acompanhamento de progresso",
+const steps = [
+  {
+    title: "Veja o treino liberado",
+    description: "A plataforma mostra qual treino seguir, sem você precisar escolher entre dezenas de opções.",
+  },
+  {
+    title: "Faça no seu ritmo",
+    description: "Treinos com peso do corpo, foco em mobilidade, força funcional e constância.",
+  },
+  {
+    title: "Registre como foi",
+    description: "Marque o que fez e registre energia, dificuldade, desconforto e anotações.",
+  },
+  {
+    title: "Continue do ponto certo",
+    description: "Sua evolução fica salva e o próximo treino libera no tempo certo.",
+  },
+];
+
+const included = [
+  {
+    title: "30 treinos guiados",
+    description: "Progressão simples organizada por dias válidos, sem pressa.",
+  },
+  {
+    title: "Registro de progresso",
+    description: "Salve hábitos, energia, dificuldade e anotações do dia.",
+  },
+  {
+    title: "Evolução salva",
+    description: "Acompanhe treino por treino dentro da plataforma.",
+  },
+  {
+    title: "Liberação organizada",
+    description: "Cada treino libera no tempo certo para incentivar constância.",
+  },
+  {
+    title: "7 eBooks complementares",
+    description: "Materiais sobre mobilidade, força, alimentação e evolução.",
+  },
+  {
+    title: "Suporte dentro da plataforma",
+    description: "Tire dúvidas e envie solicitações diretamente pelo Espaço do Aluno.",
+  },
+];
+
+const pains = [
+  "Não sei o que fazer hoje",
+  "Começo e paro depois de poucos dias",
+  "Fico perdido entre vídeos, dicas e planilhas",
+];
+
+const faqs = [
+  {
+    question: "Preciso ter experiência com calistenia?",
+    answer: "Não. A jornada começa com movimentos simples e progressivos.",
+  },
+  {
+    question: "Preciso de equipamentos?",
+    answer: "Não obrigatoriamente. A proposta usa principalmente o peso do corpo e apoios simples, como parede ou cadeira.",
+  },
+  {
+    question: "Os treinos liberam todos de uma vez?",
+    answer: "Não. A liberação é organizada para ajudar na constância e evitar pressa.",
+  },
+  {
+    question: "E se eu perder alguns dias?",
+    answer: "Você pode retomar do ponto em que parou, mas o acesso continua correndo por calendário.",
+  },
+  {
+    question: "Os eBooks estão inclusos?",
+    answer: "Sim. A jornada inclui 7 materiais complementares de apoio.",
+  },
+  {
+    question: "Isso substitui acompanhamento profissional?",
+    answer: "Não. É um conteúdo educativo e não substitui avaliação ou orientação profissional.",
+  },
+];
+
+const appFeatures = [
+  "Treinos concluídos",
+  "Dias de acesso",
+  "Próximo treino",
+  "Registro de prática",
+  "Evolução salva",
+  "Materiais de apoio",
 ];
 
 export default function HomePage() {
   return (
-    <main className="min-h-screen bg-slate-950 text-white">
-      <section className="relative overflow-hidden px-6 py-10 md:px-10 lg:px-20">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.22),transparent_35%),radial-gradient(circle_at_top_left,rgba(59,130,246,0.18),transparent_30%)]" />
+    <main className="min-h-screen bg-[#070A0D] text-white">
+      <header className="fixed top-0 left-0 right-0 z-50 border-b border-white/10 bg-[#070A0D]/90 backdrop-blur">
+        <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 md:px-10 lg:px-20">
+          <Link href="/" className="text-xl font-bold text-white hover:text-yellow-400 transition-colors">
+            Calistenia Equilibrada
+          </Link>
 
-        <div className="relative mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-2">
-          <div>
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-sm text-emerald-300">
-              <ShieldCheck className="h-4 w-4" />
-              Método digital para iniciantes
+          <nav className="hidden md:flex items-center gap-6 text-sm text-slate-300">
+            <Link href="#como-funciona" className="hover:text-white transition-colors">
+              Como funciona
+            </Link>
+            <Link href="#o-que-inclui" className="hover:text-white transition-colors">
+              O que inclui
+            </Link>
+            <Link href="#faq" className="hover:text-white transition-colors">
+              FAQ
+            </Link>
+          </nav>
+
+          <Button asChild className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+            <Link href="/login">Entrar</Link>
+          </Button>
+        </div>
+      </header>
+
+<section className="relative flex min-h-screen items-center px-6 pt-20 pb-16 md:px-10 lg:px-20">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.10),transparent_35%),radial-gradient(circle_at_top_left,rgba(250,204,21,0.08),transparent_30%)]" />
+
+<div className="relative mx-auto grid max-w-screen-2xl items-center gap-20 lg:grid-cols-12">
+          <div className="lg:col-span-6">
+            <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-5 py-2.5 text-base text-slate-300">
+              Jornada 30 Treinos • Plataforma + 7 eBooks
             </div>
 
-            <h1 className="max-w-3xl text-4xl font-bold tracking-tight md:text-6xl">
-              Jornada 30 Dias para destravar seu corpo com calistenia equilibrada
+            <h1 className="max-w-5xl text-5xl font-bold tracking-tight text-white md:text-8xl">
+              Pare de juntar vídeos. Comece a seguir um caminho.
             </h1>
 
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-300">
-              Receba 7 eBooks premium + acesso ao Espaço do Aluno para seguir
-              treinos, registrar hábitos, acompanhar sua evolução e criar uma
-              rotina de mobilidade e força funcional pelo celular.
+            <p className="mt-8 max-w-4xl text-xl leading-8 text-slate-300">
+              Uma jornada guiada para começar a se movimentar com clareza, registrar sua evolução e continuar sem depender de exercícios soltos.
             </p>
 
-            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Button size="lg" className="bg-emerald-400 text-slate-950 hover:bg-emerald-300">
-                Começar por R$67
-                <ArrowRight className="ml-2 h-4 w-4" />
+            <p className="mt-3 text-base text-slate-400">
+              Treine com o peso do corpo, siga um treino por vez e acompanhe seu progresso dentro da plataforma.
+            </p>
+
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <Button size="lg" asChild className="px-8 py-6 text-base bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                <Link href="/login">
+                  Começar por R$ 67
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
               </Button>
 
               <Button
                 size="lg"
                 variant="outline"
-                className="border-white/20 bg-white/5 text-white hover:bg-white/10"
+                asChild
+                className="px-8 py-6 text-base border-white/10 bg-white/5 text-white hover:bg-white/10"
               >
-                Ver como funciona
+                <Link href="#como-funciona">
+                  Ver como funciona
+                </Link>
               </Button>
             </div>
 
-            <p className="mt-4 text-sm text-slate-400">
-              Programa de 30 dias com acesso à plataforma por tempo limitado.
+            <p className="mt-4 text-sm text-slate-500">
+              Acesso à plataforma • 30 treinos guiados • 7 eBooks inclusos
+            </p>
+
+            <div className="mt-6 flex flex-wrap items-center gap-5 text-sm text-slate-400">
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                Treino liberado no tempo certo
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                Evolução salva
+              </span>
+              <span className="flex items-center gap-2">
+                <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                Suporte dentro da plataforma
+              </span>
+            </div>
+          </div>
+
+          <div className="relative lg:order-2 lg:col-span-6">
+            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-black/60">
+              <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-yellow-400/10" />
+
+              <video
+                src="/videos/home/hero-desktop.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="hidden w-full h-auto md:block"
+              />
+
+              <video
+                src="/videos/home/hero-mobile.mp4"
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="w-full h-auto md:hidden"
+              />
+            </div>
+          </div>
+        </div>
+       </section>
+
+      <section className="bg-[#0B1115] px-6 py-16 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12 max-w-3xl">
+            <h2 className="text-3xl font-bold tracking-tight text-white">
+              Você já tentou começar antes.
+            </h2>
+            <p className="mt-3 text-slate-300">
+              Salvou vídeos. Prometeu que ia treinar em casa. Fez um ou dois dias. Depois ficou sem saber o que fazer, perdeu o ritmo e voltou para o zero.
+            </p>
+            <p className="mt-2 text-lg font-semibold text-white">
+              O problema quase nunca é falta de vontade. É falta de sequência.
             </p>
           </div>
 
-          <Card className="border-white/10 bg-white/10 text-white shadow-2xl backdrop-blur">
-            <CardContent className="p-6">
-              <div className="mb-6 flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-emerald-300">Espaço do Aluno</p>
-                  <h2 className="text-2xl font-semibold">Dia 04 de 30</h2>
-                </div>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {pains.map((pain) => (
+              <Card key={pain} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+                <CardContent className="flex items-start gap-3 p-5">
+                  <XCircle className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+                  <p className="text-sm text-slate-300">{pain}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
 
-                <div className="rounded-2xl bg-emerald-400 p-3 text-slate-950">
-                  <Smartphone className="h-6 w-6" />
-                </div>
-              </div>
+          <div className="mt-12 relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-black/40">
+            <Image
+              src="/images/home/hero-treino-casa.png"
+              alt="Treino em casa"
+              width={1200}
+              height={500}
+              className="w-full h-auto"
+            />
+            <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-yellow-400/10" />
+          </div>
+        </div>
+      </section>
 
-              <div className="mb-6 rounded-2xl bg-slate-950/70 p-5">
-                <div className="mb-3 flex items-center justify-between text-sm">
-                  <span className="text-slate-300">Progresso da jornada</span>
-                  <span className="text-emerald-300">13%</span>
-                </div>
+      <section id="como-funciona" className="px-6 py-16 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-white">
+              Um treino por vez. Uma evolução registrada. Um caminho mais claro.
+            </h2>
+            <p className="mt-3 max-w-2xl text-slate-300">
+              A Calistenia Equilibrada organiza sua prática em uma jornada progressiva. Você acessa o treino liberado, faz no seu ritmo, registra como foi e acompanha sua evolução.
+            </p>
+          </div>
 
-                <div className="h-3 overflow-hidden rounded-full bg-slate-800">
-                  <div className="h-full w-[13%] rounded-full bg-emerald-400" />
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                {benefits.map((item) => (
-                  <div
-                    key={item}
-                    className="flex items-center gap-3 rounded-xl bg-white/5 p-3 text-sm text-slate-200"
-                  >
-                    <CheckCircle2 className="h-5 w-5 text-emerald-300" />
-                    {item}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {steps.map((step, index) => (
+              <Card key={step.title} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-yellow-400/10 border border-yellow-400/20 text-yellow-400 font-semibold text-sm">
+                      {index + 1}
+                    </div>
+                    <CardTitle className="text-base text-white">{step.title}</CardTitle>
                   </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-300">{step.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#0B1115] px-6 py-16 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl shadow-black/40">
+              <Image
+                src="/images/home/mockup-mobile-jornada.png"
+                alt="Mockup mobile da jornada"
+                width={600}
+                height={800}
+                className="w-full h-auto"
+              />
+              <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-yellow-400/10" />
+            </div>
+
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold tracking-tight text-white">
+                Tudo organizado dentro da plataforma.
+              </h2>
+              <p className="text-slate-300">
+                No Início, você vê seu progresso. Na Jornada, registra o treino. Na Evolução, acompanha seu histórico. Em Materiais, acessa os eBooks. Em Suporte, tira dúvidas.
+              </p>
+
+              <ul className="space-y-3 text-sm text-slate-300">
+                {appFeatures.map((feature) => (
+                  <li key={feature} className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                    {feature}
+                  </li>
                 ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="o-que-inclui" className="px-6 py-16 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-white">O que está incluso na Jornada 30 Treinos</h2>
+            <p className="mt-3 max-w-2xl text-slate-300">
+              Tudo o que precisa para acompanhar a jornada em um só lugar.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {included.map((item) => (
+              <Card key={item.title} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+                <CardHeader>
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-emerald-400/10 border border-emerald-400/20">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    </div>
+                    <CardTitle className="text-base text-white">{item.title}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-300">{item.description}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="oferta" className="bg-[#0B1115] px-6 py-20 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-2">
+            <div className="space-y-6">
+              <div>
+                <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">Oferta</Badge>
+                <h2 className="mt-4 text-3xl font-bold tracking-tight text-white">Jornada 30 Treinos</h2>
+                <p className="mt-2 text-slate-300">
+                  Para começar com uma rotina simples, guiada e possível de manter.
+                </p>
               </div>
 
-              <div className="mt-6 rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-                <div className="flex items-center gap-3">
-                  <Dumbbell className="h-5 w-5 text-emerald-300" />
-                  <div>
-                    <p className="font-medium">Treino de hoje</p>
-                    <p className="text-sm text-slate-300">
-                      Mobilidade + estabilidade • 20 minutos
-                    </p>
-                  </div>
-                </div>
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl font-bold text-white">R$ 67</span>
+                <span className="text-sm text-slate-400">compra única</span>
               </div>
+
+              <ul className="space-y-3 text-sm text-slate-300">
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  Plataforma de acompanhamento
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  30 treinos progressivos
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  7 eBooks de apoio
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  Evolução registrada
+                </li>
+                <li className="flex items-start gap-3">
+                  <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                  Suporte dentro da plataforma
+                </li>
+              </ul>
+
+              <Button size="lg" asChild className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                <Link href="/login">
+                  Começar por R$ 67
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+
+              <p className="text-xs text-slate-400">
+                Após a liberação do acesso, você entra com e-mail e senha.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="faq" className="px-6 py-16 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="mb-12">
+            <h2 className="text-3xl font-bold tracking-tight text-white">Dúvidas comuns antes de começar</h2>
+            <p className="mt-3 max-w-2xl text-slate-300">
+              Respostas rápidas para o que mais surge antes de começar.
+            </p>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            {faqs.map((item) => (
+              <Card key={item.question} className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+                <CardHeader>
+                  <CardTitle className="flex items-start gap-3 text-base text-white">
+                    <HelpCircle className="mt-0.5 h-5 w-5 shrink-0 text-yellow-400" />
+                    {item.question}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-sm text-slate-300">{item.answer}</p>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="seguranca" className="bg-[#0B1115] px-6 py-16 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <Card className="border-rose-400/10 bg-rose-400/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg text-white">
+                <Shield className="h-5 w-5 text-rose-400" />
+                Segurança
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm leading-relaxed text-slate-300">
+                Este conteúdo é educativo e não substitui avaliação ou acompanhamento de profissional de saúde, educação física ou fisioterapia. Em caso de dor forte, tontura, formigamento ou desconforto intenso, interrompa a prática e procure orientação profissional.
+              </p>
             </CardContent>
           </Card>
+        </div>
+      </section>
+
+      <section className="px-6 py-20 md:px-10 lg:px-20">
+        <div className="mx-auto max-w-7xl">
+          <div className="grid gap-10 lg:grid-cols-2">
+            <div className="space-y-6">
+              <h2 className="text-3xl font-bold tracking-tight text-white">
+                Comece com clareza, sem montar tudo do zero.
+              </h2>
+              <p className="text-slate-300">
+                Entre na jornada, siga o treino liberado, registre sua prática e acompanhe sua evolução.
+              </p>
+              <Button size="lg" asChild className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                <Link href="/login">
+                  Começar por R$ 67
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+              </Button>
+            </div>
+
+            <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-lg text-white">
+                  <Lightbulb className="h-5 w-5 text-yellow-400" />
+                  Lembre-se
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-slate-300">
+                  Cada treino é uma etapa. Não precisa ser rápido, precisa ser feito com consciência.
+                </p>
+                <p className="text-sm text-slate-300">
+                  Se faltar energia, reduza a amplitude ou faça pausas. O ritmo é seu.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </section>
     </main>
