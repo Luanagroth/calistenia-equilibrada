@@ -36,9 +36,9 @@ export default async function EvolucaoPage() {
   const getStatusLabel = (status: string) => {
     switch (status) {
       case "completed":
-        return "Concluído";
+        return "Treino concluído";
       case "in_progress":
-        return "Em andamento";
+        return "Treino em andamento";
       default:
         return "Não iniciado";
     }
@@ -55,7 +55,7 @@ export default async function EvolucaoPage() {
         </div>
         <div className="flex items-center gap-3">
           <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            Dia {lastCompletedDay ? String(lastCompletedDay).padStart(2, "0") : "00"} de 30
+            Treino {lastCompletedDay ? String(lastCompletedDay).padStart(2, "0") : "00"} de 30
           </Badge>
           <Link href="/aluno/checklist">
             <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
@@ -79,33 +79,33 @@ export default async function EvolucaoPage() {
 
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Dias concluídos</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Treinos concluídos</CardTitle>
             <Flag className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{totalCompletedDays}</div>
-            <p className="text-xs text-slate-400">Dias finalizados</p>
+            <p className="text-xs text-slate-400">Treinos finalizados</p>
           </CardContent>
         </Card>
 
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Em andamento</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Treinos em andamento</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{totalInProgressDays}</div>
-            <p className="text-xs text-slate-400">Dias iniciados</p>
+            <p className="text-xs text-slate-400">Treinos iniciados</p>
           </CardContent>
         </Card>
 
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Último dia concluído</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Último treino concluído</CardTitle>
             <Trophy className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{lastCompletedDay ? `Dia ${lastCompletedDay}` : "—"}</div>
+            <div className="text-2xl font-bold text-white">{lastCompletedDay ? `Treino ${lastCompletedDay}` : "—"}</div>
             <p className="text-xs text-slate-400">Continue assim</p>
           </CardContent>
         </Card>
@@ -115,9 +115,9 @@ export default async function EvolucaoPage() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg text-white">
             <Calendar className="h-5 w-5 text-yellow-400" />
-            Dias da jornada
+            Treinos da jornada
           </CardTitle>
-          <p className="text-xs text-slate-400">Acompanhe o status de cada dia de 1 a 30</p>
+          <p className="text-xs text-slate-400">Acompanhe o status de cada treino de 1 a 30</p>
         </CardHeader>
         <CardContent>
           <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
@@ -127,7 +127,7 @@ export default async function EvolucaoPage() {
                 className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3"
               >
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-white">Dia {String(journey.day).padStart(2, "0")}</p>
+                  <p className="text-sm font-medium text-white">Treino {String(journey.day).padStart(2, "0")}</p>
                   <Badge variant="outline" className={`${getStatusBadge(journey.status)} border text-[10px] px-1.5 py-0`}>
                     {getStatusLabel(journey.status)}
                   </Badge>
@@ -156,7 +156,7 @@ export default async function EvolucaoPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-slate-300">
-              Recomendamos refazer a avaliação no Dia 15 e no Dia 30 para comparar sua evolução com mais clareza.
+              Recomendamos refazer a avaliação no Treino 15 e no Treino 30 para comparar sua evolução com mais clareza.
             </p>
             <Link href="/aluno/checklist">
               <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">

@@ -76,11 +76,11 @@ export default async function AdminAlunoDetailPage({
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Dias concluídos</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Treinos concluídos</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-emerald-300">{totalCompletedDays}</div>
-            <p className="text-xs text-slate-400">de 30 dias</p>
+            <p className="text-xs text-slate-400">de 30 treinos</p>
           </CardContent>
         </Card>
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
@@ -94,19 +94,19 @@ export default async function AdminAlunoDetailPage({
         </Card>
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Em andamento</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Treinos em andamento</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-amber-300">{totalInProgressDays}</div>
-            <p className="text-xs text-slate-400">dias iniciados</p>
+            <p className="text-xs text-slate-400">treinos iniciados</p>
           </CardContent>
         </Card>
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Último dia concluído</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Último treino concluído</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{lastCompletedDay ? `Dia ${lastCompletedDay}` : "—"}</div>
+            <div className="text-2xl font-bold text-white">{lastCompletedDay ? `Treino ${lastCompletedDay}` : "—"}</div>
             <p className="text-xs text-slate-400">
               Status atual: <span className="text-slate-300">{student.profileStatus === "blocked" ? "bloqueado" : student.isAccessActive ? "ativo" : "vencido"}</span>
             </p>
@@ -124,7 +124,7 @@ export default async function AdminAlunoDetailPage({
               <p className="text-sm font-medium text-white capitalize">{student.profileStatus === "blocked" ? "Bloqueado" : student.isAccessActive ? "Ativo" : "Vencido"}</p>
               <p className="text-[11px] text-slate-500">
                 {student.isAccessActive && student.daysRemaining > 0
-                  ? `${student.daysRemaining} dias restantes`
+                  ? `${student.daysRemaining} dias de acesso restantes`
                   : "Sem acesso ativo"}
               </p>
               <p className="text-[11px] text-slate-500">
@@ -194,13 +194,13 @@ export default async function AdminAlunoDetailPage({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-lg text-white">
             <Calendar className="h-5 w-5 text-yellow-400" />
-            Dias da jornada
+            Treinos da jornada
           </CardTitle>
-          <p className="text-xs text-slate-400">Acompanhe o progresso dia a dia deste aluno</p>
+          <p className="text-xs text-slate-400">Acompanhe o progresso treino a treino deste aluno</p>
         </CardHeader>
         <CardContent>
           {progressList.length === 0 ? (
-            <p className="text-xs text-slate-400">Este aluno ainda não iniciou nenhum dia da jornada.</p>
+            <p className="text-xs text-slate-400">Este aluno ainda não iniciou nenhum treino.</p>
           ) : (
             <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
               {Array.from({ length: 30 }, (_, i) => i + 1).map((day) => {
@@ -213,7 +213,7 @@ export default async function AdminAlunoDetailPage({
 
                 return (
                   <div key={day} className={`rounded-xl border p-3 ${statusVariant}`}>
-                    <p className="text-sm font-medium text-white">Dia {String(day).padStart(2, "0")}</p>
+                    <p className="text-sm font-medium text-white">Treino {String(day).padStart(2, "0")}</p>
                     <p className="text-[10px] text-slate-400 capitalize">{dayProgress.status === "completed" ? "Concluído" : "Em andamento"}</p>
                     {dayProgress.completed_at && (
                       <p className="text-[10px] text-slate-500">{formatDate(dayProgress.completed_at)}</p>

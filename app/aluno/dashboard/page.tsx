@@ -79,7 +79,7 @@ export default async function DashboardPage() {
         </div>
         <div className="flex items-center gap-3">
           <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            Dia {String(journey.suggestedDay).padStart(2, "0")} de 30
+            Treino {String(journey.suggestedDay).padStart(2, "0")} de 30
           </Badge>
           {!journey.isJourneyCompleted && !journey.isNextDayLocked && (
             <Link href={`/aluno/treinos/dia-${String(journey.availableDay).padStart(2, "0")}`}>
@@ -101,35 +101,35 @@ export default async function DashboardPage() {
           <CardContent>
             <div className="text-2xl font-bold text-white">{progressPercentage}%</div>
             <Progress value={progressPercentage} className="mt-3 h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400" />
-            <p className="mt-2 text-[10px] text-slate-400">{totalCompletedDays} de 30 dias concluídos</p>
+            <p className="mt-2 text-[10px] text-slate-400">{totalCompletedDays} de 30 treinos concluídos</p>
           </CardContent>
         </Card>
 
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Dias concluídos</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Treinos concluídos</CardTitle>
             <CheckCircle2 className="h-4 w-4 text-emerald-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{totalCompletedDays}</div>
-            <p className="text-xs text-slate-400">Dias finalizados</p>
+            <p className="text-xs text-slate-400">Treinos finalizados</p>
           </CardContent>
         </Card>
 
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Em andamento</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Treinos em andamento</CardTitle>
             <Flame className="h-4 w-4 text-amber-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-white">{totalInProgressDays}</div>
-            <p className="text-xs text-slate-400">Dias iniciados</p>
+            <p className="text-xs text-slate-400">Treinos iniciados</p>
           </CardContent>
         </Card>
 
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Acesso restante</CardTitle>
+            <CardTitle className="text-sm font-medium text-slate-300">Dias de acesso</CardTitle>
             <Clock className="h-4 w-4 text-yellow-400" />
           </CardHeader>
           <CardContent>
@@ -184,7 +184,7 @@ export default async function DashboardPage() {
               Treino de hoje
             </CardTitle>
             <p className="text-xs text-slate-400">
-              Dia {String(journey.suggestedDay).padStart(2, "0")} —{" "}
+              Treino {String(journey.suggestedDay).padStart(2, "0")} —{" "}
               {journey.isJourneyCompleted
                 ? "Jornada concluída!"
                 : journey.isNextDayLocked
@@ -224,7 +224,7 @@ export default async function DashboardPage() {
                     <Calendar className="h-8 w-8 text-yellow-400" />
                   </div>
                   <div className="space-y-1">
-                    <h3 className="font-semibold text-white">Dia {String(journey.availableDay).padStart(2, "0")} da jornada</h3>
+                    <h3 className="font-semibold text-white">Treino {String(journey.availableDay).padStart(2, "0")} da jornada</h3>
                     <p className="text-sm text-slate-300">
                       Faça os movimentos com calma. A meta é executar bem, não fazer rápido.
                     </p>
@@ -252,20 +252,20 @@ export default async function DashboardPage() {
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-white">
               <TrendingUp className="h-5 w-5 text-yellow-400" />
-              Últimos registros
+              Últimos treinos
             </CardTitle>
-            <p className="text-xs text-slate-400">Seus últimos dias registrados</p>
+            <p className="text-xs text-slate-400">Seus últimos treinos registrados</p>
           </CardHeader>
           <CardContent>
             {recentDays.length === 0 ? (
               <div className="space-y-3">
                 <p className="text-sm text-slate-300">
-                  Você ainda não iniciou nenhum dia. Que tal começar agora?
+                  Você ainda não iniciou nenhum treino. Que tal começar agora?
                 </p>
                 {!journey.isNextDayLocked && journey.availableDay === 1 && (
                   <Link href="/aluno/checklist?dia=1">
                     <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                      Começar dia 1
+                      Começar treino 1
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
@@ -280,7 +280,7 @@ export default async function DashboardPage() {
                   >
                     <div className="space-y-1">
                       <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-white">Dia {String(day.journey_day).padStart(2, "0")}</p>
+                        <p className="text-sm font-medium text-white">Treino {String(day.journey_day).padStart(2, "0")}</p>
                         <Badge
                           variant="outline"
                           className={
@@ -289,7 +289,7 @@ export default async function DashboardPage() {
                               : "border-amber-400/30 bg-amber-400/5 text-amber-300"
                           }
                         >
-                          {day.status === "completed" ? "Concluído" : "Em andamento"}
+                          {day.status === "completed" ? "Treino concluído" : "Treino em andamento"}
                         </Badge>
                       </div>
                       <div className="flex flex-wrap gap-3 text-[10px] text-slate-400">

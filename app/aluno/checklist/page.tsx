@@ -135,7 +135,7 @@ export default async function ChecklistPage({
         </div>
         <div className="flex items-center gap-3">
           <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            Dia {String(selectedDay).padStart(2, "0")} de 30
+            Treino {String(selectedDay).padStart(2, "0")} de 30
           </Badge>
         </div>
       </div>
@@ -161,8 +161,8 @@ export default async function ChecklistPage({
               <LockIcon className="h-6 w-6" />
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-medium text-amber-300">Dia bloqueado</p>
-              <p className="text-xs text-slate-300">Esse dia ainda não está liberado. Continue a jornada no próximo dia válido.</p>
+              <p className="text-sm font-medium text-amber-300">Treino bloqueado</p>
+              <p className="text-xs text-slate-300">Esse treino ainda não está liberado. Continue a jornada no próximo dia útil disponível.</p>
             </div>
           </CardContent>
         </Card>
@@ -175,7 +175,7 @@ export default async function ChecklistPage({
               <LockIcon className="h-6 w-6" />
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-medium text-amber-300">Dia bloqueado</p>
+              <p className="text-sm font-medium text-amber-300">Treino bloqueado</p>
               <p className="text-xs text-slate-300">{journey.message}</p>
             </div>
           </CardContent>
@@ -184,7 +184,7 @@ export default async function ChecklistPage({
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader>
-          <CardTitle className="text-lg text-white">Selecione o dia</CardTitle>
+          <CardTitle className="text-lg text-white">Selecione o treino</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
@@ -258,7 +258,7 @@ export default async function ChecklistPage({
               {locked && (
                 <div className="rounded-xl border border-amber-400/10 bg-amber-400/5 p-3">
                   <p className="text-xs text-amber-300">
-                    Você pode visualizar o roteiro, mas o registro só será liberado no próximo dia válido.
+                    Você pode visualizar o roteiro, mas o registro só será liberado no próximo dia útil.
                   </p>
                 </div>
               )}
@@ -269,7 +269,7 @@ export default async function ChecklistPage({
 
       <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
         <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-slate-300">Sua consistência no dia {String(selectedDay).padStart(2, "0")}</CardTitle>
+          <CardTitle className="text-sm font-medium text-slate-300">Sua consistência no treino {String(selectedDay).padStart(2, "0")}</CardTitle>
           <CheckCircle2 className="h-4 w-4 text-emerald-400" />
         </CardHeader>
         <CardContent className="space-y-4">
@@ -290,7 +290,7 @@ export default async function ChecklistPage({
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardContent className="flex flex-col items-center justify-center gap-3 py-10">
             <LockIcon className="h-10 w-10 text-amber-400" />
-            <p className="text-sm font-medium text-white">Dia bloqueado</p>
+            <p className="text-sm font-medium text-white">Treino bloqueado</p>
             <p className="text-xs text-slate-400 text-center max-w-md">{journey.message}</p>
             {journey.lockedUntilDate && (
               <p className="text-[11px] text-slate-500">
@@ -413,7 +413,7 @@ export default async function ChecklistPage({
                 Salvar progresso
               </Button>
               <Button type="submit" name="intent" value="complete" variant="outline" className="border-emerald-400/40 text-emerald-300 hover:bg-emerald-400/10">
-                Concluir dia
+                Concluir treino
               </Button>
             </div>
           </div>
