@@ -12,6 +12,7 @@ export type StudentProfile = {
   age: number | null;
   heightCm: number | null;
   weightKg: number | null;
+  mobilityLevel: number | null;
   mainGoal: string;
   limitations: string;
 };
@@ -28,7 +29,9 @@ export async function getStudentProfile(): Promise<StudentProfile> {
 
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("id, full_name, avatar_url, age, height_cm, weight_kg, main_goal, limitations")
+    .select(
+      "id, full_name, avatar_url, age, height_cm, weight_kg, mobility_level, main_goal, limitations",
+    )
     .eq("id", user.id)
     .maybeSingle();
 
@@ -44,6 +47,7 @@ export async function getStudentProfile(): Promise<StudentProfile> {
     age: profile?.age ?? null,
     heightCm: profile?.height_cm ?? null,
     weightKg: profile?.weight_kg ?? null,
+    mobilityLevel: profile?.mobility_level ?? null,
     mainGoal: profile?.main_goal ?? "",
     limitations: profile?.limitations ?? "",
   };

@@ -12,6 +12,7 @@ const profileSchema = z.object({
   age: z.number().int().min(5).max(120).nullable(),
   heightCm: z.number().int().min(80).max(250).nullable(),
   weightKg: z.number().min(20).max(300).nullable(),
+  mobilityLevel: z.number().int().min(0).max(5).nullable(),
   mainGoal: z.string().trim(),
   limitations: z.string().trim(),
 });
@@ -49,6 +50,7 @@ export async function updateStudentProfileAction(formData: FormData): Promise<vo
     age: parseOptionalInteger(getTrimmedValue(formData, "age")),
     heightCm: parseOptionalInteger(getTrimmedValue(formData, "heightCm")),
     weightKg: parseOptionalDecimal(getTrimmedValue(formData, "weightKg")),
+    mobilityLevel: parseOptionalInteger(getTrimmedValue(formData, "mobilityLevel")),
     mainGoal: getTrimmedValue(formData, "mainGoal"),
     limitations: getTrimmedValue(formData, "limitations"),
   });
@@ -68,6 +70,9 @@ export async function updateStudentProfileAction(formData: FormData): Promise<vo
     if (issues.weightKg?.length) {
       redirect("/aluno/perfil?error=invalid-weight");
     }
+    if (issues.mobilityLevel?.length) {
+      redirect("/aluno/perfil?error=invalid-mobility-level");
+    }
 
     redirect("/aluno/perfil?error=profile-error");
   }
@@ -80,6 +85,7 @@ export async function updateStudentProfileAction(formData: FormData): Promise<vo
       age: parsedProfile.data.age,
       height_cm: parsedProfile.data.heightCm,
       weight_kg: parsedProfile.data.weightKg,
+      mobility_level: parsedProfile.data.mobilityLevel,
       main_goal: parsedProfile.data.mainGoal || null,
       limitations: parsedProfile.data.limitations || null,
     })
@@ -125,4 +131,10 @@ export async function updateStudentPasswordAction(formData: FormData): Promise<v
 
   revalidatePath("/aluno/perfil");
   redirect("/aluno/perfil?success=password-updated");
+}
+
+export async function logoutAction(): Promise<void> {
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/login");
 }

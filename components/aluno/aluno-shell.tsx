@@ -10,6 +10,7 @@ import {
   LogOut,
   Flame,
   Clock,
+  User,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -21,6 +22,11 @@ const navItems = [
   { label: "Evolução", href: "/aluno/evolucao", icon: Flame },
   { label: "Materiais", href: "/aluno/materiais", icon: BookOpen },
   { label: "Suporte", href: "/aluno/suporte", icon: Headphones },
+];
+
+const mobileNavItems = [
+  ...navItems,
+  { label: "Perfil", href: "/aluno/perfil", icon: User },
 ];
 
 type AlunoShellProps = {
@@ -158,46 +164,13 @@ export function AlunoShell({
         </div>
       </aside>
 
-      <main className="pb-36 lg:ml-72 lg:pb-0">
+      <main className="pb-24 lg:ml-72 lg:pb-0">
         <div className="mx-auto max-w-6xl px-5 py-6 lg:px-8 lg:py-8">{children}</div>
       </main>
 
-      <div className="fixed inset-x-0 bottom-18 z-40 px-3 lg:hidden">
-        <div className="mx-auto flex max-w-3xl items-stretch gap-2">
-          <Link
-            href="/aluno/perfil"
-            className={cn(
-              "group flex flex-1 items-center gap-3 rounded-2xl border border-white/10 bg-[#0B1115]/95 px-3 py-3 shadow-2xl shadow-black/40 backdrop-blur transition hover:cursor-pointer hover:border-yellow-400/20 hover:bg-yellow-400/[0.08]",
-              pathname === "/aluno/perfil" && "border-yellow-400/30 bg-yellow-400/10"
-            )}
-          >
-            {studentAvatarUrl ? (
-              <img
-                src={studentAvatarUrl}
-                alt={`Foto de perfil de ${displayName}`}
-                className="size-10 rounded-full border border-white/10 object-cover"
-              />
-            ) : (
-              <div className="flex size-10 items-center justify-center rounded-full bg-white/10 text-sm font-medium text-white">
-                {initials}
-              </div>
-            )}
-            <p className="min-w-0 truncate text-sm font-medium text-white">{displayName}</p>
-          </Link>
-          <button
-            onClick={handleLogout}
-            className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#0B1115]/95 px-3 py-3 text-xs font-medium text-slate-300 shadow-2xl shadow-black/40 backdrop-blur transition hover:bg-white/10 hover:text-white"
-            title="Sair"
-          >
-            <LogOut className="h-4 w-4" />
-            Sair
-          </button>
-        </div>
-      </div>
-
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#070A0D]/95 px-2 py-2 backdrop-blur lg:hidden">
-        <div className="grid grid-cols-5 gap-1">
-          {navItems.map((item) => {
+        <div className="grid grid-cols-6 gap-1">
+          {mobileNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 

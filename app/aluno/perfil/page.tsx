@@ -1,4 +1,4 @@
-import { Camera, CheckCircle2, Lock, Shield, UserRound } from "lucide-react";
+import { Camera, CheckCircle2, ChevronRight, Lock, LogOut, Shield, SlidersHorizontal, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -10,6 +10,7 @@ import { getStudentProfile } from "@/lib/aluno/get-student-profile";
 import {
   updateStudentPasswordAction,
   updateStudentProfileAction,
+  logoutAction,
 } from "./actions";
 
 function getMessageFromError(error?: string) {
@@ -22,6 +23,8 @@ function getMessageFromError(error?: string) {
       return "A altura deve estar entre 80 e 250 cm.";
     case "invalid-weight":
       return "O peso deve estar entre 20 e 300 kg.";
+    case "invalid-mobility-level":
+      return "A mobilidade inicial deve ficar entre 0 e 5.";
     case "password-too-short":
       return "Use uma senha com pelo menos 6 caracteres.";
     case "password-mismatch":
@@ -42,6 +45,14 @@ export default async function StudentProfilePage({
 }) {
   const params = await searchParams;
   const profile = await getStudentProfile();
+  const mobilityOptions = [
+    { value: 0, label: "Muito baixa" },
+    { value: 1, label: "Baixa" },
+    { value: 2, label: "Limitada" },
+    { value: 3, label: "Regular" },
+    { value: 4, label: "Boa" },
+    { value: 5, label: "Muito boa" },
+  ];
 
   return (
     <div className="space-y-8">
@@ -49,7 +60,7 @@ export default async function StudentProfilePage({
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white">Meu perfil</h1>
           <p className="mt-2 max-w-2xl text-slate-300">
-            Atualize seus dados para deixar sua jornada mais personalizada.
+            Atualize seus dados e personalize sua jornada.
           </p>
         </div>
       </div>
@@ -90,19 +101,19 @@ export default async function StudentProfilePage({
         </Card>
       )}
 
-      <div className="grid gap-6 xl:grid-cols-[1.5fr_1fr]">
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+      <div className="grid gap-6">
+        <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-white">
               <UserRound className="h-5 w-5 text-yellow-400" />
-              Dados pessoais
+              Dados de acesso
             </CardTitle>
             <p className="text-xs text-slate-400">
-              Ajuste suas informacoes basicas para personalizar a experiencia.
+              Ajuste as informacoes principais da sua conta sem mexer no e-mail de acesso.
             </p>
           </CardHeader>
           <CardContent>
-            <form action={updateStudentProfileAction} className="space-y-5">
+            <form action={updateStudentProfileAction} className="space-y-6">
               <div className="grid gap-5 md:grid-cols-2">
                 <div className="space-y-2 md:col-span-2">
                   <Label htmlFor="fullName" className="text-xs text-slate-300">Nome exibido</Label>
@@ -116,7 +127,7 @@ export default async function StudentProfilePage({
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="email" className="text-xs text-slate-300">E-mail</Label>
+                  <Label htmlFor="email" className="text-xs text-slate-300">E-mail de acesso</Label>
                   <Input
                     id="email"
                     defaultValue={profile.email}
@@ -130,7 +141,7 @@ export default async function StudentProfilePage({
                 </div>
 
                 <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="avatarUrl" className="text-xs text-slate-300">URL da foto de perfil</Label>
+                  <Label htmlFor="avatarUrl" className="text-xs text-slate-300">Foto/avatar</Label>
                   <div className="relative">
                     <Camera className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
                     <Input
@@ -142,76 +153,111 @@ export default async function StudentProfilePage({
                       className="h-11 border-white/10 bg-white/5 pl-10 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                     />
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="age" className="text-xs text-slate-300">Idade</Label>
-                  <Input
-                    id="age"
-                    name="age"
-                    type="number"
-                    min={5}
-                    max={120}
-                    defaultValue={profile.age ?? ""}
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="heightCm" className="text-xs text-slate-300">Altura em cm</Label>
-                  <Input
-                    id="heightCm"
-                    name="heightCm"
-                    type="number"
-                    min={80}
-                    max={250}
-                    defaultValue={profile.heightCm ?? ""}
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="weightKg" className="text-xs text-slate-300">Peso em kg</Label>
-                  <Input
-                    id="weightKg"
-                    name="weightKg"
-                    type="number"
-                    min={20}
-                    max={300}
-                    step="0.01"
-                    defaultValue={profile.weightKg ?? ""}
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="mainGoal" className="text-xs text-slate-300">Objetivo principal</Label>
-                  <Input
-                    id="mainGoal"
-                    name="mainGoal"
-                    defaultValue={profile.mainGoal}
-                    placeholder="Ex: ganhar mobilidade, criar consistencia..."
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="limitations" className="text-xs text-slate-300">Observacoes ou limitacoes</Label>
-                  <Textarea
-                    id="limitations"
-                    name="limitations"
-                    defaultValue={profile.limitations}
-                    placeholder="Ex: desconforto no ombro, pouca mobilidade no quadril, retorno gradual..."
-                    className="min-h-[140px] border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
+                  <p className="text-[11px] text-slate-500">
+                    Cole uma URL de imagem. Upload de foto sera adicionado depois.
+                  </p>
                 </div>
               </div>
 
-              <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
-                <p className="text-xs leading-relaxed text-slate-400">
-                  Essas informacoes sao usadas apenas para personalizar sua experiencia. Elas nao substituem avaliacao profissional.
-                </p>
-              </div>
+              <Card className="border-white/10 bg-[#0D1317] shadow-none">
+                <CardHeader className="pb-4">
+                  <CardTitle className="flex items-center gap-2 text-lg text-white">
+                    <SlidersHorizontal className="h-5 w-5 text-yellow-400" />
+                    Aspectos gerais
+                  </CardTitle>
+                  <p className="text-xs text-slate-400">
+                    Essas informacoes ajudam a personalizar sua experiencia e acompanhar sua evolucao percebida. Elas nao substituem avaliacao profissional.
+                  </p>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                  <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="age" className="text-xs text-slate-300">Idade</Label>
+                      <Input
+                        id="age"
+                        name="age"
+                        type="number"
+                        min={5}
+                        max={120}
+                        defaultValue={profile.age ?? ""}
+                        className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="heightCm" className="text-xs text-slate-300">Altura em cm</Label>
+                      <Input
+                        id="heightCm"
+                        name="heightCm"
+                        type="number"
+                        min={80}
+                        max={250}
+                        defaultValue={profile.heightCm ?? ""}
+                        className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="weightKg" className="text-xs text-slate-300">Peso em kg</Label>
+                      <Input
+                        id="weightKg"
+                        name="weightKg"
+                        type="number"
+                        min={20}
+                        max={300}
+                        step="0.01"
+                        defaultValue={profile.weightKg ?? ""}
+                        className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="mobilityLevel" className="text-xs text-slate-300">Mobilidade inicial</Label>
+                      <select
+                        id="mobilityLevel"
+                        name="mobilityLevel"
+                        defaultValue={profile.mobilityLevel?.toString() ?? ""}
+                        className="h-11 w-full rounded-md border border-white/10 bg-white/5 px-3 text-sm text-slate-200 outline-none transition focus:border-yellow-400/50 focus:ring-2 focus:ring-yellow-400/20"
+                      >
+                        <option value="" className="bg-slate-950 text-slate-300">
+                          Selecione um nivel
+                        </option>
+                        {mobilityOptions.map((option) => (
+                          <option
+                            key={option.value}
+                            value={option.value}
+                            className="bg-slate-950 text-slate-200"
+                          >
+                            {option.value} - {option.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="mainGoal" className="text-xs text-slate-300">Objetivo principal</Label>
+                    <Input
+                      id="mainGoal"
+                      name="mainGoal"
+                      defaultValue={profile.mainGoal}
+                      placeholder="Ex: ganhar mobilidade, criar consistencia..."
+                      className="h-11 border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="limitations" className="text-xs text-slate-300">Observacoes ou limitacoes</Label>
+                    <Textarea
+                      id="limitations"
+                      name="limitations"
+                      defaultValue={profile.limitations}
+                      placeholder="Ex: desconforto no ombro, pouca mobilidade no quadril, retorno gradual..."
+                      className="min-h-[140px] border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
 
               <Button
                 type="submit"
@@ -223,70 +269,95 @@ export default async function StudentProfilePage({
           </CardContent>
         </Card>
 
-        <div className="space-y-6">
-          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-lg text-white">
-                <Lock className="h-5 w-5 text-yellow-400" />
-                Trocar senha
-              </CardTitle>
-              <p className="text-xs text-slate-400">
-                Atualize sua senha sem alterar o fluxo publico de recuperacao.
-              </p>
-            </CardHeader>
-            <CardContent>
-              <form action={updateStudentPasswordAction} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="newPassword" className="text-xs text-slate-300">Nova senha</Label>
-                  <Input
-                    id="newPassword"
-                    name="newPassword"
-                    type="password"
-                    minLength={6}
-                    required
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
+        <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Lock className="h-5 w-5 text-yellow-400" />
+              Seguranca
+            </CardTitle>
+            <p className="text-xs text-slate-400">
+              Troque sua senha sem alterar o fluxo publico de recuperacao.
+            </p>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <form action={updateStudentPasswordAction} className="grid gap-5 md:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="newPassword" className="text-xs text-slate-300">Nova senha</Label>
+                <Input
+                  id="newPassword"
+                  name="newPassword"
+                  type="password"
+                  minLength={6}
+                  required
+                  className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword" className="text-xs text-slate-300">Confirmar nova senha</Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  minLength={6}
+                  required
+                  className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                />
+              </div>
+
+              <div className="md:col-span-2 flex flex-col gap-4 rounded-2xl border border-white/10 bg-white/[0.03] p-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-slate-200">Use uma senha com pelo menos 6 caracteres.</p>
+                  <p className="text-xs text-slate-400">
+                    Evite repetir senhas antigas e nao compartilhe seu acesso com outras pessoas.
+                  </p>
                 </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="confirmPassword" className="text-xs text-slate-300">Confirmar nova senha</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    minLength={6}
-                    required
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                  />
-                </div>
-
-                <p className="text-xs text-slate-400">
-                  Use uma senha com pelo menos 6 caracteres.
-                </p>
-
                 <Button
                   type="submit"
-                  variant="outline"
-                  className="w-full border-yellow-400/30 bg-yellow-400/10 text-yellow-300 hover:bg-yellow-400/20 hover:text-yellow-200"
+                  className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 sm:w-auto"
                 >
                   Atualizar senha
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
-              </form>
-            </CardContent>
-          </Card>
-
-          <Card className="border-rose-400/10 bg-rose-400/5">
-            <CardContent className="flex items-start gap-3 p-5">
-              <Shield className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
-              <div className="space-y-1">
-                <p className="text-sm font-medium text-slate-200">Privacidade e seguranca</p>
-                <p className="text-xs leading-relaxed text-slate-400">
-                  Mantenha seus dados atualizados para melhorar as recomendacoes e nunca compartilhe sua senha com outras pessoas.
-                </p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+            </form>
+
+            <Card className="border-rose-400/10 bg-rose-400/5 shadow-none">
+              <CardContent className="flex items-start gap-3 p-5">
+                <Shield className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-slate-200">Privacidade e seguranca</p>
+                  <p className="text-xs leading-relaxed text-slate-400">
+                    Mantenha seus dados atualizados para melhorar as recomendacoes e nunca compartilhe sua senha com outras pessoas.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </CardContent>
+        </Card>
+
+        <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <LogOut className="h-5 w-5 text-rose-400" />
+              Sessão
+            </CardTitle>
+            <p className="text-xs text-slate-400">
+              Encerre sua sessão atual e retorne para o login.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <form action={logoutAction}>
+              <Button
+                type="submit"
+                variant="outline"
+                className="border-rose-400/30 text-rose-300 hover:bg-rose-400/10 hover:text-rose-200"
+              >
+                Sair da conta
+              </Button>
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
