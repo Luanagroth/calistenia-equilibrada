@@ -1,142 +1,356 @@
-import { ArrowLeft, CheckCircle2, Dumbbell, Droplets, Footprints, HeartPulse, Lightbulb, Moon, Shield, TrendingUp, Trophy, Lock as LockIcon } from "lucide-react";
+import Link from "next/link";
+import {
+  CheckCircle2,
+  ChevronDown,
+  CircleAlert,
+  Clock3,
+  Dumbbell,
+  Medal,
+  PlayCircle,
+  Shield,
+  TriangleAlert,
+} from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { getStudentProgressByDay, getStudentProgressSummary } from "@/lib/aluno/get-student-progress";
+import { getStudentProgressByDay } from "@/lib/aluno/get-student-progress";
 import { getJourneyAvailability } from "@/lib/jornada/progress-rules";
-import { getTrainingDayPlan } from "@/lib/jornada/training-plan";
+import { getTrainingDayPlan, type TrainingExercise, type TrainingExerciseCategory } from "@/lib/jornada/training-plan";
+import { RatingStars } from "./rating-stars";
+
 import { saveDailyProgressAction } from "./actions";
 
-type HabitId = "warmup" | "mobility" | "strength" | "stretching" | "breathing" | "reading";
+type HabitId = "hydration" | "balancedFood" | "naturalFoods" | "respectedLimits" | "rest" | "reading";
 
-const habits: { id: HabitId; title: string; description: string; icon: React.ReactNode }[] = [
+const categoryMeta: Record<
+  TrainingExerciseCategory,
   {
-    id: "warmup",
-    title: "Aquecimento feito",
-    description: "Completei o aquecimento preparatório do dia.",
-    icon: <TrendingUp className="h-4 w-4 text-yellow-400" />,
+    label: string;
+    badgeClassName: string;
+    iconClassName: string;
+  }
+> = {
+  aquecimento: {
+    label: "Aquecimento",
+    badgeClassName: "border-amber-400/20 bg-amber-400/10 text-amber-300",
+    iconClassName: "text-amber-300",
+  },
+  mobilidade: {
+    label: "Mobilidade",
+    badgeClassName: "border-sky-400/20 bg-sky-400/10 text-sky-300",
+    iconClassName: "text-sky-300",
+  },
+  estabilidade: {
+    label: "Estabilidade",
+    badgeClassName: "border-emerald-400/20 bg-emerald-400/10 text-emerald-300",
+    iconClassName: "text-emerald-300",
+  },
+  forca: {
+    label: "Forca",
+    badgeClassName: "border-yellow-400/20 bg-yellow-400/10 text-yellow-300",
+    iconClassName: "text-yellow-300",
+  },
+  alongamento: {
+    label: "Alongamento",
+    badgeClassName: "border-violet-400/20 bg-violet-400/10 text-violet-300",
+    iconClassName: "text-violet-300",
+  },
+  respiracao: {
+    label: "Respiracao",
+    badgeClassName: "border-indigo-400/20 bg-indigo-400/10 text-indigo-300",
+    iconClassName: "text-indigo-300",
+  },
+};
+
+const dailyHabits: Array<{
+  id: HabitId;
+  title: string;
+  description: string;
+}> = [
+  {
+    id: "hydration",
+    title: "Bebi agua hoje",
+    description: "A hidratacao ajuda o corpo a responder melhor ao treino e a se recuperar.",
   },
   {
-    id: "mobility",
-    title: "Mobilidade feita",
-    description: "Pelo menos os exercícios de mobilidade do dia.",
-    icon: <TrendingUp className="h-4 w-4 text-sky-400" />,
+    id: "balancedFood",
+    title: "Fiz uma alimentacao equilibrada",
+    description: "Comer bem ajuda energia, foco e constancia ao longo da jornada.",
   },
   {
-    id: "strength",
-    title: "Força/controle corporal feito",
-    description: "Completei a sessão principal de força.",
-    icon: <Dumbbell className="h-4 w-4 text-amber-400" />,
+    id: "naturalFoods",
+    title: "Inclui frutas, verduras ou alimentos naturais",
+    description: "Escolhas simples no dia ajudam a sustentar sua evolucao fora do treino.",
   },
   {
-    id: "stretching",
-    title: "Alongamento feito",
-    description: "Finalizei com os alongamentos indicados.",
-    icon: <HeartPulse className="h-4 w-4 text-emerald-400" />,
+    id: "respectedLimits",
+    title: "Respeitei meus limites",
+    description: "O treino rende mais quando voce evolui sem brigar com o corpo.",
   },
   {
-    id: "breathing",
-    title: "Respiração/relaxamento feito",
-    description: "Reservei um momento para respiração e relaxamento.",
-    icon: <Moon className="h-4 w-4 text-indigo-400" />,
+    id: "rest",
+    title: "Descansei ou dormi bem",
+    description: "Recuperacao tambem faz parte da pratica.",
   },
   {
     id: "reading",
-    title: "Leitura/orientação do dia feita",
-    description: "Li a orientação e o conteúdo do dia.",
-    icon: <Lightbulb className="h-4 w-4 text-violet-400" />,
+    title: "Li ou revisei a orientacao do dia",
+    description: "Revisar a orientacao ajuda a praticar com mais clareza e intencao.",
   },
 ];
 
-function formatDate(value: string | null) {
-  if (!value) return "—";
-  const date = new Date(value);
-  return date.toLocaleDateString("pt-BR");
+function getCurrentStatus({
+  hasInProgress,
+  isCompleted,
+  isBlocked,
+}: {
+  hasInProgress: boolean;
+  isCompleted: boolean;
+  isBlocked: boolean;
+}) {
+  if (isCompleted && isBlocked) {
+    return "Bloqueado";
+  }
+
+  if (hasInProgress) {
+    return "Em andamento";
+  }
+
+  if (isCompleted) {
+    return "Concluido";
+  }
+
+  if (isBlocked) {
+    return "Bloqueado";
+  }
+
+  return "Liberado";
 }
 
-function isDayLocked(day: number, journey: {
-  availableDay: number;
-  suggestedDay: number;
+function getStatusClasses(status: string) {
+  switch (status) {
+    case "Concluido":
+      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
+    case "Em andamento":
+      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
+    case "Bloqueado":
+      return "border-white/10 bg-white/5 text-slate-300";
+    default:
+      return "border-yellow-400/20 bg-yellow-400/10 text-yellow-300";
+  }
+}
+
+function getExerciseChecks(checklist: Record<string, unknown>) {
+  const raw = checklist.exercises;
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
+    return {} as Record<string, boolean>;
+  }
+
+  return Object.fromEntries(
+    Object.entries(raw).map(([key, value]) => [key, Boolean(value)])
+  ) as Record<string, boolean>;
+}
+
+function shouldShowLockedState({
+  journeyMessage,
+  progressStatus,
+  isNextDayLocked,
+}: {
+  journeyMessage: string;
+  progressStatus: string | null;
   isNextDayLocked: boolean;
-  lockedUntilDate: string | null;
-  todayDateKey: string;
-  message: string;
-  isJourneyCompleted: boolean;
-}, progressList: { journey_day: number; status: string }[]): boolean {
-  if (day === journey.availableDay && !journey.isNextDayLocked) return false;
+}) {
+  return (
+    isNextDayLocked &&
+    progressStatus === "completed" &&
+    journeyMessage.toLowerCase().includes("proximo")
+  );
+}
 
-  const dayProgress = progressList.find((p) => p.journey_day === day);
-  if (dayProgress?.status === "in_progress") return false;
-  if (dayProgress?.status === "completed") return false;
+function getNextReleaseText(lockedUntilDate: string | null) {
+  if (!lockedUntilDate) {
+    return "O proximo treino sera liberado no proximo dia util da jornada.";
+  }
 
-  if (day < journey.availableDay) return false;
+  const [year, month, day] = lockedUntilDate.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  return `Seu proximo treino sera liberado em ${date.toLocaleDateString("pt-BR")}.`;
+}
 
-  return true;
+function ExerciseCard({
+  exercise,
+  index,
+  checked,
+}: {
+  exercise: TrainingExercise;
+  index: number;
+  checked: boolean;
+}) {
+  const meta = categoryMeta[exercise.category];
+
+  return (
+    <Card
+      className={`border-white/10 bg-[#10161A] shadow-2xl shadow-black/20 transition ${
+        checked ? "border-emerald-400/30 bg-emerald-400/[0.05]" : ""
+      }`}
+    >
+      <CardContent className="space-y-4 p-5">
+        <div className="flex items-start justify-between gap-4">
+          <div className="space-y-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="flex size-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs font-semibold text-slate-300">
+                {String(index + 1).padStart(2, "0")}
+              </span>
+              <Badge className={meta.badgeClassName}>{meta.label}</Badge>
+              {checked && (
+                <Badge className="border-emerald-400/20 bg-emerald-400/10 text-emerald-300">
+                  Concluido
+                </Badge>
+              )}
+            </div>
+
+            <div>
+              <h3 className="text-lg font-semibold text-white">{exercise.name}</h3>
+              <p className="mt-1 text-sm leading-relaxed text-slate-300">{exercise.summary}</p>
+            </div>
+          </div>
+
+          <Dumbbell className={`mt-1 h-5 w-5 shrink-0 ${meta.iconClassName}`} />
+        </div>
+
+        <div className="grid gap-3 text-xs text-slate-300 sm:grid-cols-3">
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2">
+            <p className="text-[11px] uppercase tracking-wide text-slate-500">Series</p>
+            <p className="mt-1 font-medium text-white">{exercise.sets}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2">
+            <p className="text-[11px] uppercase tracking-wide text-slate-500">Repeticoes</p>
+            <p className="mt-1 font-medium text-white">{exercise.reps}</p>
+          </div>
+          <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2">
+            <p className="text-[11px] uppercase tracking-wide text-slate-500">Descanso</p>
+            <p className="mt-1 font-medium text-white">{exercise.rest}</p>
+          </div>
+        </div>
+
+        <details className="group rounded-2xl border border-white/10 bg-white/[0.03]">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-medium text-yellow-200">
+            Como fazer
+            <ChevronDown className="h-4 w-4 transition group-open:rotate-180" />
+          </summary>
+          <div className="space-y-4 border-t border-white/10 px-4 py-4 text-sm text-slate-300">
+            <div>
+              <p className="font-medium text-white">Passo a passo</p>
+              <ol className="mt-2 space-y-2">
+                {exercise.howTo.map((step, stepIndex) => (
+                  <li key={`${exercise.id}-howto-${stepIndex}`} className="flex gap-2">
+                    <span className="mt-0.5 text-yellow-300">{stepIndex + 1}.</span>
+                    <span className="leading-relaxed">{step}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
+            <div>
+              <p className="font-medium text-white">Erros comuns</p>
+              <ul className="mt-2 space-y-2">
+                {exercise.commonMistakes.map((mistake) => (
+                  <li key={`${exercise.id}-${mistake}`} className="flex gap-2">
+                    <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-300" />
+                    <span className="leading-relaxed">{mistake}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="grid gap-3 lg:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-400">Adaptacao</p>
+                <p className="mt-2 leading-relaxed">{exercise.adaptation}</p>
+              </div>
+              <div className="rounded-2xl border border-rose-400/10 bg-rose-400/5 p-4">
+                <p className="text-xs font-semibold uppercase tracking-wide text-rose-200">Cuidados</p>
+                <p className="mt-2 leading-relaxed text-slate-300">{exercise.safetyNote}</p>
+              </div>
+            </div>
+
+            <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4 text-xs text-slate-400">
+              {exercise.media?.imageSrc || exercise.media?.videoSrc
+                ? "Area preparada para imagem ou video demonstrativo."
+                : "Imagem/video demonstrativo sera adicionado em breve."}
+            </div>
+          </div>
+        </details>
+
+        <label className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 transition hover:border-white/20">
+          <Checkbox
+            name={`exercise:${exercise.id}`}
+            defaultChecked={checked}
+            className="mt-0.5 data-checked:border-emerald-400 data-checked:bg-emerald-400"
+          />
+          <div>
+            <p className="text-sm font-medium text-white">Concluir exercicio</p>
+            <p className="mt-1 text-xs text-slate-400">
+              Marque quando terminar este exercicio com boa tecnica e dentro do seu limite.
+            </p>
+          </div>
+        </label>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default async function ChecklistPage({
   searchParams,
 }: {
-  searchParams: Promise<{ dia?: string; success?: string; error?: string }>;
+  searchParams: Promise<{ success?: string; error?: string }>;
 }) {
   const params = await searchParams;
-  const dayParam = params.dia;
-  const selectedDay = dayParam ? Math.min(30, Math.max(1, parseInt(dayParam, 10) || 1)) : 1;
-
-  const progress = await getStudentProgressByDay(selectedDay);
-  const summary = await getStudentProgressSummary();
   const journey = await getJourneyAvailability();
+  const selectedDay = journey.availableDay;
+  const plan = getTrainingDayPlan(selectedDay);
+  const progress = await getStudentProgressByDay(selectedDay);
 
-  const checklist = (progress?.checklist as Record<string, boolean>) ?? {};
+  if (!plan) {
+    return null;
+  }
+
+  const checklist = (progress?.checklist as Record<string, unknown>) ?? {};
+  const exerciseChecks = getExerciseChecks(checklist);
+  const completedExerciseCount = plan.exercises.filter((exercise) => exerciseChecks[exercise.id]).length;
+  const totalExerciseCount = plan.exercises.length;
+  const progressPercentage = totalExerciseCount === 0 ? 0 : Math.round((completedExerciseCount / totalExerciseCount) * 100);
+  const currentProgressStatus = progress?.status ?? null;
   const energyLevel = progress?.energy_level ?? null;
   const difficultyLevel = progress?.difficulty_level ?? null;
   const painLevel = progress?.pain_level ?? null;
   const notes = progress?.notes ?? "";
-
-  const completedHabits = habits.filter((h) => checklist[h.id]).length;
-  const totalHabits = habits.length;
-  const progressPercentage = Math.round((completedHabits / totalHabits) * 100);
-
-  const dayNumbers = Array.from({ length: 30 }, (_, i) => i + 1);
-
-  const locked = isDayLocked(selectedDay, journey, summary.progressList);
-  const showLockedError = params.error === "day-locked";
-
-  const getDayLabel = (day: number) => {
-    const dayProgress = summary.progressList.find((p) => p.journey_day === day);
-    if (dayProgress?.status === "completed") return "Concluído";
-    if (dayProgress?.status === "in_progress") return "Em andamento";
-    if (isDayLocked(day, journey, summary.progressList)) return "Bloqueado";
-    return "Pendente";
-  };
-
-  const getDayBadgeVariant = (day: number) => {
-    const dayProgress = summary.progressList.find((p) => p.journey_day === day);
-    if (dayProgress?.status === "completed") return "border-emerald-400/30 bg-emerald-400/10 text-emerald-300";
-    if (dayProgress?.status === "in_progress") return "border-amber-400/30 bg-amber-400/10 text-amber-300";
-    if (isDayLocked(day, journey, summary.progressList)) return "border-white/10 bg-white/5 text-slate-500";
-    return "border-white/10 bg-white/5 text-slate-300";
-  };
+  const hasPendingTraining = currentProgressStatus === "in_progress";
+  const lockedState = shouldShowLockedState({
+    journeyMessage: journey.message,
+    progressStatus: currentProgressStatus,
+    isNextDayLocked: journey.isNextDayLocked,
+  });
+  const currentStatus = getCurrentStatus({
+    hasInProgress: hasPendingTraining,
+    isCompleted: currentProgressStatus === "completed",
+    isBlocked: lockedState,
+  });
+  const nextReleaseText = getNextReleaseText(journey.lockedUntilDate);
 
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white">Jornada do dia</h1>
-          <p className="mt-2 max-w-xl text-slate-300">
-            Registre sua prática, acompanhe sua evolução e avance no tempo certo.
+          <p className="mt-2 max-w-2xl text-slate-300">
+            Siga o treino liberado, registre sua pratica e avance no tempo certo.
           </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            Treino {String(selectedDay).padStart(2, "0")} de 30
-          </Badge>
         </div>
       </div>
 
@@ -148,289 +362,267 @@ export default async function ChecklistPage({
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium text-emerald-300">Progresso salvo com sucesso.</p>
-              <p className="text-xs text-slate-300">Seus hábitos e métricas foram registrados.</p>
+              <p className="text-xs text-slate-300">Seus exercicios marcados e anotacoes continuam salvos.</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      {showLockedError && (
-        <Card className="border-amber-400/20 bg-amber-400/5">
-          <CardContent className="flex items-center gap-4 p-6">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-400 text-slate-950">
-              <LockIcon className="h-6 w-6" />
+      {params.success === "training-completed" && (
+        <Card className="border-emerald-400/20 bg-emerald-400/5">
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-slate-950">
+                <Medal className="h-6 w-6" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-emerald-300">Treino concluido. Voce se saiu muito bem!</p>
+                <p className="text-xs text-slate-300">
+                  Mais uma etapa da sua jornada foi registrada. Continue assim - constancia vale mais do que pressa.
+                </p>
+              </div>
             </div>
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-amber-300">Treino bloqueado</p>
-              <p className="text-xs text-slate-300">Esse treino ainda não está liberado. Continue a jornada no próximo dia útil disponível.</p>
+            <div className="rounded-2xl border border-white/10 bg-black/10 p-4">
+              <p className="text-xs font-medium uppercase tracking-wide text-slate-400">Proximo passo</p>
+              <p className="mt-2 text-sm text-slate-200">{nextReleaseText}</p>
             </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {locked && selectedDay !== journey.availableDay && (
-        <Card className="border-amber-400/20 bg-amber-400/5">
-          <CardContent className="flex items-center gap-4 p-6">
-            <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-400 text-slate-950">
-              <LockIcon className="h-6 w-6" />
-            </div>
-            <div className="space-y-1">
-              <p className="text-sm font-medium text-amber-300">Treino bloqueado</p>
-              <p className="text-xs text-slate-300">{journey.message}</p>
+            <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
+              <p className="text-sm font-semibold text-emerald-200">🏅 Medalha de persistencia</p>
+              <p className="mt-1 text-xs text-slate-300">Voce concluiu mais um treino da Jornada 30 Treinos.</p>
             </div>
           </CardContent>
         </Card>
       )}
 
-      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-        <CardHeader>
-          <CardTitle className="text-lg text-white">Selecione o treino</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
-            {dayNumbers.map((day) => (
-              <Link
-                key={day}
-                href={`/aluno/checklist?dia=${day}`}
-                className={`flex h-9 min-w-[2.5rem] items-center justify-center rounded-lg border px-3 text-xs transition ${
-                  selectedDay === day
-                    ? "border-yellow-400 bg-yellow-400/10 text-yellow-300"
-                    : `${getDayBadgeVariant(day)}`
-                }`}
-              >
-                {String(day).padStart(2, "0")}
-              </Link>
-            ))}
-          </div>
-          {locked && (
-            <p className="mt-2 text-[11px] text-amber-400">
-              {journey.message}
-            </p>
-          )}
-        </CardContent>
-      </Card>
+      {params.error && (
+        <Card className="border-rose-400/20 bg-rose-400/5">
+          <CardContent className="flex items-center gap-3 p-4 text-sm text-rose-200">
+            <CircleAlert className="h-5 w-5 shrink-0 text-rose-300" />
+            <span>
+              {params.error === "incomplete-main-steps" &&
+                "Conclua os exercicios principais antes de finalizar o treino."}
+              {params.error === "day-locked" &&
+                "Esse treino nao esta liberado agora. Continue no treino acionavel da jornada."}
+              {params.error === "invalid-day" &&
+                "Nao foi possivel identificar o treino atual da jornada."}
+              {params.error === "save-error" &&
+                "Nao foi possivel salvar seu progresso agora. Tente novamente."}
+            </span>
+          </CardContent>
+        </Card>
+      )}
 
-      {(() => {
-        const plan = getTrainingDayPlan(selectedDay);
-
-        if (!plan) return null;
-
-        return (
-          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-            <CardHeader>
-              <div className="flex items-center justify-between">
-                <CardTitle className="text-lg text-white">
-                  Treino de hoje — Dia {String(plan.day).padStart(2, "0")}
-                </CardTitle>
-                <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-                  {plan.duration}
+      <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
+        <CardContent className="p-5 sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge className="border-yellow-400/20 bg-yellow-400/10 text-yellow-300">
+                  Treino {String(plan.day).padStart(2, "0")} de 30
                 </Badge>
+                <Badge className={getStatusClasses(currentStatus)}>{currentStatus}</Badge>
               </div>
-              <p className="text-xs text-slate-400">{plan.focus}</p>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-sm text-slate-300">{plan.description}</p>
-
-              <div className="space-y-3">
-                {plan.steps.map((step) => (
-                  <div key={step.label} className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3">
-                    <div className="flex size-6 shrink-0 items-center justify-center rounded-lg bg-yellow-400/10 border border-yellow-400/20 text-[10px] font-semibold text-yellow-400">
-                      {step.label.charAt(0)}
-                    </div>
-                    <div className="space-y-1">
-                      <p className="text-sm font-medium text-white">{step.label}</p>
-                      <p className="text-xs text-slate-400">{step.description}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="space-y-1">
+                <h2 className="text-xl font-semibold text-white">{plan.title}</h2>
+                <p className="text-sm font-medium text-yellow-200">{plan.focus}</p>
+                <p className="max-w-2xl text-sm leading-relaxed text-slate-300">{plan.description}</p>
               </div>
-
-              <div className="rounded-xl border border-white/10 bg-white/5 p-3 space-y-1">
-                <p className="text-[11px] font-medium text-slate-300">Adaptação recomendada</p>
-                <p className="text-[11px] text-slate-400">{plan.adaptation}</p>
-              </div>
-
-              <div className="rounded-xl border border-rose-400/10 bg-rose-400/5 p-3 space-y-1">
-                <p className="text-[11px] font-medium text-rose-300">Cuidado</p>
-                <p className="text-[11px] text-slate-400">{plan.safetyNote}</p>
-              </div>
-
-              {locked && (
-                <div className="rounded-xl border border-amber-400/10 bg-amber-400/5 p-3">
-                  <p className="text-xs text-amber-300">
-                    Você pode visualizar o roteiro, mas o registro só será liberado no próximo dia útil.
-                  </p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        );
-      })()}
-
-      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
-          <CardTitle className="text-sm font-medium text-slate-300">Sua consistência no treino {String(selectedDay).padStart(2, "0")}</CardTitle>
-          <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-baseline justify-between">
-            <div className="text-2xl font-bold text-white">
-              {completedHabits} de {totalHabits} hábitos concluídos
             </div>
-            <div className="text-sm text-slate-400">{progressPercentage}%</div>
+
+            <div className="flex flex-wrap gap-2 text-xs text-slate-300">
+              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
+                <Clock3 className="h-3.5 w-3.5 text-yellow-300" />
+                <span>{plan.duration}</span>
+              </div>
+              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
+                <PlayCircle className="h-3.5 w-3.5 text-emerald-300" />
+                <span>{completedExerciseCount} de {totalExerciseCount} exercicios concluidos</span>
+              </div>
+            </div>
           </div>
-          <Progress value={progressPercentage} className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400" />
-          <p className="text-xs text-slate-400 italic">
-            Você está criando ritmo. Continue sem pressa.
-          </p>
+
+          <div className="mt-5 space-y-2">
+            <div className="flex items-center justify-between text-xs text-slate-400">
+              <span>Progresso do treino atual</span>
+              <span className="font-medium text-emerald-300">{progressPercentage}%</span>
+            </div>
+            <Progress
+              value={progressPercentage}
+              className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+            />
+            <p className="text-xs leading-relaxed text-slate-300">
+              {hasPendingTraining
+                ? "Voce tem um treino pendente. Continue de onde parou."
+                : journey.message}
+            </p>
+          </div>
         </CardContent>
       </Card>
 
-      {locked ? (
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-          <CardContent className="flex flex-col items-center justify-center gap-3 py-10">
-            <LockIcon className="h-10 w-10 text-amber-400" />
-            <p className="text-sm font-medium text-white">Treino bloqueado</p>
-            <p className="text-xs text-slate-400 text-center max-w-md">{journey.message}</p>
-            {journey.lockedUntilDate && (
-              <p className="text-[11px] text-slate-500">
-                Liberação prevista: {new Date(journey.lockedUntilDate + "T00:00:00").toLocaleDateString("pt-BR")}
+      {lockedState ? (
+        <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
+          <CardContent className="space-y-5 p-6">
+            <div className="space-y-2">
+              <h3 className="text-xl font-semibold text-white">Proximo treino no tempo certo</h3>
+              <p className="max-w-2xl text-sm leading-relaxed text-slate-300">
+                Voce ja concluiu o treino disponivel. O proximo treino libera no proximo dia util da jornada.
               </p>
-            )}
+            </div>
+
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <Button asChild variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+                <Link href="/aluno/evolucao">Ver evolucao</Link>
+              </Button>
+              <Button asChild className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+                <Link href="/aluno/materiais">Ver materiais</Link>
+              </Button>
+            </div>
           </CardContent>
         </Card>
       ) : (
-        <form action={saveDailyProgressAction} className="grid gap-6 lg:grid-cols-2">
+        <form action={saveDailyProgressAction} className="space-y-8">
           <input type="hidden" name="journeyDay" value={selectedDay} />
 
-          <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-            <CardHeader>
-              <CardTitle className="text-lg text-white">Hábitos do dia</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {habits.map((habit) => (
+          <section className="space-y-4">
+            <div className="space-y-1">
+              <h3 className="text-xl font-semibold text-white">Exercicios de hoje</h3>
+              <p className="text-sm text-slate-400">
+                Faca na ordem indicada. Comece leve, respeite seus limites e marque cada exercicio ao concluir.
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              {plan.exercises.map((exercise, index) => (
+                <ExerciseCard
+                  key={`${plan.day}-${exercise.id}`}
+                  exercise={exercise}
+                  index={index}
+                  checked={exerciseChecks[exercise.id] ?? false}
+                />
+              ))}
+            </div>
+          </section>
+
+          <section className="space-y-4">
+            <div className="space-y-1">
+              <h3 className="text-xl font-semibold text-white">Checklist de habitos</h3>
+              <p className="text-sm text-slate-400">
+                Esses habitos ajudam a sustentar sua evolucao fora do treino.
+              </p>
+            </div>
+
+            <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/20">
+              <CardContent className="grid gap-3 p-5 md:grid-cols-2">
+                {dailyHabits.map((habit) => (
                   <label
                     key={habit.id}
-                    className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] p-3 transition-colors hover:border-white/10 cursor-pointer"
+                    className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-white/20"
                   >
                     <Checkbox
                       name={habit.id}
-                      defaultChecked={checklist[habit.id] ?? false}
-                      className="mt-0.5 data-checked:bg-emerald-400 data-checked:border-emerald-400"
+                      defaultChecked={Boolean(checklist[habit.id])}
+                      className="mt-0.5 data-checked:border-emerald-400 data-checked:bg-emerald-400"
                     />
-                    <div className="flex-1 space-y-1">
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="flex items-center gap-2 text-sm font-medium text-slate-200">
-                          {habit.icon}
-                          {habit.title}
-                        </span>
-                      </div>
-                      <p className="text-xs text-slate-400">{habit.description}</p>
+                    <div className="space-y-1">
+                      <p className="text-sm font-medium text-white">{habit.title}</p>
+                      <p className="text-xs leading-relaxed text-slate-400">{habit.description}</p>
                     </div>
                   </label>
                 ))}
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </section>
 
-          <div className="space-y-6">
-            <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-              <CardHeader>
-                <CardTitle className="text-lg text-white">Como você se sentiu hoje?</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="energyLevel" className="text-xs text-slate-300">Nível de energia (1 a 5)</Label>
-                  <select
-                    id="energyLevel"
+          <section className="space-y-4">
+            <div className="space-y-1">
+              <h3 className="text-xl font-semibold text-white">Como voce se sentiu</h3>
+              <p className="text-sm text-slate-400">
+                Registre como foi sua pratica. Isso ajuda voce a perceber evolucao, limites e constancia.
+              </p>
+            </div>
+
+            <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/20">
+              <CardContent className="grid gap-5 p-5 lg:grid-cols-2">
+                <div className="space-y-4">
+                  <RatingStars
+                    title="Energia"
                     name="energyLevel"
-                    defaultValue={energyLevel ?? ""}
-                    className="h-10 rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20 outline-none"
-                  >
-                    <option value="">Selecione...</option>
-                    <option value="1">1 - Muito baixa</option>
-                    <option value="2">2 - Baixa</option>
-                    <option value="3">3 - Regular</option>
-                    <option value="4">4 - Boa</option>
-                    <option value="5">5 - Muito boa</option>
-                  </select>
-                </div>
+                    defaultValue={energyLevel}
+                    options={[
+                      { value: 1, label: "Baixa" },
+                      { value: 2, label: "Regular" },
+                      { value: 3, label: "Boa" },
+                      { value: 4, label: "Muito boa" },
+                      { value: 5, label: "Excelente" },
+                    ]}
+                  />
 
-                <div className="space-y-2">
-                  <Label htmlFor="difficultyLevel" className="text-xs text-slate-300">Nível de dificuldade (1 a 5)</Label>
-                  <select
-                    id="difficultyLevel"
+                  <RatingStars
+                    title="Dificuldade"
                     name="difficultyLevel"
-                    defaultValue={difficultyLevel ?? ""}
-                    className="h-10 rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20 outline-none"
-                  >
-                    <option value="">Selecione...</option>
-                    <option value="1">1 - Muito fácil</option>
-                    <option value="2">2 - Fácil</option>
-                    <option value="3">3 - Moderado</option>
-                    <option value="4">4 - Difícil</option>
-                    <option value="5">5 - Muito difícil</option>
-                  </select>
+                    defaultValue={difficultyLevel}
+                    options={[
+                      { value: 1, label: "Muito leve" },
+                      { value: 2, label: "Leve" },
+                      { value: 3, label: "Moderada" },
+                      { value: 4, label: "Dificil" },
+                      { value: 5, label: "Muito dificil" },
+                    ]}
+                  />
+
+                  <RatingStars
+                    title="Desconforto/dor"
+                    name="painLevel"
+                    defaultValue={painLevel}
+                    options={[
+                      { value: 1, label: "Baixo" },
+                      { value: 2, label: "Leve" },
+                      { value: 3, label: "Moderado" },
+                      { value: 4, label: "Alto" },
+                      { value: 5, label: "Muito alto" },
+                    ]}
+                  />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="painLevel" className="text-xs text-slate-300">Nível de dor/desconforto (0 a 5)</Label>
-                  <select
-                    id="painLevel"
-                    name="painLevel"
-                    defaultValue={painLevel ?? ""}
-                    className="h-10 rounded-xl border border-white/10 bg-white/5 px-3 text-sm text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20 outline-none"
-                  >
-                    <option value="">Selecione...</option>
-                    <option value="0">0 - Sem dor</option>
-                    <option value="1">1 - Muito leve</option>
-                    <option value="2">2 - Leve</option>
-                    <option value="3">3 - Moderado</option>
-                    <option value="4">4 - Intenso</option>
-                    <option value="5">5 - Muito intenso</option>
-                  </select>
-                </div>
-
-                <div className="space-y-2 pt-2">
-                  <Label htmlFor="notes" className="text-xs text-slate-300">Anotações do dia</Label>
+                  <Label htmlFor="notes" className="text-xs text-slate-300">Anotacoes</Label>
                   <Textarea
                     id="notes"
                     name="notes"
                     defaultValue={notes}
-                    placeholder="Ex: senti mais mobilidade no quadril, tive dificuldade na prancha, dormi pouco..."
-                    className="min-h-[100px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    placeholder="Ex: tive mais facilidade na mobilidade, senti cansaco, percebi menos desconforto..."
+                    className="min-h-[220px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                   />
                   <p className="text-[11px] text-slate-500">
-                    Este registro é privado e ajuda você a identificar padrões ao longo da semana.
+                    Esse registro e privado e ajuda voce a perceber evolucao, limites e constancia.
                   </p>
                 </div>
               </CardContent>
             </Card>
+          </section>
 
-            <div className="grid grid-cols-2 gap-3">
-              <Button type="submit" name="intent" value="save" className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                Salvar progresso
-              </Button>
-              <Button type="submit" name="intent" value="complete" variant="outline" className="border-emerald-400/40 text-emerald-300 hover:bg-emerald-400/10">
-                Concluir treino
-              </Button>
-            </div>
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
+            <Button
+              type="submit"
+              name="intent"
+              value="complete"
+              className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20"
+            >
+              Concluir treino
+            </Button>
           </div>
         </form>
       )}
 
-      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg text-white">
-            <Shield className="h-5 w-5 text-yellow-400" />
-            Regra de segurança
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm leading-relaxed text-slate-300">
-            Dor aguda, tontura, formigamento ou desconforto intenso são sinais para interromper o exercício. O objetivo é evoluir com controle, não forçar o corpo.
-          </p>
+      <Card className="border-rose-400/10 bg-rose-400/5">
+        <CardContent className="flex items-start gap-3 p-5">
+          <Shield className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
+          <div className="space-y-1">
+            <p className="text-sm font-medium text-slate-200">Pratique com seguranca</p>
+            <p className="text-xs leading-relaxed text-slate-400">
+              Dor aguda, tontura, formigamento ou desconforto intenso sao sinais para interromper o exercicio. O objetivo e evoluir com controle, nao forcar o corpo.
+            </p>
+          </div>
         </CardContent>
       </Card>
     </div>

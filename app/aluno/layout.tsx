@@ -19,12 +19,14 @@ export default async function AlunoLayout({
 
   const studentName = access.profile?.full_name ?? "Aluno";
   const studentEmail = access.user.email ?? "";
+  const studentAvatarUrl = access.profile?.avatar_url ?? "";
   const daysRemaining = access.daysRemaining;
 
   return (
     <AlunoShell
       studentName={studentName}
       studentEmail={studentEmail}
+      studentAvatarUrl={studentAvatarUrl}
       daysRemaining={daysRemaining}
     >
       {children}

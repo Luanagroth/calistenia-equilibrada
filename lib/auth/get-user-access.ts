@@ -3,7 +3,7 @@ import { getAccessDaysRemaining } from "@/lib/jornada/calendar";
 
 export type UserAccess = {
   user: { id: string; email: string } | null;
-  profile: { full_name: string; role: string; status: string } | null;
+  profile: { full_name: string | null; role: string; status: string; avatar_url: string | null } | null;
   access: { id: string; starts_at: string; ends_at: string; status: string } | null;
   isActive: boolean;
   daysRemaining: number;
@@ -21,7 +21,7 @@ export async function getUserAccess(): Promise<UserAccess> {
 
   const { data: profile } = await supabase
     .from("profiles")
-    .select("full_name, role, status")
+    .select("full_name, role, status, avatar_url")
     .eq("id", user.id)
     .single();
 
