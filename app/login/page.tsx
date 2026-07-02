@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { ArrowRight, CheckCircle2, Home, Lock, Mail } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -66,77 +65,102 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070A0D]">
-      <div className="grid min-h-screen lg:grid-cols-2">
-        <div className="flex flex-col justify-center px-8 py-12 lg:px-16">
-          <div className="mx-auto w-full max-w-md">
-            <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-              Espaço do Aluno
-            </Badge>
-            <h1 className="mt-6 text-3xl font-bold tracking-tight text-white">
-              Acesse sua Jornada 30 Dias
-            </h1>
-            <p className="mt-4 text-slate-300">
-              Entre com o e-mail usado na compra para acompanhar seus treinos, registrar sua evolução e acessar os materiais do Método Calistenia Equilibrada.
-            </p>
+    <div className="min-h-screen bg-[#070A0D] text-white">
+      <header className="border-b border-white/10 bg-[#070A0D]/90 backdrop-blur">
+        <div className="mx-auto flex items-center justify-between px-6 py-4 md:px-10 lg:px-20 max-w-screen-2xl">
+          <Link href="/" className="text-xl font-bold text-white hover:text-yellow-400 transition-colors">
+            Calistenia Equilibrada
+          </Link>
+          <Button asChild variant="ghost" className="text-slate-300 hover:text-white hover:bg-white/5">
+            <Link href="/" className="flex items-center gap-2">
+              <Home className="h-4 w-4" />
+              Voltar
+            </Link>
+          </Button>
+        </div>
+      </header>
 
-            <div className="mt-10 space-y-4">
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-                <div>
-                  <p className="text-sm font-medium text-slate-200">Plano de 30 dias</p>
-                  <p className="text-xs text-slate-400">Treinos progressivos e seguros.</p>
+      <div className="grid min-h-[calc(100vh-73px)] lg:grid-cols-2">
+        <div className="hidden lg:flex flex-col justify-center px-20 xl:px-28">
+          <div className="max-w-2xl space-y-10">
+            <div className="space-y-5">
+              <h2 className="text-5xl xl:text-6xl font-extrabold tracking-tight text-white">
+                Continue sua jornada.
+              </h2>
+              <p className="text-xl leading-relaxed text-slate-300">
+                Acesse sua área do aluno para ver o treino liberado, registrar sua prática e acompanhar sua evolução.
+              </p>
+            </div>
+
+            <ul className="space-y-5">
+              <li className="flex items-start gap-4">
+                <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-emerald-400" />
+                <span className="text-lg text-slate-300">Treinos liberados no tempo certo</span>
+              </li>
+              <li className="flex items-start gap-4">
+                <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-emerald-400" />
+                <span className="text-lg text-slate-300">Evolução salva</span>
+              </li>
+              <li className="flex items-start gap-4">
+                <CheckCircle2 className="mt-1 h-6 w-6 shrink-0 text-emerald-400" />
+                <span className="text-lg text-slate-300">Materiais de apoio inclusos</span>
+              </li>
+            </ul>
+
+            <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-8 shadow-2xl shadow-black/30 relative overflow-hidden">
+              <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-yellow-400/10 pointer-events-none" />
+              <div className="space-y-5">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-semibold text-white">Sua área do aluno</h3>
+                  <p className="text-sm text-slate-400">Depois de entrar, você acompanha tudo em um só lugar.</p>
                 </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-                <div>
-                  <p className="text-sm font-medium text-slate-200">Checklist diário</p>
-                  <p className="text-xs text-slate-400">Acompanhe seus hábitos e consistência.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-                <div>
-                  <p className="text-sm font-medium text-slate-200">Biblioteca de exercícios</p>
-                  <p className="text-xs text-slate-400">Consulte movimentos por categoria.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-                <div>
-                  <p className="text-sm font-medium text-slate-200">Evolução da jornada</p>
-                  <p className="text-xs text-slate-400">Compare seu ponto de partida e progresso.</p>
-                </div>
-              </div>
-              <div className="flex items-start gap-3">
-                <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
-                <div>
-                  <p className="text-sm font-medium text-slate-200">7 eBooks premium</p>
-                  <p className="text-xs text-slate-400">Conteúdo exclusivo do método.</p>
-                </div>
+
+                <ul className="space-y-4">
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                    <div>
+                      <p className="text-base text-white">Treino liberado</p>
+                      <p className="text-sm text-slate-300">Veja a prática disponível no tempo certo.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                    <div>
+                      <p className="text-base text-white">Evolução salva</p>
+                      <p className="text-sm text-slate-300">Registre energia, dificuldade e anotações.</p>
+                    </div>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <CheckCircle2 className="mt-0.5 h-5 w-5 shrink-0 text-emerald-400" />
+                    <div>
+                      <p className="text-base text-white">Materiais inclusos</p>
+                      <p className="text-sm text-slate-300">Acesse os 7 eBooks de apoio.</p>
+                    </div>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center justify-center px-8 py-12 lg:px-16">
-          <Card className="w-full max-w-md bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-            <CardHeader className="space-y-1">
-              <CardTitle className="text-2xl font-semibold text-white">Entrar na plataforma</CardTitle>
-              <p className="text-sm text-slate-400">Use seu e-mail e senha para acessar sua área.</p>
+        <div className="flex items-center justify-center px-8 py-16 lg:px-20 lg:py-0">
+          <Card className="w-full max-w-xl bg-[#10161A] border-white/10 shadow-2xl shadow-black/40 rounded-3xl relative overflow-hidden">
+            <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-yellow-400/10 pointer-events-none" />
+            <CardHeader className="space-y-1 pt-10 pb-7">
+              <CardTitle className="text-3xl font-semibold text-white">Entrar na plataforma</CardTitle>
+              <p className="text-lg text-slate-300">Use o e-mail e a senha liberados para acessar sua jornada.</p>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-6 pb-10">
               {error && (
-                <div className="rounded-xl border border-rose-400/20 bg-rose-400/5 p-3 text-xs text-rose-300">
+                <div className="rounded-xl border border-yellow-400/20 bg-yellow-400/5 p-4 text-sm text-yellow-200">
                   {error}
                 </div>
               )}
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-xs text-slate-300">E-mail</Label>
+              <form onSubmit={handleSubmit} className="space-y-5">
+                <div className="space-y-3">
+                  <Label htmlFor="email" className="text-base text-slate-300">E-mail</Label>
                   <div className="relative">
-                    <Mail className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                    <Mail className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <Input
                       id="email"
                       type="email"
@@ -144,15 +168,15 @@ export default function LoginPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="seu@email.com"
                       required
-                      className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      className="border-white/10 bg-white/5 pl-10 text-base text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20 h-14"
                     />
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="password" className="text-xs text-slate-300">Senha</Label>
+                <div className="space-y-3">
+                  <Label htmlFor="password" className="text-base text-slate-300">Senha</Label>
                   <div className="relative">
-                    <Lock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
+                    <Lock className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-500" />
                     <Input
                       id="password"
                       type="password"
@@ -160,7 +184,7 @@ export default function LoginPage() {
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Sua senha"
                       required
-                      className="border-white/10 bg-white/5 pl-9 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      className="border-white/10 bg-white/5 pl-10 text-base text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20 h-14"
                     />
                   </div>
                 </div>
@@ -168,7 +192,7 @@ export default function LoginPage() {
                 <div className="flex items-center justify-end">
                   <Link
                     href="/recuperar-senha"
-                    className="text-xs text-yellow-400 hover:text-yellow-300 transition-colors"
+                    className="text-base text-yellow-400 hover:text-yellow-300 transition-colors"
                   >
                     Esqueci minha senha
                   </Link>
@@ -177,24 +201,29 @@ export default function LoginPage() {
                 <Button
                   type="submit"
                   disabled={loading}
-                  className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 disabled:opacity-50 disabled:cursor-not-allowed h-14 text-lg"
                 >
-                  {loading ? "Entrando..." : "Entrar no Espaço do Aluno"}
-                  {!loading && <ArrowRight className="ml-2 h-4 w-4" />}
+                  {loading ? "Entrando..." : "Entrar"}
+                  {!loading && <ArrowRight className="ml-2 h-5 w-5" />}
                 </Button>
               </form>
 
               <Link
                 href="/"
-                className="flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-slate-300 transition-colors"
+                className="flex items-center justify-center gap-2 text-base text-slate-400 hover:text-slate-300 transition-colors"
               >
-                <Home className="h-3.5 w-3.5" />
-                Voltar para página inicial
+                <Home className="h-4 w-4" />
+                Voltar para a página inicial
               </Link>
 
-              <p className="text-center text-[11px] text-slate-500">
-                O acesso é liberado para compradores da Jornada 30 Dias conforme as regras da oferta.
-              </p>
+              <div className="space-y-3 pt-3">
+                <p className="text-center text-sm text-slate-400">
+                  Seu acesso é liberado após a compra ou cadastro manual pela equipe.
+                </p>
+                <p className="text-center text-sm text-slate-500">
+                  Problemas para acessar? Use a recuperação de senha ou fale com o suporte após entrar na plataforma.
+                </p>
+              </div>
             </CardContent>
           </Card>
         </div>
