@@ -5,7 +5,6 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   BarChart3,
   Users,
-  Calendar,
   Headphones,
   Dumbbell,
   LogOut,
@@ -15,9 +14,8 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 
 const navItems = [
-  { label: "Dashboard", href: "/admin", icon: BarChart3 },
+  { label: "Início", href: "/admin", icon: BarChart3 },
   { label: "Alunos", href: "/admin/alunos", icon: Users },
-  { label: "Acessos", href: "/admin/acessos", icon: Calendar },
   { label: "Suporte", href: "/admin/suporte", icon: Headphones },
 ];
 
@@ -115,7 +113,7 @@ export function AdminShell({ children, adminName = "Admin", adminEmail = "" }: A
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#070A0D]/95 px-2 py-2 backdrop-blur lg:hidden">
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-3 gap-1">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;

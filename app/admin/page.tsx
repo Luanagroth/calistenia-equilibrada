@@ -15,7 +15,7 @@ export default async function AdminDashboardPage() {
         <div>
           <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard Admin</h1>
           <p className="mt-2 max-w-xl text-slate-300">
-            Visão geral do acesso dos alunos e métricas do sistema.
+            Gerencie alunos, acessos e evolução em um só lugar.
           </p>
         </div>
       </div>
