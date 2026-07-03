@@ -1,0 +1,23 @@
+{
+  "name": "Calistenia Equilibrada",
+  "short_name": "Calistenia",
+  "description": "Jornada guiada de mobilidade, constância e evolução física.",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#FACC15",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon/icon-192x192-dark.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon/icon-512x512-dark.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

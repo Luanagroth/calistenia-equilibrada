@@ -2,6 +2,7 @@ import { ArrowRight, CheckCircle2, CircleDot, HelpCircle, Lightbulb, Route, Shie
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { InstallAppBanner } from "@/components/install-app-banner";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -594,9 +595,10 @@ export default function HomePage() {
               </Link>
               <span>Conteúdo educativo. Não substitui avaliação ou orientação profissional.</span>
             </div>
-          </div>
+</div>
         </div>
       </footer>
+      <InstallAppBanner />
     </main>
   );
 }

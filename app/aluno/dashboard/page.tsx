@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { InstallPromptBanner } from "@/components/install-prompt-dashboard";
 import { getStudentProgressByDay, getStudentProgressSummary } from "@/lib/aluno/get-student-progress";
 import { getUnreadStudentNotificationsCount } from "@/lib/aluno/get-student-notifications";
 import { getBrazilDateKey } from "@/lib/jornada/calendar";
@@ -324,6 +325,7 @@ export default async function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <InstallPromptBanner storageKey="install-prompt-dismissed-student" />
     </div>
   );
 }

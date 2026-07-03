@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { getAdminDashboardStats } from "@/lib/admin/get-admin-dashboard-stats";
 import { getUnreadAdminNotificationsCount } from "@/lib/admin/get-admin-notifications";
+import { InstallPromptBanner } from "@/components/install-prompt-dashboard";
 
 export default async function AdminDashboardPage() {
   const [stats, unreadCount] = await Promise.all([
@@ -163,6 +164,7 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
       </div>
+      <InstallPromptBanner storageKey="install-prompt-dismissed-admin" />
     </div>
   );
 }
