@@ -280,9 +280,22 @@ function ExerciseCard({
             </div>
 
             <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.02] p-4 text-xs text-slate-400">
-              {exercise.media?.imageSrc || exercise.media?.videoSrc
-                ? "Area preparada para imagem ou video demonstrativo."
-                : "Imagem/video demonstrativo sera adicionado em breve."}
+              {exercise.media?.videoSrc ? (
+                <div className="space-y-3">
+                  <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">
+                    Video demonstrativo
+                  </p>
+                  <video
+                    src={exercise.media.videoSrc}
+                    controls
+                    playsInline
+                    preload="metadata"
+                    className="w-full rounded-2xl border border-white/10 bg-black"
+                  />
+                </div>
+              ) : (
+                "Video demonstrativo sera adicionado em breve."
+              )}
             </div>
           </div>
         </details>

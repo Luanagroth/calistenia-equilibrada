@@ -105,7 +105,33 @@ const defaultHabits: TrainingHabit[] = [
   },
 ];
 
-const exerciseLibrary: Record<string, TrainingExercise> = {
+const exerciseVideoMap: Record<string, string> = {
+  "rotacao-ombros": "/videos/jornada/rotacao-ombros.mp4",
+  "alongamento-toracico": "/videos/jornada/alongamento-toracico.mp4",
+  "mobilidade-quadril": "/videos/jornada/mobilidade-quadril.mp4",
+  "agachamento-profundo-assistido": "/videos/jornada/agachamento-assistido.mp4",
+  "alongamento-tornozelos": "/videos/jornada/alongamento-tornozelos.mp4",
+  "ponte-gluteos": "/videos/jornada/ponte-gluteos.mp4",
+  "bird-dog": "/videos/jornada/bird-dog.mp4",
+  "dead-bug": "/videos/jornada/dead-bug.mp4",
+  "prancha-joelhos": "/videos/jornada/prancha-joelhos.mp4",
+  "prancha-tradicional": "/videos/jornada/prancha-tradicional.mp4",
+  "flexao-inclinada": "/videos/jornada/flexao-inclinada.mp4",
+  "afundo-apoio": "/videos/jornada/afundo-apoio.mp4",
+  "remada-adaptada": "/videos/jornada/remada-adaptada.mp4",
+  "alongamento-posterior-pernas": "/videos/jornada/alongamento-posterior.mp4",
+  "elevacao-panturrilhas": "/videos/jornada/elevacao-panturrilhas.mp4",
+  "gato-camelo": "/videos/jornada/gato-camelo.mp4",
+  "mobilidade-toracica-quatro-apoios": "/videos/jornada/mobilidade-toracica-quatro-apoios.mp4",
+  "alongamento-flexores-quadril": "/videos/jornada/flexores-quadril.mp4",
+  "prancha-lateral-adaptada": "/videos/jornada/prancha-lateral-adaptada.mp4",
+  "superman": "/videos/jornada/superman.mp4",
+  "agachamento-livre": "/videos/jornada/agachamento-livre.mp4",
+  "step-up-baixo": "/videos/jornada/step-up-baixo.mp4",
+  "respiracao-final": "/videos/jornada/respiracao-final.mp4",
+};
+
+const baseExerciseLibrary: Record<string, TrainingExercise> = {
   "rotacao-ombros": {
     id: "rotacao-ombros",
     category: "aquecimento",
@@ -636,6 +662,21 @@ const exerciseLibrary: Record<string, TrainingExercise> = {
     safetyNote: "Interrompa se houver falta de ar importante, tontura persistente ou desconforto incomum.",
   },
 };
+
+const exerciseLibrary: Record<string, TrainingExercise> = Object.fromEntries(
+  Object.entries(baseExerciseLibrary).map(([id, exercise]) => [
+    id,
+    {
+      ...exercise,
+      media: exerciseVideoMap[id]
+        ? {
+            ...exercise.media,
+            videoSrc: exerciseVideoMap[id],
+          }
+        : exercise.media,
+    },
+  ]),
+) as Record<string, TrainingExercise>;
 
 const dayConfigs: DayConfig[] = [
   {

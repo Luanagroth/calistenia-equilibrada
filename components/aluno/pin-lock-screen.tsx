@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Lock, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ import {
 } from "@/lib/security/pin";
 
 export function PinLockScreen({ children }: { children: React.ReactNode }) {
+  const isMountedRef = useRef(false);
+  const [ready, setReady] = useState(false);
   const [locked, setLocked] = useState(false);
   const [pin, setPin] = useState("");
   const [error, setError] = useState("");
@@ -23,15 +25,26 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (isPinEnabled() && !isPinUnlocked()) {
-      setLocked(true);
-    }
+    isMountedRef.current = true;
+
+    const shouldLock = isPinEnabled() && !isPinUnlocked();
+    setLocked(shouldLock);
+    setReady(true);
+
+    return () => {
+      isMountedRef.current = false;
+    };
   }, []);
 
   const handleUnlock = async () => {
     setError("");
     setLoading(true);
     const ok = await verifyPin(pin);
+
+    if (!isMountedRef.current) {
+      return;
+    }
+
     if (ok) {
       markPinUnlocked();
       setLocked(false);
@@ -47,6 +60,10 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
     clearPinUnlock();
     router.push("/login");
   };
+
+  if (!ready) {
+    return null;
+  }
 
   if (!locked) {
     return <>{children}</>;

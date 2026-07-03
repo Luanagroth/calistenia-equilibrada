@@ -1,10 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { cn } from "@/lib/utils";
 import {
   isPinEnabled,
   savePin,
@@ -15,12 +14,25 @@ import {
 type Mode = "idle" | "setup" | "change";
 
 export function PinSettingsCard() {
+  const isMountedRef = useRef(false);
   const [mode, setMode] = useState<Mode>("idle");
+  const [enabled, setEnabled] = useState(false);
+  const [ready, setReady] = useState(false);
   const [pin, setPin] = useState("");
   const [confirmPin, setConfirmPin] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    isMountedRef.current = true;
+    setEnabled(isPinEnabled());
+    setReady(true);
+
+    return () => {
+      isMountedRef.current = false;
+    };
+  }, []);
 
   const resetStates = () => {
     setPin("");
@@ -57,6 +69,10 @@ export function PinSettingsCard() {
 
     if (mode === "change") {
       const ok = await verifyPin(pin);
+      if (!isMountedRef.current) {
+        return;
+      }
+
       if (!ok) {
         setError("PIN atual incorreto.");
         setLoading(false);
@@ -74,6 +90,11 @@ export function PinSettingsCard() {
     }
 
     await savePin(pin);
+    if (!isMountedRef.current) {
+      return;
+    }
+
+    setEnabled(true);
     setSuccess("PIN ativado com sucesso.");
     resetStates();
     setMode("idle");
@@ -85,13 +106,12 @@ export function PinSettingsCard() {
     setSuccess("");
     setLoading(true);
     disablePin();
+    setEnabled(false);
     setSuccess("PIN desativado com sucesso.");
     resetStates();
     setMode("idle");
     setLoading(false);
   };
-
-  const enabled = isPinEnabled();
 
   return (
     <div className="rounded-2xl border border-white/10 bg-[#0D1317] p-5 shadow-none">
@@ -102,7 +122,7 @@ export function PinSettingsCard() {
             Este PIN protege o acesso rápido neste aparelho. Ele não substitui sua senha de login.
           </p>
         </div>
-        {enabled && mode === "idle" && (
+        {ready && enabled && mode === "idle" && (
           <span className="inline-flex items-center gap-1 rounded-full border border-emerald-400/20 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-medium text-emerald-300">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
             PIN ativo neste dispositivo
