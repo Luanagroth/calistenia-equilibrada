@@ -15,6 +15,7 @@ import {
 
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
+import { clearPinUnlock } from "@/lib/security/pin";
 
 const navItems = [
   { label: "Início", href: "/aluno/dashboard", icon: Home },
@@ -48,6 +49,7 @@ export function AlunoShell({
   const router = useRouter();
 
   const handleLogout = async () => {
+    clearPinUnlock();
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");

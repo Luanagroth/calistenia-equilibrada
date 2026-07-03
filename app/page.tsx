@@ -206,8 +206,8 @@ export default function HomePage() {
 
       <section className="bg-[#0B1115] px-6 py-16 md:px-10 lg:px-20">
         <div className="mx-auto max-w-screen-2xl">
-          <div className="grid gap-12 lg:grid-cols-2 items-center">
-            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-black/40">
+          <div className="grid gap-12 items-center lg:grid-cols-2">
+            <div className="order-2 relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 shadow-2xl shadow-black/40 lg:order-1">
               <Image
                 src="/images/home/hero-treino-casa.png"
                 alt="Treino em casa"
@@ -219,7 +219,7 @@ export default function HomePage() {
               <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-[#0B1115] to-transparent opacity-60" />
             </div>
 
-            <div className="bg-[#10161A] border border-white/10 rounded-3xl p-10 shadow-2xl shadow-black/30">
+            <div className="order-1 rounded-3xl border border-white/10 bg-[#10161A] p-10 shadow-2xl shadow-black/30 lg:order-2">
               <h2 className="text-4xl font-bold tracking-tight text-white">
                 A internet já tem exercício demais. O que falta é sequência.
               </h2>
@@ -301,7 +301,14 @@ export default function HomePage() {
                   alt="Mockup desktop da plataforma"
                   width={1800}
                   height={800}
-                  className="w-full h-auto max-h-[95vh] object-cover"
+                  className="hidden h-auto max-h-[95vh] w-full object-cover md:block"
+                />
+                <Image
+                  src="/images/home/mockup-mobile-jornada.png"
+                  alt="Mockup mobile da jornada"
+                  width={900}
+                  height={1400}
+                  className="block h-auto w-full max-w-full object-cover md:hidden"
                 />
                 <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-yellow-400/10" />
                 <div className="absolute inset-0 rounded-3xl bg-gradient-to-t from-[#0B1115] to-transparent opacity-60" />

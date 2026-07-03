@@ -10,8 +10,10 @@ import { getStudentProfile } from "@/lib/aluno/get-student-profile";
 import {
   updateStudentPasswordAction,
   updateStudentProfileAction,
-  logoutAction,
 } from "./actions";
+
+import { PinSettingsCard } from "@/components/aluno/pin-settings-card";
+import { LogoutButton } from "@/components/aluno/logout-button";
 
 function getMessageFromError(error?: string) {
   switch (error) {
@@ -347,17 +349,11 @@ export default async function StudentProfilePage({
             </p>
           </CardHeader>
           <CardContent>
-            <form action={logoutAction}>
-              <Button
-                type="submit"
-                variant="outline"
-                className="border-rose-400/30 text-rose-300 hover:bg-rose-400/10 hover:text-rose-200"
-              >
-                Sair da conta
-              </Button>
-            </form>
+            <LogoutButton>Sair da conta</LogoutButton>
           </CardContent>
         </Card>
+
+        <PinSettingsCard />
       </div>
     </div>
   );

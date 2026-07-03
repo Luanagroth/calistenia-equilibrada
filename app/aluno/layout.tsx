@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { getUserAccess } from "@/lib/auth/get-user-access";
 import { AlunoShell } from "@/components/aluno/aluno-shell";
+import { PinLockScreen } from "@/components/aluno/pin-lock-screen";
 
 export default async function AlunoLayout({
   children,
@@ -23,13 +24,15 @@ export default async function AlunoLayout({
   const daysRemaining = access.daysRemaining;
 
   return (
-    <AlunoShell
-      studentName={studentName}
-      studentEmail={studentEmail}
-      studentAvatarUrl={studentAvatarUrl}
-      daysRemaining={daysRemaining}
-    >
-      {children}
-    </AlunoShell>
+    <PinLockScreen>
+      <AlunoShell
+        studentName={studentName}
+        studentEmail={studentEmail}
+        studentAvatarUrl={studentAvatarUrl}
+        daysRemaining={daysRemaining}
+      >
+        {children}
+      </AlunoShell>
+    </PinLockScreen>
   );
 }
