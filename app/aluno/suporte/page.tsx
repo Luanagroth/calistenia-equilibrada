@@ -154,7 +154,7 @@ export default async function AlunoSuportePage({
                     defaultValue=""
                     className="h-10 w-full max-w-full appearance-none rounded-xl border border-white/10 bg-[#10161A] px-3 pr-10 text-sm text-slate-100 outline-none transition focus:border-[#FACC15] focus:ring-2 focus:ring-[#FACC15]/20"
                   >
-                    <option value="" disabled className="bg-[#10161A] text-slate-400">
+                    <option value="" disabled className="bg-[#10161A] text-slate-300">
                       Selecione...
                     </option>
                     {supportTypes.map((type) => (
@@ -178,7 +178,7 @@ export default async function AlunoSuportePage({
                   name="subject"
                   placeholder="Resumo da sua duvida"
                   required
-                  className="w-full max-w-full border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                  className="w-full max-w-full border-white/10 bg-white/5 text-sm text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 />
               </div>
 
@@ -189,7 +189,7 @@ export default async function AlunoSuportePage({
                   name="message"
                   placeholder="Descreva sua duvida ou problema com o maximo de detalhes possivel..."
                   required
-                  className="min-h-[140px] w-full max-w-full border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                  className="min-h-[140px] w-full max-w-full border-white/10 bg-white/5 text-sm text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 />
               </div>
 
@@ -303,7 +303,7 @@ export default async function AlunoSuportePage({
                       </Badge>
                     </div>
                     <p className="break-words text-xs leading-relaxed text-slate-300">{ticket.message}</p>
-                    <p className="break-words text-[10px] leading-relaxed text-slate-500">
+                    <p className="break-words text-[10px] leading-relaxed text-slate-400">
                       {supportTypes.find((st) => st.value === ticket.type)?.label ?? ticket.type} •{" "}
                       {formatDate(ticket.created_at)}
                     </p>

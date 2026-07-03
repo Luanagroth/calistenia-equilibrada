@@ -360,7 +360,7 @@ export default async function EvolucaoPage({
                     max={300}
                     step="0.01"
                     defaultValue={profile.weightKg ?? ""}
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    className="h-11 border-white/10 bg-white/5 text-slate-100 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                   />
                 </div>
 
@@ -379,7 +379,7 @@ export default async function EvolucaoPage({
                         <div className="flex min-h-[108px] flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-4 text-center transition hover:border-yellow-400/40 hover:bg-yellow-400/5 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 peer-checked:shadow-lg peer-checked:shadow-yellow-400/10">
                           <span className="text-2xl">{option.emoji}</span>
                           <span className="mt-2 text-sm font-medium text-white">{option.label}</span>
-                          <span className="mt-1 text-[11px] text-slate-400">{option.value}/5</span>
+                          <span className="mt-1 text-[11px] text-slate-300">{option.value}/5</span>
                         </div>
                       </label>
                     ))}
@@ -400,7 +400,7 @@ export default async function EvolucaoPage({
                         <div className="flex min-h-[108px] flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-4 text-center transition hover:border-yellow-400/40 hover:bg-yellow-400/5 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 peer-checked:shadow-lg peer-checked:shadow-yellow-400/10">
                           <span className="text-2xl">{option.emoji}</span>
                           <span className="mt-2 text-sm font-medium text-white">{option.label}</span>
-                          <span className="mt-1 text-[11px] text-slate-400">{option.value}/5</span>
+                          <span className="mt-1 text-[11px] text-slate-300">{option.value}/5</span>
                         </div>
                       </label>
                     ))}
@@ -421,7 +421,7 @@ export default async function EvolucaoPage({
                         <div className="flex min-h-[108px] flex-col items-center justify-center rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-4 text-center transition hover:border-yellow-400/40 hover:bg-yellow-400/5 peer-checked:border-yellow-400 peer-checked:bg-yellow-400/10 peer-checked:shadow-lg peer-checked:shadow-yellow-400/10">
                           <span className="text-2xl">{option.emoji}</span>
                           <span className="mt-2 text-sm font-medium text-white">{option.label}</span>
-                          <span className="mt-1 text-[11px] text-slate-400">{option.value}/5</span>
+                          <span className="mt-1 text-[11px] text-slate-300">{option.value}/5</span>
                         </div>
                       </label>
                     ))}
@@ -434,7 +434,7 @@ export default async function EvolucaoPage({
                     id="notes"
                     name="notes"
                     placeholder="Ex: estou me sentindo mais solto, mais disposto ou mais travado hoje..."
-                    className="min-h-[130px] border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    className="min-h-[130px] border-white/10 bg-white/5 text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                   />
                 </div>
               </div>
@@ -546,7 +546,7 @@ export default async function EvolucaoPage({
                     {getStatusLabel(journey.status)}
                   </Badge>
                   {journey.status === "completed" && journey.completed_at && (
-                    <p className="text-[10px] text-slate-500">
+                    <p className="text-[10px] text-slate-400">
                       {new Date(journey.completed_at).toLocaleDateString("pt-BR")}
                     </p>
                   )}

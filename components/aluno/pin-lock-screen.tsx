@@ -77,7 +77,7 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
         </div>
         <div className="text-center">
           <h2 className="text-lg font-bold text-white">Acesso rápido</h2>
-          <p className="mt-1 text-xs text-slate-400">
+          <p className="mt-1 text-xs text-slate-300">
             Digite seu PIN para continuar
           </p>
         </div>
@@ -98,7 +98,7 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
                 setPin(value);
               }}
               className={cn(
-                "h-12 text-center text-lg tracking-[0.3em] border-white/10 bg-white/5 text-slate-200 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20",
+                "h-12 border-white/10 bg-white/5 text-center text-lg tracking-[0.3em] text-slate-100 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20",
                 error && "border-rose-400/50"
               )}
               placeholder="0000"
@@ -117,7 +117,7 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
           <button
             type="button"
             onClick={handleLogout}
-            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+            className="flex w-full items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
           >
             <LogOut className="h-4 w-4" />
             Sair da conta

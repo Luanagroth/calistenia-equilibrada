@@ -39,22 +39,23 @@ export function RatingStars({
       <div className="flex flex-wrap gap-2">
         {options.map((option) => {
           const active = value !== null && option.value <= value;
+          const selected = value === option.value;
 
           return (
             <button
               key={`${name}-${option.value}`}
               type="button"
               onClick={() => setValue(option.value)}
-              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2 text-left transition hover:border-yellow-400/30 hover:bg-yellow-400/[0.06]"
+              className="flex items-center gap-2 rounded-2xl border border-white/10 bg-white/[0.03] px-3 py-2 text-left transition hover:border-yellow-400/30 hover:bg-yellow-400/[0.06] aria-pressed:border-yellow-400/50 aria-pressed:bg-yellow-400/[0.12]"
               aria-label={`${title}: ${option.label}`}
-              aria-pressed={value === option.value}
+              aria-pressed={selected}
             >
               <Star
                 className={`h-5 w-5 ${
-                  active ? "fill-yellow-400 text-yellow-400" : "text-slate-500"
+                  active ? "fill-yellow-400 text-yellow-400" : "text-slate-400"
                 }`}
               />
-              <span className="text-xs text-slate-300">{option.value}</span>
+              <span className={`text-xs ${selected ? "text-white" : "text-slate-300"}`}>{option.value}</span>
             </button>
           );
         })}

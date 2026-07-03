@@ -1,4 +1,4 @@
-import { Camera, CheckCircle2, ChevronRight, Lock, LogOut, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import { CheckCircle2, ChevronRight, Lock, LogOut, Shield, SlidersHorizontal, UserRound } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,7 @@ import {
   updateStudentProfileAction,
 } from "./actions";
 
+import { AvatarUploadField } from "@/components/aluno/avatar-upload-field";
 import { PinSettingsCard } from "@/components/aluno/pin-settings-card";
 import { LogoutButton } from "@/components/aluno/logout-button";
 
@@ -124,7 +125,7 @@ export default async function StudentProfilePage({
                     name="fullName"
                     defaultValue={profile.fullName}
                     required
-                    className="h-11 border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                    className="h-11 border-white/10 bg-white/5 text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                   />
                 </div>
 
@@ -135,30 +136,14 @@ export default async function StudentProfilePage({
                     defaultValue={profile.email}
                     readOnly
                     disabled
-                    className="h-11 border-white/10 bg-white/[0.03] text-slate-400"
+                    className="h-11 border-white/10 bg-white/[0.03] text-slate-300"
                   />
-                  <p className="text-[11px] text-slate-500">
+                  <p className="text-[11px] text-slate-400">
                     Para alterar o e-mail de acesso, fale com o suporte.
                   </p>
                 </div>
 
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="avatarUrl" className="text-xs text-slate-300">Foto/avatar</Label>
-                  <div className="relative">
-                    <Camera className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-500" />
-                    <Input
-                      id="avatarUrl"
-                      name="avatarUrl"
-                      type="url"
-                      defaultValue={profile.avatarUrl}
-                      placeholder="https://..."
-                      className="h-11 border-white/10 bg-white/5 pl-10 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
-                    />
-                  </div>
-                  <p className="text-[11px] text-slate-500">
-                    Cole uma URL de imagem. Upload de foto sera adicionado depois.
-                  </p>
-                </div>
+                <AvatarUploadField initialAvatarUrl={profile.avatarUrl} />
               </div>
 
               <Card className="border-white/10 bg-[#0D1317] shadow-none">
@@ -219,7 +204,7 @@ export default async function StudentProfilePage({
                         id="mobilityLevel"
                         name="mobilityLevel"
                         defaultValue={profile.mobilityLevel?.toString() ?? ""}
-                        className="h-11 w-full rounded-md border border-white/10 bg-white/5 px-3 text-sm text-slate-200 outline-none transition focus:border-yellow-400/50 focus:ring-2 focus:ring-yellow-400/20"
+                        className="h-11 w-full rounded-md border border-white/10 bg-white/5 px-3 text-sm text-slate-100 outline-none transition focus:border-yellow-400/50 focus:ring-2 focus:ring-yellow-400/20"
                       >
                         <option value="" className="bg-slate-950 text-slate-300">
                           Selecione um nivel
@@ -244,7 +229,7 @@ export default async function StudentProfilePage({
                       name="mainGoal"
                       defaultValue={profile.mainGoal}
                       placeholder="Ex: ganhar mobilidade, criar consistencia..."
-                      className="h-11 border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      className="h-11 border-white/10 bg-white/5 text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                     />
                   </div>
 
@@ -255,7 +240,7 @@ export default async function StudentProfilePage({
                       name="limitations"
                       defaultValue={profile.limitations}
                       placeholder="Ex: desconforto no ombro, pouca mobilidade no quadril, retorno gradual..."
-                      className="min-h-[140px] border-white/10 bg-white/5 text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                      className="min-h-[140px] border-white/10 bg-white/5 text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                     />
                   </div>
                 </CardContent>

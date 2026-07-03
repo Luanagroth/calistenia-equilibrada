@@ -1,330 +1,166 @@
-import { ArrowRight, Award, BookOpen, Calendar, CheckCircle2, Clock, Dumbbell, Flame, Lock as LockIcon, Shield, TrendingUp, Trophy, User } from "lucide-react";
+"use client";
+
+import { ArrowRight, Award, Clock, Dumbbell, Flame, TrendingUp } from "lucide-react";
+import Link from "next/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
-import { getUserAccess } from "@/lib/auth/get-user-access";
-import { getStudentProgressSummary } from "@/lib/aluno/get-student-progress";
-import { getJourneyAvailability } from "@/lib/jornada/progress-rules";
-import { getStudentJourneyAlerts } from "@/lib/jornada/student-alerts";
-import Link from "next/link";
 
-function formatDate(value: string | null) {
-  if (!value) return "—";
-  const date = new Date(value);
-  return date.toLocaleDateString("pt-BR");
-}
+const workoutExercises = [
+  "Mobilidade cervical",
+  "Rotacao de ombros",
+  "Alongamento toracico",
+  "Prancha com joelhos",
+  "Ponte de gluteos",
+];
 
-function getInitials(name: string) {
-  return name
-    .split(" ")
-    .map((n) => n[0])
-    .join("")
-    .slice(0, 2)
-    .toUpperCase();
-}
+const habits = [
+  { id: "treino", label: "Treino do dia", checked: true },
+  { id: "mobilidade", label: "Mobilidade", checked: true },
+  { id: "agua", label: "Agua", checked: false },
+  { id: "sono", label: "Sono", checked: false },
+  { id: "postura", label: "Postura", checked: false },
+];
 
-export default async function DashboardPage() {
-  const access = await getUserAccess();
-  const summary = await getStudentProgressSummary();
-  const journey = await getJourneyAvailability();
-
-  const alerts = await getStudentJourneyAlerts({
-    daysRemaining: access.daysRemaining,
-    accessEndsAt: access.access?.ends_at ?? new Date(),
-    accessStartsAt: access.access?.starts_at ?? new Date(),
-    progressList: summary.progressList as Array<{
-      journey_day: number;
-      status: string;
-      updated_at: string | null;
-      completed_at: string | null;
-      created_at: string;
-    }>,
-  });
-
-  const {
-    totalCompletedDays,
-    totalInProgressDays,
-    progressPercentage,
-    lastCompletedDay,
-    progressList,
-  } = summary;
-
-  const recentDays = [...progressList]
-    .sort((a, b) => {
-      const dateA = a.created_at ? new Date(a.created_at).getTime() : 0;
-      const dateB = b.created_at ? new Date(b.created_at).getTime() : 0;
-      return dateB - dateA;
-    })
-    .slice(0, 3);
-
-  const greeting = access.profile?.full_name
-    ? `Olá, ${access.profile.full_name.split(" ")[0]}`
-    : "Olá";
-
+export default function DashboardPage() {
   return (
     <div className="space-y-8">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
         <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold tracking-tight text-white">{greeting}</h1>
-            <div className="flex size-10 shrink-0 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xs font-semibold text-yellow-400">
-              {access.profile?.full_name ? getInitials(access.profile.full_name) : <User className="h-5 w-5" />}
-            </div>
-          </div>
+          <h1 className="text-3xl font-bold tracking-tight">Bem-vinda a sua jornada</h1>
           <p className="mt-2 max-w-xl text-slate-300">
-            Continue sua jornada de mobilidade, força funcional e constância.
+            Foco em mobilidade, controle e constancia. Cada dia e um passo para o equilibrio do seu corpo e da sua mente.
           </p>
         </div>
         <div className="flex items-center gap-3">
-          <Badge className="border-yellow-400/30 bg-yellow-400/10 text-yellow-300">
-            Treino {String(journey.suggestedDay).padStart(2, "0")} de 30
+          <Badge className="border-emerald-400/30 bg-emerald-400/10 text-emerald-300">
+            Dia 04 de 30
           </Badge>
-          {!journey.isJourneyCompleted && !journey.isNextDayLocked && (
-            <Link href={`/aluno/treinos/dia-${String(journey.availableDay).padStart(2, "0")}`}>
-              <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                {journey.availableDay === journey.suggestedDay ? "Continuar treino" : "Iniciar treino"}
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </Link>
-          )}
+          <Button className="bg-emerald-400 text-slate-950 hover:bg-emerald-400/90">
+            Iniciar treino de hoje
+            <ArrowRight className="ml-2 h-4 w-4" />
+          </Button>
         </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Progresso da jornada</CardTitle>
-            <TrendingUp className="h-4 w-4 text-yellow-400" />
+            <CardTitle className="text-sm font-medium text-slate-300">Progresso</CardTitle>
+            <TrendingUp className="h-4 w-4 text-emerald-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{progressPercentage}%</div>
-            <Progress value={progressPercentage} className="mt-3 h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400" />
-            <p className="mt-2 text-[10px] text-slate-400">{totalCompletedDays} de 30 treinos concluídos</p>
+            <div className="text-2xl font-bold text-white">13%</div>
+            <Progress
+              value={13}
+              className="mt-3 h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+            />
           </CardContent>
         </Card>
 
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Treinos concluídos</CardTitle>
-            <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+            <CardTitle className="text-sm font-medium text-slate-300">Sequencia atual</CardTitle>
+            <Flame className="h-4 w-4 text-emerald-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{totalCompletedDays}</div>
-            <p className="text-xs text-slate-400">Treinos finalizados</p>
+            <div className="text-2xl font-bold text-white">3 dias</div>
+            <p className="text-xs text-slate-400">Continue assim</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Treinos em andamento</CardTitle>
-            <Flame className="h-4 w-4 text-amber-400" />
+            <CardTitle className="text-sm font-medium text-slate-300">Tempo estimado</CardTitle>
+            <Clock className="h-4 w-4 text-emerald-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{totalInProgressDays}</div>
-            <p className="text-xs text-slate-400">Treinos iniciados</p>
+            <div className="text-2xl font-bold text-white">20 min</div>
+            <p className="text-xs text-slate-400">Por sessao</p>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium text-slate-300">Dias de acesso</CardTitle>
-            <Clock className="h-4 w-4 text-yellow-400" />
+            <CardTitle className="text-sm font-medium text-slate-300">Conquista</CardTitle>
+            <Award className="h-4 w-4 text-emerald-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-white">{access.daysRemaining > 0 ? `${access.daysRemaining} dias` : "Encerrado"}</div>
-            <p className="text-xs text-slate-400">
-              {access.daysRemaining > 0 ? "Continue aproveitando" : "Renove seu acesso"}
-            </p>
+            <div className="text-2xl font-bold text-white">Iniciante</div>
+            <p className="text-xs text-slate-400">Nivel atual</p>
           </CardContent>
         </Card>
       </div>
-
-      <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-lg text-white">
-            <Shield className="h-5 w-5 text-yellow-400" />
-            Avisos da jornada
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {alerts.map((alert, index) => (
-              <div
-                key={index}
-                className={`flex items-start gap-3 rounded-xl border p-4 ${
-                  alert.type === "danger"
-                    ? "border-rose-400/20 bg-rose-400/5"
-                    : alert.type === "warning"
-                      ? "border-amber-400/20 bg-amber-400/5"
-                      : alert.type === "success"
-                        ? "border-emerald-400/20 bg-emerald-400/5"
-                        : "border-white/10 bg-white/5"
-                }`}
-              >
-                <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-white/5 border border-white/10">
-                  <Shield className="h-4 w-4 text-yellow-400" />
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-medium text-white">{alert.title}</p>
-                  <p className="text-xs text-slate-300">{alert.message}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-lg text-white">
-              <Dumbbell className="h-5 w-5 text-yellow-400" />
+              <Dumbbell className="h-5 w-5 text-emerald-400" />
               Treino de hoje
             </CardTitle>
-            <p className="text-xs text-slate-400">
-              Treino {String(journey.suggestedDay).padStart(2, "0")} —{" "}
-              {journey.isJourneyCompleted
-                ? "Jornada concluída!"
-                : journey.isNextDayLocked
-                  ? "Aguardando próximo dia útil"
-                  : journey.suggestedDay === 1
-                    ? "Comece por aqui"
-                    : "Continue de onde parou"}
-            </p>
           </CardHeader>
           <CardContent className="space-y-4">
-            {journey.isJourneyCompleted ? (
-              <div className="flex items-center gap-4">
-                <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-emerald-400/10 border border-emerald-400/20">
-                  <Trophy className="h-8 w-8 text-emerald-400" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-semibold text-white">Parabéns! Você completou a jornada.</h3>
-                  <p className="text-sm text-slate-300">
-                    Revise sua evolução e prepare-se para os próximos passos.
-                  </p>
-                </div>
-              </div>
-            ) : journey.isNextDayLocked ? (
-              <div className="flex items-center gap-4">
-                <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-amber-400/10 border border-amber-400/20">
-                  <LockIcon className="h-8 w-8 text-amber-400" />
-                </div>
-                <div className="space-y-1">
-                  <h3 className="font-semibold text-white">Próximo treino bloqueado</h3>
-                  <p className="text-sm text-slate-300">{journey.message}</p>
-                </div>
-              </div>
-            ) : (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-white/5 border border-white/10">
-                    <Calendar className="h-8 w-8 text-yellow-400" />
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="font-semibold text-white">Treino {String(journey.availableDay).padStart(2, "0")} da jornada</h3>
-                    <p className="text-sm text-slate-300">
-                      Faça os movimentos com calma. A meta é executar bem, não fazer rápido.
-                    </p>
-                  </div>
-                </div>
-                <div className="flex items-center gap-3 pt-2">
-                  <Link href={`/aluno/treinos/dia-${String(journey.availableDay).padStart(2, "0")}`}>
-                    <Button className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                      {journey.availableDay === journey.suggestedDay ? "Continuar treino" : "Iniciar treino"}
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                  <Link href={`/aluno/checklist?dia=${journey.availableDay}`}>
-                    <Button variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
-                      Registrar progresso
-                    </Button>
-                  </Link>
-                </div>
-              </>
-            )}
+            <div>
+              <h3 className="font-semibold text-white">Dia 04 - Mobilidade + estabilidade</h3>
+              <p className="mt-2 text-sm text-slate-300">
+                Faca os movimentos com calma. A meta e executar bem, nao fazer rapido.
+              </p>
+            </div>
+            <ul className="space-y-3">
+              {workoutExercises.map((exercise) => (
+                <li key={exercise} className="flex items-center gap-3 text-sm text-slate-200">
+                  <span className="flex size-2 shrink-0 rounded-full bg-emerald-400" />
+                  {exercise}
+                </li>
+              ))}
+            </ul>
           </CardContent>
         </Card>
 
-        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+        <Card className="border-white/10 bg-white/5">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-lg text-white">
-              <TrendingUp className="h-5 w-5 text-yellow-400" />
-              Últimos treinos
-            </CardTitle>
-            <p className="text-xs text-slate-400">Seus últimos treinos registrados</p>
+            <CardTitle className="text-lg text-white">Jornada de hoje</CardTitle>
           </CardHeader>
-          <CardContent>
-            {recentDays.length === 0 ? (
-              <div className="space-y-3">
-                <p className="text-sm text-slate-300">
-                  Você ainda não iniciou nenhum treino. Que tal começar agora?
-                </p>
-                {!journey.isNextDayLocked && journey.availableDay === 1 && (
-                  <Link href="/aluno/checklist?dia=1">
-                    <Button className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                      Começar treino 1
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                )}
+          <CardContent className="space-y-5">
+            <div className="space-y-2">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-slate-300">Progresso da jornada</span>
+                <span className="font-medium text-emerald-300">2/5</span>
               </div>
-            ) : (
-              <div className="space-y-3">
-                {recentDays.map((day) => (
-                  <div
-                    key={day.journey_day}
-                    className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 p-3"
-                  >
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2">
-                        <p className="text-sm font-medium text-white">Treino {String(day.journey_day).padStart(2, "0")}</p>
-                        <Badge
-                          variant="outline"
-                          className={
-                            day.status === "completed"
-                              ? "border-emerald-400/30 bg-emerald-400/5 text-emerald-300"
-                              : "border-amber-400/30 bg-amber-400/5 text-amber-300"
-                          }
-                        >
-                          {day.status === "completed" ? "Treino concluído" : "Treino em andamento"}
-                        </Badge>
-                      </div>
-                      <div className="flex flex-wrap gap-3 text-[10px] text-slate-400">
-                        {day.energy_level && <span>Energia: {day.energy_level}/5</span>}
-                        {day.difficulty_level && <span>Dificuldade: {day.difficulty_level}/5</span>}
-                        {day.pain_level !== null && <span>Dor: {day.pain_level}/5</span>}
-                      </div>
-                      {day.notes && <p className="text-[10px] text-slate-400 line-clamp-1">{day.notes}</p>}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-            <div className="pt-3">
-              <Link href="/aluno/evolucao">
-                <Button variant="outline" className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
-                  Ver evolução completa
-                </Button>
-              </Link>
+              <Progress
+                value={40}
+                className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-yellow-400"
+              />
             </div>
+
+            <div className="space-y-4">
+              {habits.map((habit) => (
+                <label
+                  key={habit.id}
+                  className="flex items-center gap-3 text-sm text-slate-200"
+                >
+                  <Checkbox
+                    checked={habit.checked}
+                    className="data-checked:border-emerald-400 data-checked:bg-emerald-400"
+                  />
+                  {habit.label}
+                </label>
+              ))}
+            </div>
+
+            <Button
+              asChild
+              className="w-full cursor-pointer border border-white/10 bg-white/5 text-slate-100 hover:border-yellow-400/30 hover:bg-yellow-400/10 hover:text-white"
+            >
+              <Link href="/aluno/checklist">Abrir jornada</Link>
+            </Button>
           </CardContent>
         </Card>
       </div>
-
-      <Card className="border-rose-400/10 bg-rose-400/5">
-        <CardContent className="flex items-start gap-3 p-5">
-          <Shield className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" />
-          <div className="space-y-1">
-            <p className="text-sm font-medium text-slate-200">Evolução com segurança</p>
-            <p className="text-xs leading-relaxed text-slate-400">
-              Em caso de dor forte, tontura, formigamento ou desconforto intenso, interrompa a prática e procure orientação profissional.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 }

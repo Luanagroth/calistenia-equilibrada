@@ -90,7 +90,7 @@ export function AlunoShell({
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition",
+                  "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-200 transition",
                   isActive
                     ? "bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20"
                     : "hover:bg-white/10 hover:text-white"
@@ -110,7 +110,7 @@ export function AlunoShell({
               <Flame className="h-4 w-4 text-yellow-400" />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs text-slate-400">
+              <div className="flex items-center justify-between text-xs text-slate-300">
                 <span>Progresso</span>
                 <span className="text-yellow-400 font-medium">{daysRemaining} dias restantes</span>
               </div>
@@ -120,7 +120,7 @@ export function AlunoShell({
                   style={{ width: `${Math.max(0, Math.min(100, (daysRemaining / 30) * 100))}%` }}
                 />
               </div>
-              <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-400">
+              <div className="flex items-center gap-3 pt-1 text-[11px] text-slate-300">
                 <span className="flex items-center gap-1">
                   <Flame className="h-3 w-3 text-emerald-400" />
                   3 dias
@@ -156,7 +156,7 @@ export function AlunoShell({
             </Link>
             <button
               onClick={handleLogout}
-              className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-medium text-slate-300 transition hover:bg-white/10 hover:text-white"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-white/[0.04] px-3 py-3 text-xs font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
               title="Sair"
             >
               <LogOut className="h-4 w-4" />
@@ -184,7 +184,7 @@ export function AlunoShell({
                   "flex flex-col items-center justify-center rounded-2xl px-2 py-2 text-[11px] transition",
                   isActive
                     ? "bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20"
-                    : "text-slate-400 hover:text-white"
+                    : "text-slate-300 hover:text-white"
                 )}
               >
                 <Icon className="mb-1 h-5 w-5" />

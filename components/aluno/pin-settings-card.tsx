@@ -118,7 +118,7 @@ export function PinSettingsCard() {
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-white">PIN de acesso rápido</p>
-          <p className="text-xs text-slate-400">
+          <p className="text-xs text-slate-300">
             Este PIN protege o acesso rápido neste aparelho. Ele não substitui sua senha de login.
           </p>
         </div>
@@ -148,7 +148,7 @@ export function PinSettingsCard() {
                   const value = e.target.value.replace(/\D/g, "").slice(0, 6);
                   setPin(value);
                 }}
-                className="h-11 border-white/10 bg-white/5 text-center text-lg tracking-[0.3em] text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                className="h-11 border-white/10 bg-white/5 text-center text-lg tracking-[0.3em] text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                 placeholder="0000"
                 autoFocus
               />
@@ -170,14 +170,14 @@ export function PinSettingsCard() {
                     const value = e.target.value.replace(/\D/g, "").slice(0, 6);
                     setConfirmPin(value);
                   }}
-                  className="h-11 border-white/10 bg-white/5 text-center text-lg tracking-[0.3em] text-slate-200 placeholder:text-slate-500 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
+                  className="h-11 border-white/10 bg-white/5 text-center text-lg tracking-[0.3em] text-slate-100 placeholder:text-slate-400 focus-visible:border-yellow-400/50 focus-visible:ring-yellow-400/20"
                   placeholder="0000"
                 />
               </div>
             )}
           </div>
 
-          <p className="text-[11px] text-slate-500">
+          <p className="text-[11px] text-slate-400">
             Use de 4 a 6 numeros.
           </p>
 
@@ -189,7 +189,7 @@ export function PinSettingsCard() {
               type="button"
               variant="ghost"
               onClick={cancelSetup}
-              className="text-slate-300 hover:text-white"
+              className="text-slate-200 hover:text-white"
             >
               Cancelar
             </Button>
@@ -211,7 +211,7 @@ export function PinSettingsCard() {
             type="button"
             variant="outline"
             onClick={startChange}
-            className="border-white/10 text-slate-300 hover:bg-white/10 hover:text-white"
+            className="border-white/10 text-slate-200 hover:bg-white/10 hover:text-white"
           >
             Alterar PIN
           </Button>
