@@ -1,11 +1,12 @@
-import { ArrowLeft, MessageSquare, CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
+import { ArrowLeft, MessageSquare, CheckCircle2, AlertTriangle } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
 import { getSupportTickets } from "@/lib/admin/get-support-tickets";
-import { markTicketReviewingAction, markTicketAnsweredAction, closeTicketAction } from "./actions";
+import { markTicketReviewingAction, markTicketAnsweredAction, closeTicketAction, replySupportTicketAction } from "./actions";
 
 type TicketStatus = "open" | "reviewing" | "answered" | "closed";
 
@@ -73,6 +74,7 @@ export default async function AdminSuportePage({
             {params.success === "mark-reviewing" && "Ticket marcado como em análise."}
             {params.success === "mark-answered" && "Ticket marcado como respondido."}
             {params.success === "mark-closed" && "Ticket fechado."}
+            {params.success === "ticket-replied" && "Resposta enviada ao aluno."}
           </CardContent>
         </Card>
       )}
@@ -123,14 +125,14 @@ export default async function AdminSuportePage({
           {tickets.length === 0 ? (
             <p className="text-xs text-slate-400">Nenhum ticket encontrado.</p>
           ) : (
-            <div className="space-y-4">
+            <div className="space-y-6">
               {tickets.map((ticket) => (
                 <div
                   key={ticket.id}
-                  className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-start sm:justify-between"
+                  className="rounded-xl border border-white/10 bg-white/5 p-4"
                 >
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
+                  <div className="space-y-2">
+                    <div className="flex flex-wrap items-center gap-2">
                       <p className="text-sm font-medium text-white">{ticket.aluno}</p>
                       <span className="text-[10px] text-slate-500">{ticket.email}</span>
                       <Badge variant="outline" className={`${statusBadgeVariant(ticket.status as TicketStatus)} border text-[10px] px-1.5 py-0`}>
@@ -142,9 +144,28 @@ export default async function AdminSuportePage({
                     <p className="text-[10px] text-slate-500">
                       {ticket.tipo} • {ticket.id.slice(0, 8)}
                     </p>
+                    {ticket.admin_notes && (
+                      <div className="mt-3 rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-3">
+                        <p className="text-[10px] font-medium text-emerald-300">Resposta do suporte</p>
+                        <p className="mt-1 text-xs text-slate-300">{ticket.admin_notes}</p>
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {(ticket.status === "open" || ticket.status === "reviewing") && (
+                      <form action={replySupportTicketAction} className="flex w-full flex-col gap-2 sm:w-auto">
+                        <input type="hidden" name="ticketId" value={ticket.id} />
+                        <Textarea
+                          name="replyMessage"
+                          placeholder="Escreva sua resposta..."
+                          className="min-h-[80px] border-white/10 bg-white/5 text-sm text-slate-200 placeholder:text-slate-500 sm:w-80"
+                        />
+                        <Button type="submit" variant="outline" className="border-emerald-400/40 text-emerald-300 hover:bg-emerald-400/10">
+                          Responder
+                        </Button>
+                      </form>
+                    )}
                     {ticket.status === "open" && (
                       <form action={markTicketReviewingAction}>
                         <input type="hidden" name="ticketId" value={ticket.id} />

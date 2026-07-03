@@ -5,6 +5,7 @@ import { getAdminAccess } from "@/lib/auth/get-admin-access";
 
 export type SupportTicket = {
   id: string;
+  user_id: string;
   aluno: string;
   email: string;
   tipo: string;
@@ -50,6 +51,7 @@ export async function getSupportTickets(): Promise<SupportTicket[]> {
 
     return {
       id: t.id,
+      user_id: t.user_id,
       aluno: user?.email?.split("@")[0] ?? "Aluno",
       email: user?.email ?? "—",
       tipo: t.type,

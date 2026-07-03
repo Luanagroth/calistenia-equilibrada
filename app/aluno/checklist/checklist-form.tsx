@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useMemo, useState } from "react";
 import {
   ChevronDown,
+  CircleAlert,
   Clock3,
   Dumbbell,
   PlayCircle,
@@ -225,7 +225,13 @@ function ExerciseCard({
                   />
                 </div>
               ) : (
-                "Video demonstrativo sera adicionado em breve."
+                <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+                  <p className="text-sm font-semibold text-[#FACC15]">🎥 Demonstracao em breve</p>
+                  <p className="mt-2 text-xs leading-relaxed text-slate-400">
+                    O video deste exercicio sera adicionado nas proximas atualizacoes. Por enquanto,
+                    siga o passo a passo acima com calma e respeite seus limites.
+                  </p>
+                </div>
               )}
             </div>
           </div>
@@ -256,12 +262,12 @@ type ChecklistFormProps = {
   difficultyLevel: number | null;
   hasPendingTraining: boolean;
   initialExerciseChecks: Record<string, boolean>;
-  journeyMessage: string;
+  initialHabitChecks: Partial<Record<HabitId, boolean>>;
+  lockedUntilLabel: string | null;
   notes: string;
   painLevel: number | null;
   plan: JourneyPlan;
   selectedDay: number;
-  checklist: Record<string, unknown>;
   totalExerciseCount: number;
 };
 
@@ -271,82 +277,119 @@ export function ChecklistForm({
   difficultyLevel,
   hasPendingTraining,
   initialExerciseChecks,
-  journeyMessage,
+  initialHabitChecks,
+  lockedUntilLabel,
   notes,
   painLevel,
   plan,
   selectedDay,
-  checklist,
   totalExerciseCount,
 }: ChecklistFormProps) {
   const [exerciseChecks, setExerciseChecks] = useState<Record<string, boolean>>(initialExerciseChecks);
+  const [habitChecks, setHabitChecks] = useState<Record<HabitId, boolean>>({
+    hydration: Boolean(initialHabitChecks.hydration),
+    balancedFood: Boolean(initialHabitChecks.balancedFood),
+    naturalFoods: Boolean(initialHabitChecks.naturalFoods),
+    respectedLimits: Boolean(initialHabitChecks.respectedLimits),
+    rest: Boolean(initialHabitChecks.rest),
+    reading: Boolean(initialHabitChecks.reading),
+  });
 
   const completedExerciseCount = useMemo(
     () => plan.exercises.filter((exercise) => exerciseChecks[exercise.id]).length,
     [exerciseChecks, plan.exercises],
   );
-
+  const completedHabitCount = useMemo(
+    () => dailyHabits.filter((habit) => habitChecks[habit.id]).length,
+    [habitChecks],
+  );
+  const totalVisualSteps = totalExerciseCount + dailyHabits.length;
+  const completedVisualSteps = completedExerciseCount + completedHabitCount;
   const progressPercentage =
-    totalExerciseCount === 0 ? 0 : Math.round((completedExerciseCount / totalExerciseCount) * 100);
+    totalVisualSteps === 0 ? 0 : Math.round((completedVisualSteps / totalVisualSteps) * 100);
+
+  const topMessage =
+    currentStatus === "Bloqueado" && lockedUntilLabel
+      ? `Proximo treino liberado em ${lockedUntilLabel}`
+      : currentStatus === "Em andamento"
+        ? "Continue de onde parou"
+        : currentStatus === "Concluido"
+          ? "Treino concluido com sucesso"
+          : "Treino liberado para hoje";
 
   return (
     <>
+      {hasPendingTraining && (
+        <Card className="border-amber-400/20 bg-amber-400/5">
+          <CardContent className="flex items-start gap-3 p-4">
+            <CircleAlert className="mt-0.5 h-5 w-5 shrink-0 text-amber-300" />
+            <div className="space-y-1">
+              <p className="text-sm font-medium text-amber-200">Voce tem um treino pendente.</p>
+              <p className="text-xs leading-relaxed text-slate-300">
+                Conclua este treino para avancar com seguranca na jornada.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
-        <CardContent className="p-5 sm:p-6">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
-            <div className="space-y-3">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge className="border-yellow-400/20 bg-yellow-400/10 text-yellow-300">
-                  Treino {String(plan.day).padStart(2, "0")} de 30
-                </Badge>
-                <Badge
-                  className={
-                    currentStatus === "Concluido"
-                      ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
-                      : currentStatus === "Em andamento"
-                        ? "border-amber-400/20 bg-amber-400/10 text-amber-300"
-                        : currentStatus === "Bloqueado"
-                          ? "border-white/10 bg-white/5 text-slate-300"
-                          : "border-yellow-400/20 bg-yellow-400/10 text-yellow-300"
-                  }
-                >
-                  {currentStatus}
-                </Badge>
-              </div>
-              <div className="space-y-1">
-                <h2 className="text-xl font-semibold text-white">{plan.title}</h2>
-                <p className="text-sm font-medium text-yellow-200">{plan.focus}</p>
-                <p className="max-w-2xl text-sm leading-relaxed text-slate-300">{plan.description}</p>
-              </div>
-            </div>
-
-            <div className="flex flex-wrap gap-2 text-xs text-slate-300">
-              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
-                <Clock3 className="h-3.5 w-3.5 text-yellow-300" />
-                <span>{plan.duration}</span>
-              </div>
-              <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
-                <PlayCircle className="h-3.5 w-3.5 text-emerald-300" />
-                <span>{completedExerciseCount} de {totalExerciseCount} exercicios concluidos</span>
-              </div>
-            </div>
+        <CardContent className="space-y-4 p-5 sm:p-6">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge className="border-yellow-400/20 bg-yellow-400/10 text-yellow-300">
+              Treino {plan.day}/30
+            </Badge>
+            <Badge
+              className={
+                currentStatus === "Concluido"
+                  ? "border-emerald-400/20 bg-emerald-400/10 text-emerald-300"
+                  : currentStatus === "Em andamento"
+                    ? "border-amber-400/20 bg-amber-400/10 text-amber-300"
+                    : currentStatus === "Bloqueado"
+                      ? "border-white/10 bg-white/5 text-slate-300"
+                      : "border-yellow-400/20 bg-yellow-400/10 text-yellow-300"
+              }
+            >
+              {currentStatus}
+            </Badge>
           </div>
 
-          <div className="mt-5 space-y-2">
-            <div className="flex items-center justify-between text-xs text-slate-400">
-              <span>Progresso do treino atual</span>
-              <span className="font-medium text-emerald-300">{progressPercentage}%</span>
-            </div>
-            <Progress
-              value={progressPercentage}
-              className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
-            />
-            <p className="text-xs leading-relaxed text-slate-300">
-              {hasPendingTraining
-                ? "Voce tem um treino pendente. Continue de onde parou."
-                : journeyMessage}
-            </p>
+          <div className="space-y-1">
+            <h2 className="text-xl font-semibold text-white">{plan.title}</h2>
+            <p className="text-sm font-medium text-yellow-200">{plan.focus}</p>
+            <p className="text-sm leading-relaxed text-slate-300">{topMessage}</p>
           </div>
+
+          <div className="flex flex-wrap gap-2 text-xs text-slate-300">
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
+              <Clock3 className="h-3.5 w-3.5 text-yellow-300" />
+              <span>{plan.duration}</span>
+            </div>
+            <div className="flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2">
+              <PlayCircle className="h-3.5 w-3.5 text-emerald-300" />
+              <span>
+                {completedExerciseCount} de {totalExerciseCount} exercicios concluidos
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/20">
+        <CardContent className="space-y-2 p-4">
+          <div className="flex items-center justify-between gap-3 text-xs text-slate-300">
+            <span>Progresso de hoje: {progressPercentage}%</span>
+            <span className="font-medium text-emerald-300">
+              {completedVisualSteps} de {totalVisualSteps} etapas concluidas
+            </span>
+          </div>
+          <Progress
+            value={progressPercentage}
+            className="h-2 bg-white/10 [&_[data-slot=progress-indicator]]:bg-emerald-400"
+          />
+          <p className="text-xs leading-relaxed text-slate-400">
+            Habitos contam no progresso visual. Os exercicios precisam ser concluidos para finalizar o treino.
+          </p>
         </CardContent>
       </Card>
 
@@ -355,9 +398,42 @@ export function ChecklistForm({
 
         <section className="space-y-4">
           <div className="space-y-1">
-            <h3 className="text-xl font-semibold text-white">Exercicios de hoje</h3>
+            <h3 className="text-xl font-semibold text-white">Checklist de habitos</h3>
             <p className="text-sm text-slate-400">
-              Faca na ordem indicada. Comece leve, respeite seus limites e marque cada exercicio ao concluir.
+              Pequenas escolhas tambem fazem parte da sua evolucao.
+            </p>
+          </div>
+
+          <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/20">
+            <CardContent className="grid gap-3 p-5 md:grid-cols-2">
+              {dailyHabits.map((habit) => (
+                <label
+                  key={habit.id}
+                  className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-white/20"
+                >
+                  <Checkbox
+                    name={habit.id}
+                    checked={habitChecks[habit.id]}
+                    onCheckedChange={(value) =>
+                      setHabitChecks((current) => ({ ...current, [habit.id]: value === true }))
+                    }
+                    className="mt-0.5 data-checked:border-emerald-400 data-checked:bg-emerald-400"
+                  />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium text-white">{habit.title}</p>
+                    <p className="text-xs leading-relaxed text-slate-400">{habit.description}</p>
+                  </div>
+                </label>
+              ))}
+            </CardContent>
+          </Card>
+        </section>
+
+        <section className="space-y-4">
+          <div className="space-y-1">
+            <h3 className="text-xl font-semibold text-white">Exercicios do treino</h3>
+            <p className="text-sm text-slate-400">
+              Faca na ordem indicada. Os exercicios precisam ser concluidos para finalizar o treino.
             </p>
           </div>
 
@@ -374,36 +450,6 @@ export function ChecklistForm({
               />
             ))}
           </div>
-        </section>
-
-        <section className="space-y-4">
-          <div className="space-y-1">
-            <h3 className="text-xl font-semibold text-white">Checklist de habitos</h3>
-            <p className="text-sm text-slate-400">
-              Esses habitos ajudam a sustentar sua evolucao fora do treino.
-            </p>
-          </div>
-
-          <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/20">
-            <CardContent className="grid gap-3 p-5 md:grid-cols-2">
-              {dailyHabits.map((habit) => (
-                <label
-                  key={habit.id}
-                  className="flex cursor-pointer items-start gap-3 rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-white/20"
-                >
-                  <Checkbox
-                    name={habit.id}
-                    defaultChecked={Boolean(checklist[habit.id])}
-                    className="mt-0.5 data-checked:border-emerald-400 data-checked:bg-emerald-400"
-                  />
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-white">{habit.title}</p>
-                    <p className="text-xs leading-relaxed text-slate-400">{habit.description}</p>
-                  </div>
-                </label>
-              ))}
-            </CardContent>
-          </Card>
         </section>
 
         <section className="space-y-4">
@@ -458,7 +504,9 @@ export function ChecklistForm({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="notes" className="text-xs text-slate-300">Anotacoes</Label>
+                <Label htmlFor="notes" className="text-xs text-slate-300">
+                  Anotacoes
+                </Label>
                 <Textarea
                   id="notes"
                   name="notes"
@@ -479,7 +527,7 @@ export function ChecklistForm({
             type="submit"
             name="intent"
             value="complete"
-            className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20"
+            className="bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
           >
             Concluir treino
           </Button>
@@ -492,7 +540,8 @@ export function ChecklistForm({
           <div className="space-y-1">
             <p className="text-sm font-medium text-slate-200">Pratique com seguranca</p>
             <p className="text-xs leading-relaxed text-slate-400">
-              Dor aguda, tontura, formigamento ou desconforto intenso sao sinais para interromper o exercicio. O objetivo e evoluir com controle, nao forcar o corpo.
+              Dor aguda, tontura, formigamento ou desconforto intenso sao sinais para interromper o
+              exercicio. O objetivo e evoluir com controle, nao forcar o corpo.
             </p>
           </div>
         </CardContent>

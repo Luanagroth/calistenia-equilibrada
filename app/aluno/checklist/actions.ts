@@ -88,10 +88,12 @@ export async function saveDailyProgressAction(formData: FormData): Promise<void>
 
   const completedExerciseCount = Object.values(exerciseProgress).filter(Boolean).length;
   const totalExerciseCount = plan.exercises.length;
+  const missingExercises = plan.exercises
+    .filter((exercise) => !exerciseProgress[exercise.id])
+    .map((exercise) => exercise.name);
+  const hasMissingExercises = missingExercises.length > 0;
 
-  if (status === "completed" && completedExerciseCount < totalExerciseCount) {
-    redirect("/aluno/checklist?error=incomplete-main-steps");
-  }
+  const finalStatus = status === "completed" && hasMissingExercises ? "in_progress" : status;
 
   const energyLevelRaw = formData.get("energyLevel");
   const energyLevel = typeof energyLevelRaw === "string" && energyLevelRaw.trim() ? parseInt(energyLevelRaw, 10) : null;
@@ -117,11 +119,13 @@ export async function saveDailyProgressAction(formData: FormData): Promise<void>
     difficulty_level: difficultyLevel,
     pain_level: painLevel,
     notes: notes || null,
-    status,
+    status: finalStatus,
   };
 
-  if (status === "completed") {
+  if (finalStatus === "completed") {
     payload.completed_at = new Date().toISOString();
+  } else {
+    payload.completed_at = null;
   }
 
   const { error } = await supabase
@@ -135,5 +139,10 @@ export async function saveDailyProgressAction(formData: FormData): Promise<void>
   revalidatePath("/aluno/checklist");
   revalidatePath("/aluno/evolucao");
 
-  redirect(`/aluno/checklist?success=${status === "completed" ? "training-completed" : "progress-saved"}`);
+  if (status === "completed" && hasMissingExercises) {
+    const missing = encodeURIComponent(missingExercises.slice(0, 3).join("|"));
+    redirect(`/aluno/checklist?success=progress-saved&pendingExercises=${missing}&pendingCount=${missingExercises.length}`);
+  }
+
+  redirect(`/aluno/checklist?success=${finalStatus === "completed" ? "training-completed" : "progress-saved"}`);
 }

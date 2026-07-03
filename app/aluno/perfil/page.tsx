@@ -1,4 +1,5 @@
 import { CheckCircle2, ChevronRight, Lock, LogOut, Shield, SlidersHorizontal, UserRound } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -335,6 +336,30 @@ export default async function StudentProfilePage({
           </CardHeader>
           <CardContent>
             <LogoutButton>Sair da conta</LogoutButton>
+          </CardContent>
+        </Card>
+
+        <Card className="border-white/10 bg-[#10161A] shadow-2xl shadow-black/30">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-lg text-white">
+              <Shield className="h-5 w-5 text-yellow-400" />
+              Documentos legais
+            </CardTitle>
+            <p className="text-xs text-slate-400">Consulte os documentos da plataforma.</p>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            <Link
+              href="/politica-de-privacidade"
+              className="block rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-slate-200 transition hover:border-yellow-400/30 hover:text-yellow-300"
+            >
+              Politica de Privacidade
+            </Link>
+            <Link
+              href="/termos-de-uso"
+              className="block rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-3 text-sm text-slate-200 transition hover:border-yellow-400/30 hover:text-yellow-300"
+            >
+              Termos de Uso
+            </Link>
           </CardContent>
         </Card>
 

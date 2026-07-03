@@ -82,12 +82,13 @@ export default async function AlunoSuportePage({
     message: string;
     status: string;
     created_at: string;
+    admin_notes: string | null;
   }[] = [];
 
   if (access.user) {
     const { data } = await supabase
       .from("support_tickets")
-      .select("id, type, subject, message, status, created_at")
+      .select("id, type, subject, message, status, created_at, admin_notes")
       .eq("user_id", access.user.id)
       .order("created_at", { ascending: false });
 
@@ -307,6 +308,12 @@ export default async function AlunoSuportePage({
                       {supportTypes.find((st) => st.value === ticket.type)?.label ?? ticket.type} •{" "}
                       {formatDate(ticket.created_at)}
                     </p>
+                    {ticket.admin_notes && (
+                      <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-3">
+                        <p className="text-[10px] font-medium text-emerald-300">Resposta do suporte</p>
+                        <p className="mt-1 text-xs text-slate-300">{ticket.admin_notes}</p>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

@@ -1,17 +1,20 @@
-import {
-  CheckCircle2,
-  CircleAlert,
-  Medal,
-} from "lucide-react";
+import { CheckCircle2, CircleAlert, Medal } from "lucide-react";
 import Link from "next/link";
 
-import { Badge } from "@/components/ui/badge";
+import { ChecklistForm } from "./checklist-form";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { getStudentProgressByDay } from "@/lib/aluno/get-student-progress";
 import { getJourneyAvailability } from "@/lib/jornada/progress-rules";
 import { getTrainingDayPlan } from "@/lib/jornada/training-plan";
-import { ChecklistForm } from "./checklist-form";
+
+type SearchParams = Promise<{
+  success?: string;
+  error?: string;
+  pendingExercises?: string;
+  pendingCount?: string;
+}>;
 
 function getCurrentStatus({
   hasInProgress,
@@ -41,19 +44,6 @@ function getCurrentStatus({
   return "Liberado";
 }
 
-function getStatusClasses(status: string) {
-  switch (status) {
-    case "Concluido":
-      return "border-emerald-400/20 bg-emerald-400/10 text-emerald-300";
-    case "Em andamento":
-      return "border-amber-400/20 bg-amber-400/10 text-amber-300";
-    case "Bloqueado":
-      return "border-white/10 bg-white/5 text-slate-300";
-    default:
-      return "border-yellow-400/20 bg-yellow-400/10 text-yellow-300";
-  }
-}
-
 function getExerciseChecks(checklist: Record<string, unknown>) {
   const raw = checklist.exercises;
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) {
@@ -61,8 +51,24 @@ function getExerciseChecks(checklist: Record<string, unknown>) {
   }
 
   return Object.fromEntries(
-    Object.entries(raw).map(([key, value]) => [key, Boolean(value)])
+    Object.entries(raw).map(([key, value]) => [key, Boolean(value)]),
   ) as Record<string, boolean>;
+}
+
+function getHabitChecks(checklist: Record<string, unknown>) {
+  const habitKeys = [
+    "hydration",
+    "balancedFood",
+    "naturalFoods",
+    "respectedLimits",
+    "rest",
+    "reading",
+  ] as const;
+
+  return Object.fromEntries(habitKeys.map((key) => [key, Boolean(checklist[key])])) as Record<
+    (typeof habitKeys)[number],
+    boolean
+  >;
 }
 
 function shouldShowLockedState({
@@ -81,20 +87,27 @@ function shouldShowLockedState({
   );
 }
 
+function formatDateKeyPtBr(dateKey: string | null) {
+  if (!dateKey) {
+    return null;
+  }
+
+  const [year, month, day] = dateKey.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString("pt-BR");
+}
+
 function getNextReleaseText(lockedUntilDate: string | null) {
   if (!lockedUntilDate) {
     return "O proximo treino sera liberado no proximo dia util da jornada.";
   }
 
-  const [year, month, day] = lockedUntilDate.split("-").map(Number);
-  const date = new Date(year, month - 1, day);
-  return `Seu proximo treino sera liberado em ${date.toLocaleDateString("pt-BR")}.`;
+  return `Seu proximo treino sera liberado em ${formatDateKeyPtBr(lockedUntilDate)}.`;
 }
 
 export default async function ChecklistPage({
   searchParams,
 }: {
-  searchParams: Promise<{ success?: string; error?: string }>;
+  searchParams: SearchParams;
 }) {
   const params = await searchParams;
   const journey = await getJourneyAvailability();
@@ -108,6 +121,7 @@ export default async function ChecklistPage({
 
   const checklist = (progress?.checklist as Record<string, unknown>) ?? {};
   const exerciseChecks = getExerciseChecks(checklist);
+  const habitChecks = getHabitChecks(checklist);
   const totalExerciseCount = plan.exercises.length;
   const currentProgressStatus = progress?.status ?? null;
   const energyLevel = progress?.energy_level ?? null;
@@ -126,6 +140,12 @@ export default async function ChecklistPage({
     isBlocked: lockedState,
   });
   const nextReleaseText = getNextReleaseText(journey.lockedUntilDate);
+  const pendingExercises = params.pendingExercises
+    ? decodeURIComponent(params.pendingExercises)
+        .split("|")
+        .filter(Boolean)
+    : [];
+  const pendingCount = params.pendingCount ? Number(params.pendingCount) : pendingExercises.length;
 
   return (
     <div className="space-y-8">
@@ -138,7 +158,35 @@ export default async function ChecklistPage({
         </div>
       </div>
 
-      {params.success === "progress-saved" && (
+      {params.success === "progress-saved" && pendingCount > 0 && (
+        <Card className="border-amber-400/20 bg-amber-400/5">
+          <CardContent className="space-y-4 p-6">
+            <div className="flex items-center gap-4">
+              <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-amber-300 text-slate-950">
+                <CheckCircle2 className="h-6 w-6" />
+              </div>
+              <div className="space-y-1">
+                <p className="text-sm font-medium text-amber-200">
+                  Seu progresso foi salvo, mas ainda falta concluir exercicio(s) deste treino.
+                </p>
+                <p className="text-xs text-slate-300">
+                  Seus habitos, exercicios marcados, estrelas e anotacoes continuam salvos.
+                </p>
+              </div>
+            </div>
+            {pendingExercises.length > 0 && (
+              <div className="rounded-2xl border border-white/10 bg-black/10 p-4">
+                <p className="text-xs font-medium uppercase tracking-wide text-slate-400">
+                  Exercicios pendentes
+                </p>
+                <p className="mt-2 text-sm text-slate-200">{pendingExercises.join(", ")}</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      )}
+
+      {params.success === "progress-saved" && pendingCount === 0 && (
         <Card className="border-emerald-400/20 bg-emerald-400/5">
           <CardContent className="flex items-center gap-4 p-6">
             <div className="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-emerald-400 text-slate-950">
@@ -146,7 +194,9 @@ export default async function ChecklistPage({
             </div>
             <div className="space-y-1">
               <p className="text-sm font-medium text-emerald-300">Progresso salvo com sucesso.</p>
-              <p className="text-xs text-slate-300">Seus exercicios marcados e anotacoes continuam salvos.</p>
+              <p className="text-xs text-slate-300">
+                Seus exercicios marcados e anotacoes continuam salvos.
+              </p>
             </div>
           </CardContent>
         </Card>
@@ -171,7 +221,7 @@ export default async function ChecklistPage({
               <p className="mt-2 text-sm text-slate-200">{nextReleaseText}</p>
             </div>
             <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 p-4">
-              <p className="text-sm font-semibold text-emerald-200">🏅 Medalha de persistencia</p>
+              <p className="text-sm font-semibold text-emerald-200">Medalha de persistencia</p>
               <p className="mt-1 text-xs text-slate-300">Voce concluiu mais um treino da Jornada 30 Treinos.</p>
             </div>
           </CardContent>
@@ -183,8 +233,6 @@ export default async function ChecklistPage({
           <CardContent className="flex items-center gap-3 p-4 text-sm text-rose-200">
             <CircleAlert className="h-5 w-5 shrink-0 text-rose-300" />
             <span>
-              {params.error === "incomplete-main-steps" &&
-                "Conclua os exercicios principais antes de finalizar o treino."}
               {params.error === "day-locked" &&
                 "Esse treino nao esta liberado agora. Continue no treino acionavel da jornada."}
               {params.error === "invalid-day" &&
@@ -202,7 +250,8 @@ export default async function ChecklistPage({
             <div className="space-y-2">
               <h3 className="text-xl font-semibold text-white">Proximo treino no tempo certo</h3>
               <p className="max-w-2xl text-sm leading-relaxed text-slate-300">
-                Voce ja concluiu o treino disponivel. O proximo treino libera no proximo dia util da jornada.
+                Voce ja concluiu o treino disponivel. O proximo treino sera liberado em{" "}
+                {formatDateKeyPtBr(journey.lockedUntilDate) ?? "breve"}.
               </p>
             </div>
 
@@ -210,7 +259,10 @@ export default async function ChecklistPage({
               <Button asChild variant="outline" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
                 <Link href="/aluno/evolucao">Ver evolucao</Link>
               </Button>
-              <Button asChild className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
+              <Button
+                asChild
+                className="bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20 hover:bg-yellow-300"
+              >
                 <Link href="/aluno/materiais">Ver materiais</Link>
               </Button>
             </div>
@@ -218,13 +270,13 @@ export default async function ChecklistPage({
         </Card>
       ) : (
         <ChecklistForm
-          checklist={checklist}
           currentStatus={currentStatus}
           difficultyLevel={difficultyLevel}
           energyLevel={energyLevel}
           hasPendingTraining={hasPendingTraining}
           initialExerciseChecks={exerciseChecks}
-          journeyMessage={journey.message}
+          initialHabitChecks={habitChecks}
+          lockedUntilLabel={formatDateKeyPtBr(journey.lockedUntilDate)}
           notes={notes}
           painLevel={painLevel}
           plan={plan}

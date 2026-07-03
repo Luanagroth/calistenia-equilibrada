@@ -160,23 +160,31 @@ export default async function AdminAlunosPage({
                   key={student.id}
                   className="flex flex-col gap-4 rounded-xl border border-white/10 bg-white/5 p-4 sm:flex-row sm:items-center sm:justify-between"
                 >
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-white">{student.fullName}</p>
-                    <p className="text-xs text-slate-400">{student.email}</p>
-                    <div className="flex flex-wrap items-center gap-2 pt-1">
-                      <Badge variant="outline" className={`${statusBadgeVariant(student.isAccessActive, student.profileStatus)} border text-[10px] px-1.5 py-0`}>
-                        {statusLabel(student.isAccessActive, student.profileStatus)}
-                      </Badge>
-                      <span className="text-[11px] text-slate-400">
-                        {student.isAccessActive && student.daysRemaining > 0
-                          ? `${student.daysRemaining} dias restantes`
-                          : "Sem acesso"}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500">
-                      {formatDate(student.endsAt)} • {student.source ?? "—"}
-                    </p>
+                <div className="space-y-1">
+                  <p className="text-sm font-medium text-white">{student.fullName}</p>
+                  <p className="text-xs text-slate-400">{student.email}</p>
+                  <div className="flex flex-wrap items-center gap-2 pt-1">
+                    <Badge variant="outline" className={`${statusBadgeVariant(student.isAccessActive, student.profileStatus)} border text-[10px] px-1.5 py-0`}>
+                      {statusLabel(student.isAccessActive, student.profileStatus)}
+                    </Badge>
+                    <span className="text-[11px] text-slate-400">
+                      {student.isAccessActive && student.daysRemaining > 0
+                        ? `${student.daysRemaining} dias restantes`
+                        : "Sem acesso"}
+                    </span>
                   </div>
+                  <div className="flex flex-wrap items-center gap-3 pt-1">
+                    <span className="text-[11px] text-slate-400">
+                      Progresso: {student.progressPercentage}%
+                    </span>
+                    <span className="text-[11px] text-slate-500">
+                      [{student.completedDays}/30]
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-slate-500">
+                    {formatDate(student.endsAt)} • {student.source ?? "—"}
+                  </p>
+                </div>
 
                    <div className="flex flex-wrap gap-2">
                      <Link href={`/admin/alunos/${student.id}`}>

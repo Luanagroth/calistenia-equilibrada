@@ -43,7 +43,7 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
 
   const { data: profiles } = await supabaseAdmin
     .from("profiles")
-    .select("id, status")
+    .select("id, full_name, status")
     .eq("role", "student");
 
   const { data: accessPeriods } = await supabaseAdmin
@@ -60,6 +60,10 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     .from("student_daily_progress")
     .select("user_id, status, journey_day")
     .eq("status", "completed");
+
+  const { data: authUsers } = await supabaseAdmin.auth.admin.listUsers();
+  const authUsersList = authUsers?.users ?? [];
+  const userMap = new Map(authUsersList.map((u) => [u.id, u.email ?? ""]));
 
   const now = new Date();
 
@@ -83,11 +87,15 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
       isAccessActive = daysRemaining > 0;
     }
 
+    const email = userMap.get(profile.id) ?? "";
+    const studentName = profile.full_name ?? email.split("@")[0] ?? "Aluno";
+
     return {
       profileStatus: profile.status,
       isAccessActive,
       daysRemaining,
       access: activeAccess,
+      studentName,
     };
   });
 
@@ -110,7 +118,7 @@ export async function getAdminDashboardStats(): Promise<AdminDashboardStats> {
     .sort((a, b) => a.daysRemaining - b.daysRemaining)
     .slice(0, 5)
     .map((s) => ({
-      studentName: s.access?.user_id ?? "Aluno",
+      studentName: s.studentName,
       daysRemaining: s.daysRemaining,
       plan: "Acesso ativo",
     }));

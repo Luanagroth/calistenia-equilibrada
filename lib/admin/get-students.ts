@@ -18,6 +18,9 @@ export type StudentAccess = {
   source: string | null;
   daysRemaining: number;
   isAccessActive: boolean;
+  completedDays: number;
+  inProgressDays: number;
+  progressPercentage: number;
 };
 
 export async function getStudents(): Promise<StudentAccess[]> {
@@ -40,6 +43,10 @@ export async function getStudents(): Promise<StudentAccess[]> {
     .select("user_id, starts_at, ends_at, status, source")
     .order("ends_at", { ascending: false });
 
+  const { data: progress } = await supabaseAdmin
+    .from("student_daily_progress")
+    .select("user_id, status, journey_day");
+
   const profileMap = new Map(profiles?.map((p) => [p.id, p]) ?? []);
   const accessByUser = new Map<string, typeof accessPeriods>();
   for (const access of accessPeriods ?? []) {
@@ -51,6 +58,16 @@ export async function getStudents(): Promise<StudentAccess[]> {
     }
   }
 
+  const progressByUser = new Map<string, typeof progress>();
+  for (const entry of progress ?? []) {
+    const existing = progressByUser.get(entry.user_id);
+    if (!existing) {
+      progressByUser.set(entry.user_id, [entry]);
+    } else {
+      existing.push(entry);
+    }
+  }
+
   const now = new Date();
 
   return authUsers
@@ -58,6 +75,7 @@ export async function getStudents(): Promise<StudentAccess[]> {
     .map((u) => {
       const profile = profileMap.get(u.id);
       const accesses = accessByUser.get(u.id) ?? [];
+      const userProgress = progressByUser.get(u.id) ?? [];
 
       const activeAccess = accesses.find((a) => {
         if (a.status !== "active") return false;
@@ -81,6 +99,10 @@ export async function getStudents(): Promise<StudentAccess[]> {
         isAccessActive = daysRemaining > 0 && accessToUse.status === "active" && startsAt <= now && endsAt >= now;
       }
 
+      const completedDays = userProgress.filter((p) => p.status === "completed").length;
+      const inProgressDays = userProgress.filter((p) => p.status === "in_progress").length;
+      const progressPercentage = Math.round((completedDays / 30) * 100);
+
       return {
         id: u.id,
         fullName: profile?.full_name ?? u.email!.split("@")[0],
@@ -93,6 +115,9 @@ export async function getStudents(): Promise<StudentAccess[]> {
         source: accessToUse?.source ?? null,
         daysRemaining,
         isAccessActive,
+        completedDays,
+        inProgressDays,
+        progressPercentage,
       };
     });
 }

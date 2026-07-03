@@ -120,19 +120,19 @@ export default function AdminNovoAlunoPage() {
               </div>
             )}
 
-            {state?.success && (
-              <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-4">
-                <div className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-400" />
-                  <div>
-                    <p className="text-sm font-medium text-emerald-300">{state.message}</p>
-                    <p className="text-xs text-slate-300 mt-1">
-                      Envie o e-mail e senha temporária ao aluno.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            )}
+             {state?.success && (
+               <div className="rounded-xl border border-emerald-400/20 bg-emerald-400/5 p-4">
+                 <div className="flex items-center gap-3">
+                   <CheckCircle2 className="h-5 w-5 text-emerald-400" />
+                   <div>
+                     <p className="text-sm font-medium text-emerald-300">{state.message}</p>
+                     <p className="text-xs text-slate-300 mt-1">
+                       Envie o e-mail e senha temporária ao aluno. O aluno deverá trocar a senha no primeiro acesso ou no Perfil.
+                     </p>
+                   </div>
+                 </div>
+               </div>
+             )}
 
             <Button
               type="submit"

@@ -564,6 +564,16 @@ export default function HomePage() {
                     Suporte
                   </Link>
                 </li>
+                <li>
+                  <Link href="/politica-de-privacidade" className="text-base text-slate-300 hover:text-yellow-400 transition-colors">
+                    Politica de Privacidade
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/termos-de-uso" className="text-base text-slate-300 hover:text-yellow-400 transition-colors">
+                    Termos de Uso
+                  </Link>
+                </li>
               </ul>
               <p className="text-sm text-slate-400">
                 Após a liberação do acesso, você entra com e-mail e senha.
@@ -575,12 +585,19 @@ export default function HomePage() {
             <p className="text-sm text-slate-400">
               © 2026 Calistenia Equilibrada. Todos os direitos reservados.
             </p>
-            <p className="text-sm text-slate-400">
-              Conteúdo educativo. Não substitui avaliação ou orientação profissional.
-            </p>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-sm text-slate-400">
+              <Link href="/politica-de-privacidade" className="transition-colors hover:text-yellow-300">
+                Politica de Privacidade
+              </Link>
+              <Link href="/termos-de-uso" className="transition-colors hover:text-yellow-300">
+                Termos de Uso
+              </Link>
+              <span>Conteúdo educativo. Não substitui avaliação ou orientação profissional.</span>
+            </div>
           </div>
         </div>
       </footer>
     </main>
   );
 }
+

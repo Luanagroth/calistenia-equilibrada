@@ -33,6 +33,7 @@ export type EvolutionCheckinsData = {
   profile: EvolutionProfileSnapshot;
   checkins: EvolutionCheckin[];
   completedTrainings: number;
+  currentWeightKg: number | null;
   journeyPercentage: number;
   trainingAverages: EvolutionTrainingAverages;
 };
@@ -68,7 +69,7 @@ export async function getEvolutionCheckins(): Promise<EvolutionCheckinsData> {
         .from("student_evolution_checkins")
         .select("*")
         .eq("user_id", user.id)
-        .order("created_at", { ascending: true }),
+        .order("created_at", { ascending: false }),
       supabase
         .from("student_daily_progress")
         .select("journey_day, energy_level, difficulty_level, pain_level, status, completed_at")
@@ -82,6 +83,9 @@ export async function getEvolutionCheckins(): Promise<EvolutionCheckinsData> {
   if (progressError) throw progressError;
 
   const completedTrainings = progress?.length ?? 0;
+  const sortedCheckins = (checkins ?? []) as EvolutionCheckin[];
+  const latestCheckinWithWeight =
+    sortedCheckins.find((checkin) => checkin.weight_kg !== null) ?? null;
 
   return {
     profile: {
@@ -91,8 +95,9 @@ export async function getEvolutionCheckins(): Promise<EvolutionCheckinsData> {
       weightKg: profile?.weight_kg ?? null,
       mobilityLevel: profile?.mobility_level ?? null,
     },
-    checkins: (checkins ?? []) as EvolutionCheckin[],
+    checkins: sortedCheckins,
     completedTrainings,
+    currentWeightKg: latestCheckinWithWeight?.weight_kg ?? profile?.weight_kg ?? null,
     journeyPercentage: Math.round((completedTrainings / 30) * 100),
     trainingAverages: {
       energy: averageFrom((progress ?? []).map((entry) => entry.energy_level)),

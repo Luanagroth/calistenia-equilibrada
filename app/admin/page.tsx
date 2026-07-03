@@ -1,13 +1,17 @@
-import { ArrowRight, Calendar, Users, Ticket, ShoppingCart, TrendingUp, AlertTriangle } from "lucide-react";
+import { ArrowRight, Calendar, Users, Ticket, ShoppingCart, TrendingUp, AlertTriangle, Bell } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import Link from "next/link";
 import { getAdminDashboardStats } from "@/lib/admin/get-admin-dashboard-stats";
+import { getUnreadAdminNotificationsCount } from "@/lib/admin/get-admin-notifications";
 
 export default async function AdminDashboardPage() {
-  const stats = await getAdminDashboardStats();
+  const [stats, unreadCount] = await Promise.all([
+    getAdminDashboardStats(),
+    getUnreadAdminNotificationsCount(),
+  ]);
 
   return (
     <div className="space-y-8">
@@ -17,6 +21,18 @@ export default async function AdminDashboardPage() {
           <p className="mt-2 max-w-xl text-slate-300">
             Gerencie alunos, acessos e evolução em um só lugar.
           </p>
+        </div>
+        <div className="flex items-center gap-3">
+          <Link href="/admin/notificacoes" className="relative">
+            <Button variant="outline" size="icon" className="border-white/10 bg-white/5 text-white hover:bg-white/10">
+              <Bell className="h-4 w-4" />
+            </Button>
+            {unreadCount > 0 && (
+              <span className="absolute -top-1 -right-1 flex size-4 items-center justify-center rounded-full bg-yellow-400 text-[10px] font-bold text-slate-950">
+                {unreadCount > 9 ? "9+" : unreadCount}
+              </span>
+            )}
+          </Link>
         </div>
       </div>
 

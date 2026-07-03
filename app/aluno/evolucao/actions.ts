@@ -73,6 +73,17 @@ export async function createEvolutionCheckinAction(formData: FormData): Promise<
     redirect("/aluno/evolucao?error=checkin-error");
   }
 
+  if (parsedCheckin.data.weightKg !== null) {
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ weight_kg: parsedCheckin.data.weightKg })
+      .eq("id", user.id);
+
+    if (profileError) {
+      redirect("/aluno/evolucao?error=checkin-error");
+    }
+  }
+
   revalidatePath("/aluno/evolucao");
   redirect("/aluno/evolucao?success=checkin-created");
 }

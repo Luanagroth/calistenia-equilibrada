@@ -8,6 +8,7 @@ import {
   Headphones,
   Dumbbell,
   LogOut,
+  User,
 } from "lucide-react";
 
 import { cn } from "@/lib/utils";
@@ -17,6 +18,11 @@ const navItems = [
   { label: "Início", href: "/admin", icon: BarChart3 },
   { label: "Alunos", href: "/admin/alunos", icon: Users },
   { label: "Suporte", href: "/admin/suporte", icon: Headphones },
+];
+
+const mobileNavItems = [
+  ...navItems,
+  { label: "Perfil", href: "/admin/perfil", icon: User },
 ];
 
 type AdminShellProps = {
@@ -113,8 +119,8 @@ export function AdminShell({ children, adminName = "Admin", adminEmail = "" }: A
       </main>
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 border-t border-white/10 bg-[#070A0D]/95 px-2 py-2 backdrop-blur lg:hidden">
-        <div className="grid grid-cols-3 gap-1">
-          {navItems.map((item) => {
+        <div className="grid grid-cols-4 gap-1">
+          {mobileNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href;
 
