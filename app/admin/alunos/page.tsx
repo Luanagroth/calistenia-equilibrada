@@ -1,4 +1,4 @@
-import { ArrowLeft, Search, Eye, Plus, Ban, RotateCcw } from "lucide-react";
+import { Search, Eye, Plus, Ban, RotateCcw } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
 import { getStudents } from "@/lib/admin/get-students";
+import { getPendingStudentsCount } from "@/lib/admin/get-pending-count";
 import { extendStudentAccessAction, blockStudentAction, reactivateStudentAction } from "./actions";
 
 const formatDate = (value: string | null) => {
@@ -40,6 +41,10 @@ export default async function AdminAlunosPage({
   const search = params.search || "";
 
   const students = await getStudents();
+  const pendingCount = await getPendingStudentsCount();
+
+  // ... resto do código
+  // Adicionar card de novos alunos pendentes após o grid de estatísticas
 
   const filtered = students.filter(
     (s) =>
@@ -69,7 +74,7 @@ export default async function AdminAlunosPage({
         </Link>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-slate-300">Total de alunos</CardTitle>
@@ -102,6 +107,17 @@ export default async function AdminAlunosPage({
             <div className="text-2xl font-bold text-amber-300">{blockedStudents}</div>
           </CardContent>
         </Card>
+        <Card className="bg-[#10161A] border-white/10 shadow-2xl shadow-black/30">
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-slate-300">Novos (Pagamento)</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-rose-300">{pendingCount}</div>
+            <Link href="/admin/alunos/pendentes" className="mt-2 inline-block text-xs text-yellow-400 hover:text-yellow-300">
+              Ver novos alunos
+            </Link>
+          </CardContent>
+        </Card>
       </div>
 
       {params.success && (
@@ -111,6 +127,7 @@ export default async function AdminAlunosPage({
               {params.success === "access-extended" && "Acesso estendido por 45 dias."}
               {params.success === "student-blocked" && "Aluno bloqueado com sucesso."}
               {params.success === "student-reactivated" && "Aluno reativado com sucesso."}
+              {params.success === "student-approved" && "Acesso liberado com sucesso!"}
             </p>
           </CardContent>
         </Card>

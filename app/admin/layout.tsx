@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { getAdminAccess } from "@/lib/auth/get-admin-access";
+import { getPendingStudentsCount } from "@/lib/admin/get-pending-count";
 import { AdminShell } from "@/components/admin/admin-shell";
 
 export default async function AdminLayout({
@@ -17,10 +18,13 @@ export default async function AdminLayout({
     redirect("/aluno/dashboard");
   }
 
+  const pendingCount = await getPendingStudentsCount();
+
   return (
     <AdminShell
       adminName={access.profile?.full_name ?? "Admin"}
       adminEmail={access.user.email ?? ""}
+      pendingStudentsCount={pendingCount}
     >
       {children}
     </AdminShell>

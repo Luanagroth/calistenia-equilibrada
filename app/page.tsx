@@ -137,11 +137,26 @@ export default function HomePage() {
               Treine com o peso do corpo, siga um treino por vez e acompanhe seu progresso dentro da plataforma.
             </p>
 
-            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+<div className="mt-10 flex flex-col gap-4 sm:flex-row">
               <Button size="lg" asChild className="px-8 py-6 text-base bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20">
-                <Link href="/login">
+                <a
+                  href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/2e98309a-c3d2-4f20-951f-0a946d08d6e5/payment-option-form/?source=link&preference-id=192819695-3c420751-aa4c-4bf9-9e74-4f20c8e09df4&router-request-id=dfae1478-69e2-4d0d-8822-0b2b99e285c9&p=05f03f7c75511001f1baf30734186006"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   Começar por R$ 67
                   <ArrowRight className="ml-2 h-5 w-5" />
+                </a>
+              </Button>
+
+              <Button
+                size="lg"
+                variant="outline"
+                asChild
+                className="px-8 py-6 text-base border-white/10 bg-white/5 text-white hover:bg-white/10"
+              >
+                <Link href="/obrigado">
+                  Após pagar, clique aqui para confirmar
                 </Link>
               </Button>
 
@@ -153,6 +168,7 @@ export default function HomePage() {
               >
                 <Link href="#como-funciona">
                   Ver como funciona
+                  <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
@@ -411,16 +427,23 @@ export default function HomePage() {
                   </li>
                 </ul>
 
-                <Button size="lg" asChild className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 text-base py-6">
-                  <Link href="/login">
+<Button size="lg" asChild className="w-full bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 text-base py-6">
+                  <a
+                    href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/2e98309a-c3d2-4f20-951f-0a946d08d6e5/payment-option-form/?source=link&preference-id=192819695-3c420751-aa4c-4bf9-9e74-4f20c8e09df4&router-request-id=dfae1478-69e2-4d0d-8822-0b2b99e285c9&p=05f03f7c75511001f1baf30734186006"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Começar por R$ 67
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+                  </a>
                 </Button>
 
                 <p className="text-xs text-slate-400 text-center">
                   Após a liberação do acesso, você entra com e-mail e senha.
                 </p>
+                <Button variant="outline" asChild className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                  <Link href="/obrigado">Após pagar, clique aqui para confirmar</Link>
+                </Button>
               </div>
             </div>
           </div>
@@ -484,17 +507,24 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="space-y-4">
+<div className="space-y-4">
                 <Button size="lg" asChild className="bg-yellow-400 text-slate-950 hover:bg-yellow-300 shadow-lg shadow-yellow-400/20 text-base py-6 px-8">
-                  <Link href="/login">
+                  <a
+                    href="https://www.mercadopago.com.br/checkout/v1/payment/redirect/2e98309a-c3d2-4f20-951f-0a946d08d6e5/payment-option-form/?source=link&preference-id=192819695-3c420751-aa4c-4bf9-9e74-4f20c8e09df4&router-request-id=dfae1478-69e2-4d0d-8822-0b2b99e285c9&p=05f03f7c75511001f1baf30734186006"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Começar por R$ 67
                     <ArrowRight className="ml-2 h-5 w-5" />
-                  </Link>
+                  </a>
                 </Button>
 
                 <p className="text-sm text-slate-400">
                   Acesso à plataforma • 30 treinos guiados • 7 eBooks inclusos
                 </p>
+                <Button variant="outline" asChild className="w-full border-white/10 bg-white/5 text-white hover:bg-white/10">
+                  <Link href="/obrigado">Após pagar, clique aqui para confirmar</Link>
+                </Button>
               </div>
             </div>
 

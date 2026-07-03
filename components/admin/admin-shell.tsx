@@ -25,13 +25,41 @@ const mobileNavItems = [
   { label: "Perfil", href: "/admin/perfil", icon: User },
 ];
 
+const NavItem = ({ item, pendingCount }: { item: { label: string; href: string; icon: React.ElementType }, pendingCount: number }) => {
+  const Icon = item.icon;
+  const isActive = usePathname() === item.href;
+
+  return (
+    <Link
+      key={item.href}
+      href={item.href}
+      className={cn(
+        "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition",
+        isActive
+          ? "bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20"
+          : "hover:bg-white/10 hover:text-white"
+      )}
+    >
+      <Icon className="h-5 w-5" />
+      <span className="flex-1">{item.label}</span>
+      {item.href === "/admin/alunos" && pendingCount > 0 && (
+        <span className="flex items-center gap-1 text-xs font-medium">
+          <span className="text-rose-400">🔴</span>
+          <span className="text-rose-400">{pendingCount}</span>
+        </span>
+      )}
+    </Link>
+  );
+};
+
 type AdminShellProps = {
   children: React.ReactNode;
   adminName?: string;
   adminEmail?: string;
+  pendingStudentsCount?: number;
 };
 
-export function AdminShell({ children, adminName = "Admin", adminEmail = "" }: AdminShellProps) {
+export function AdminShell({ children, adminName = "Admin", adminEmail = "", pendingStudentsCount = 0 }: AdminShellProps) {
   const pathname = usePathname();
   const router = useRouter();
 
@@ -64,28 +92,11 @@ export function AdminShell({ children, adminName = "Admin", adminEmail = "" }: A
           </div>
         </div>
 
-        <nav className="space-y-1.5">
-          {navItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = pathname === item.href;
-
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={cn(
-                  "flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-slate-300 transition",
-                  isActive
-                    ? "bg-yellow-400 text-slate-950 shadow-lg shadow-yellow-400/20"
-                    : "hover:bg-white/10 hover:text-white"
-                )}
-              >
-                <Icon className="h-5 w-5" />
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+<nav className="space-y-1.5">
+           <NavItem item={navItems[0]} pendingCount={0} />
+           <NavItem item={navItems[1]} pendingCount={pendingStudentsCount} />
+           <NavItem item={navItems[2]} pendingCount={0} />
+         </nav>
 
         <div className="mt-auto">
           <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 shadow-2xl shadow-black/30">

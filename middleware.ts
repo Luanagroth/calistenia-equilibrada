@@ -13,5 +13,5 @@ export async function middleware() {
 }
 
 export const config = {
-  matcher: ["/aluno/:path*"],
+  matcher: ["/aluno/:path*", "/admin/:path*"],
 };
