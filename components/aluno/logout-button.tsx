@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { clearPinValidation } from "@/lib/security/pin";
 import { Button } from "@/components/ui/button";
 
 export function LogoutButton({ children }: { children: React.ReactNode }) {
@@ -12,7 +11,6 @@ export function LogoutButton({ children }: { children: React.ReactNode }) {
 
   const handleLogout = async () => {
     setLoading(true);
-    clearPinValidation();
     const supabase = createClient();
     await supabase.auth.signOut();
     router.push("/login");

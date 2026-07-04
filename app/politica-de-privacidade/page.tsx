@@ -13,7 +13,6 @@ const sections = [
     title: "2. Dados que podemos coletar",
     body: [
       "Podemos coletar nome, e-mail, dados de acesso, idade, altura, peso, mobilidade percebida, disposicao/animo, dor ou desconforto relatado, progresso dos treinos, check-ins de evolucao, mensagens enviadas ao suporte e dados tecnicos basicos de navegacao.",
-      "O PIN de acesso rapido fica salvo apenas no dispositivo do usuario e nao e enviado como senha para o servidor.",
     ],
   },
   {

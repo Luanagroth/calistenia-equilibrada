@@ -23,14 +23,7 @@ const sections = [
     ],
   },
   {
-    title: "4. PIN de acesso rapido",
-    body: [
-      "O PIN e opcional, funciona apenas no dispositivo e nao substitui o login com e-mail e senha.",
-      "Se o usuario sair da conta, sera necessario fazer login novamente para voltar a utilizar a plataforma.",
-    ],
-  },
-  {
-    title: "5. Conteudo educativo e responsabilidade",
+    title: "4. Conteudo educativo e responsabilidade",
     body: [
       "Os exercicios e orientacoes sao gerais e nao substituem avaliacao medica, fisioterapeutica, nutricional ou de educador fisico.",
       "O usuario deve respeitar seus limites e interromper a pratica se sentir dor forte, tontura, falta de ar, formigamento, mal-estar ou desconforto intenso.",
@@ -38,51 +31,51 @@ const sections = [
     ],
   },
   {
-    title: "6. Uso adequado",
+    title: "5. Uso adequado",
     body: [
       "O usuario concorda em usar a plataforma de forma pessoal, nao compartilhar login, nao copiar, revender ou distribuir os materiais, nao tentar acessar areas restritas e nao usar o servico de forma ilegal ou prejudicial.",
     ],
   },
   {
-    title: "7. Materiais digitais",
+    title: "6. Materiais digitais",
     body: [
       "eBooks, videos, textos e demais conteudos sao protegidos e destinados ao uso pessoal do aluno.",
     ],
   },
   {
-    title: "8. Suporte",
+    title: "7. Suporte",
     body: [
       "O suporte pode ser feito pela plataforma ou pelo e-mail suporte@calisteniaequilibrada.com.br.",
     ],
   },
   {
-    title: "9. Disponibilidade e atualizacoes",
+    title: "8. Disponibilidade e atualizacoes",
     body: [
       "A plataforma pode receber melhorias, correcoes e atualizacoes ao longo do tempo. Tambem podem ocorrer instabilidades temporarias.",
     ],
   },
   {
-    title: "10. Cancelamento, prazo de acesso e reembolsos",
+    title: "9. Cancelamento, prazo de acesso e reembolsos",
     body: [
       "O prazo de acesso segue a oferta adquirida. Pedidos de cancelamento ou reembolso seguem as regras da plataforma de pagamento ou da oferta vigente.",
       "Detalhes comerciais podem ser informados no momento da compra.",
     ],
   },
   {
-    title: "11. Limitacao de responsabilidade",
+    title: "10. Limitacao de responsabilidade",
     body: [
       "A plataforma nao garante resultados especificos, como emagrecimento, ganho de massa, cura de dores ou melhora obrigatoria.",
       "Os resultados variam conforme rotina, consistencia, condicao individual e outros fatores.",
     ],
   },
   {
-    title: "12. Alteracoes nos termos",
+    title: "11. Alteracoes nos termos",
     body: [
       "Estes termos podem ser atualizados ao longo do tempo. O uso continuo da plataforma indica ciencia dessas alteracoes.",
     ],
   },
   {
-    title: "13. Contato",
+    title: "12. Contato",
     body: [
       "Para duvidas relacionadas a estes termos, entre em contato pelo e-mail suporte@calisteniaequilibrada.com.br.",
     ],

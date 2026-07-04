@@ -14,7 +14,6 @@ import {
 } from "./actions";
 
 import { AvatarUploadField } from "@/components/aluno/avatar-upload-field";
-import { PinSettingsCard } from "@/components/aluno/pin-settings-card";
 import { LogoutButton } from "@/components/aluno/logout-button";
 
 function getMessageFromError(error?: string) {
@@ -362,8 +361,6 @@ export default async function StudentProfilePage({
             </Link>
           </CardContent>
         </Card>
-
-        <PinSettingsCard />
       </div>
     </div>
   );
