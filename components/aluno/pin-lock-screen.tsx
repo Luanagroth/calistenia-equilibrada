@@ -7,12 +7,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 import {
   isPinEnabled,
-  isPinUnlocked,
+  isPinValidated,
   verifyPin,
-  markPinUnlocked,
-  clearPinUnlock,
+  markPinValidated,
+  clearPinValidation,
 } from "@/lib/security/pin";
 
 export function PinLockScreen({ children }: { children: React.ReactNode }) {
@@ -27,7 +28,7 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     isMountedRef.current = true;
 
-    const shouldLock = isPinEnabled() && !isPinUnlocked();
+    const shouldLock = isPinEnabled() && !isPinValidated();
     setLocked(shouldLock);
     setReady(true);
 
@@ -46,7 +47,7 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
     }
 
     if (ok) {
-      markPinUnlocked();
+      markPinValidated();
       setLocked(false);
       setPin("");
     } else {
@@ -57,7 +58,9 @@ export function PinLockScreen({ children }: { children: React.ReactNode }) {
   };
 
   const handleLogout = async () => {
-    clearPinUnlock();
+    clearPinValidation();
+    const supabase = createClient();
+    await supabase.auth.signOut();
     router.push("/login");
   };
 

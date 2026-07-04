@@ -51,17 +51,17 @@ export function disablePin(): void {
   localStorage.removeItem(PIN_SALT_KEY);
 }
 
-export function markPinUnlocked(): void {
-  if (!isBrowser()) return;
-  sessionStorage.setItem("ce_pin_unlocked", "1");
-}
-
-export function isPinUnlocked(): boolean {
+export function isPinValidated(): boolean {
   if (!isBrowser()) return false;
-  return sessionStorage.getItem("ce_pin_unlocked") === "1";
+  return sessionStorage.getItem("ce_pin_validated") === "1";
 }
 
-export function clearPinUnlock(): void {
+export function markPinValidated(): void {
   if (!isBrowser()) return;
-  sessionStorage.removeItem("ce_pin_unlocked");
+  sessionStorage.setItem("ce_pin_validated", "1");
+}
+
+export function clearPinValidation(): void {
+  if (!isBrowser()) return;
+  sessionStorage.removeItem("ce_pin_validated");
 }

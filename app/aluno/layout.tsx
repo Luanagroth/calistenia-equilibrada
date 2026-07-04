@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { getUserAccess } from "@/lib/auth/get-user-access";
 import { AlunoShell } from "@/components/aluno/aluno-shell";
-import { PinLockScreen } from "@/components/aluno/pin-lock-screen";
+import { PinValidationWrapper } from "@/components/aluno/pin-validation-wrapper";
 
 export default async function AlunoLayout({
   children,
@@ -24,7 +24,7 @@ export default async function AlunoLayout({
   const daysRemaining = access.daysRemaining;
 
   return (
-    <PinLockScreen>
+    <PinValidationWrapper>
       <AlunoShell
         studentName={studentName}
         studentEmail={studentEmail}
@@ -33,6 +33,6 @@ export default async function AlunoLayout({
       >
         {children}
       </AlunoShell>
-    </PinLockScreen>
+    </PinValidationWrapper>
   );
 }

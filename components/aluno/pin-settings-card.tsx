@@ -9,6 +9,7 @@ import {
   savePin,
   disablePin,
   verifyPin,
+  clearPinValidation,
 } from "@/lib/security/pin";
 
 type Mode = "idle" | "setup" | "change";
@@ -106,6 +107,7 @@ export function PinSettingsCard() {
     setSuccess("");
     setLoading(true);
     disablePin();
+    clearPinValidation();
     setEnabled(false);
     setSuccess("PIN desativado com sucesso.");
     resetStates();
